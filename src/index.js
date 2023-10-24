@@ -1,9 +1,11 @@
 const express = require('express');
+// Kết nối mongodb
 const mongoose = require('mongoose');
 const cors = require('cors');
+// Kết nối tới api
 const apiRoute = require("./routes/api");
-
 const app = express();
+
 app.use(cors())
 app.use(express.json())
 
@@ -21,6 +23,6 @@ conn.on('error', () => {
     console.log('Fail to connection to db')
 })
 
-app.listen(3003, () => {
+app.listen(3001, () => {
     console.log("Server is Running");
 })
