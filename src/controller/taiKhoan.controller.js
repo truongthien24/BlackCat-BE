@@ -17,6 +17,7 @@ const loginTaiKhoan = async (req, res) => {
   try {
 
     const users = await TaiKhoan.findOne({ tenDangNhap, matKhau });
+    console.log('users', users)
     if (users.tenDangNhap === tenDangNhap && users.matKhau === matKhau) {
       if(users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee" ) {
         return res.status(400).send({
@@ -76,7 +77,7 @@ const postCreateTaiKhoan = async (req, res) => {
         taiKhoanId: user._id,
         token: jwt.sign({ id: user._id }, "jwtSecretKey", { expiresIn: 300 }),
       })
-      const url = `localhost:3002/${user._id}/verify/${tokens.token}`;
+      const url = `localhost:3000/${user._id}/verify/${tokens.token}`;
       await sendEmail(user.email, "Verify Email", url);
       res.status(201).send({ message: 'An email sent to your account please verify' });
     }
@@ -91,12 +92,7 @@ const loginAdmin = async (req, res) => {
 
     const users = await TaiKhoan.findOne({ tenDangNhap, matKhau });
     if (users.tenDangNhap === tenDangNhap && users.matKhau === matKhau) {
-      if(users.loaiTaiKhoan === "user") {
-        return res.status(400).send({
-          error: "Tài khoản không được cấp quyền"
-        })
-      }
-      else {
+      if(users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee") {
         const id = users?._id;
         // Đăng ký token
         const token = jwt.sign({ id }, "jwtSecretKey", { expiresIn: 300 });
@@ -110,6 +106,11 @@ const loginAdmin = async (req, res) => {
           },
           Message: "Login sucess!",
         });
+      }
+      else {
+        return res.status(400).json({
+          error: "Tài khoản không được cấp quyền"
+        })
       } 
     }
   } catch (error) {

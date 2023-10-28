@@ -1,4 +1,6 @@
 const express = require("express");
+const { getAllSach, createSach } = require("../controller/sach.controller");
+const { getAllTacGia, createTacGia } = require("../controller/tacGia.controller");
 const {
   postCreateTaiKhoan,
   getAllTaiKhoan,
@@ -9,6 +11,7 @@ const TaiKhoan = require("../models/TaiKhoan");
 const Token = require("../models/token");
 const router = express.Router();
 
+// Tài khoản
 router.post("/create-taiKhoan", postCreateTaiKhoan);
 router.get("/getAll-taiKhoan", getAllTaiKhoan);
 router.post("/login", loginTaiKhoan);
@@ -36,9 +39,14 @@ router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
   }
 });
 
-// Post gửi dữ liệu từ client lên server
-// GET lấy dữ liệu từ server về client
-// PUT sửa dữ liệu
-// DELETE xoá dữ liệu
+
+// Sách
+router.get("/getAllSach", getAllSach);
+router.post("/createSach", createSach);
+
+
+// Tác giả
+router.get("/getAllTacGia", getAllTacGia);
+router.post("/createTacGia", createTacGia);
 
 module.exports = router;
