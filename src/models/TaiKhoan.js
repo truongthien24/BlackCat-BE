@@ -10,10 +10,12 @@ const TaiKhoanSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    name: String,
-    age: Number,
+    hoTen: String,
+    tuoi: Number,
+    xacThucEmail: { type: Boolean },
+    loaiTaiKhoan: { type: String, required: true},
 })
 
-const TaiKhoanModel = mongoose.model("TaiKhoan", TaiKhoanSchema);
+const TaiKhoanModel = mongoose.model("taiKhoan", TaiKhoanSchema);
 
 module.exports = TaiKhoanModel;
