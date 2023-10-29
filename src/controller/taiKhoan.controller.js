@@ -35,9 +35,6 @@ const loginTaiKhoan = async (req, res) => {
           Data: {
             tenDangNhap: users?.tenDangNhap,
             email: users?.email,
-            // email: results[0]?.email,
-            // id: results[0]?.id,
-            // name: results[0]?.name,
           },
           Message: "Login sucess!",
         });

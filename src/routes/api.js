@@ -9,6 +9,9 @@ const {
 } = require("../controller/taiKhoan.controller");
 const TaiKhoan = require("../models/TaiKhoan");
 const Token = require("../models/token");
+const { getAllNhaXuatBan, createNhaXuatBan } = require("../controller/nhaXuatBan.controller");
+const { getAllTheLoai, createTheLoai } = require("../controller/theLoai.controller");
+const { getAllNhaCungCap, createNhaCungCap } = require("../controller/nhaCungCap.controller");
 const router = express.Router();
 
 // Tài khoản
@@ -49,4 +52,15 @@ router.post("/createSach", createSach);
 router.get("/getAllTacGia", getAllTacGia);
 router.post("/createTacGia", createTacGia);
 
+//Nhà xuất bản
+router.get("/getAllNhaXuatBan", getAllNhaXuatBan);
+router.post("/createNhaXuatBan", createNhaXuatBan);
+
+//Thể loại
+router.get("/getAllTheLoai", getAllTheLoai);
+router.post("/createTheLoai", createTheLoai);
+
+//Nhà cung cấp
+router.get("/getAllNhaCungCap", getAllNhaCungCap);
+router.post("/createNhaCungCap", createNhaCungCap);
 module.exports = router;
