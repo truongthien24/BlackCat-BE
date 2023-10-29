@@ -17,7 +17,6 @@ const loginTaiKhoan = async (req, res) => {
   try {
 
     const users = await TaiKhoan.findOne({ tenDangNhap, matKhau });
-    console.log('users', users)
     if (users.tenDangNhap === tenDangNhap && users.matKhau === matKhau) {
       if(users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee" ) {
         return res.status(400).send({
@@ -35,9 +34,6 @@ const loginTaiKhoan = async (req, res) => {
           Data: {
             tenDangNhap: users?.tenDangNhap,
             email: users?.email,
-            // email: results[0]?.email,
-            // id: results[0]?.id,
-            // name: results[0]?.name,
           },
           Message: "Login sucess!",
         });
