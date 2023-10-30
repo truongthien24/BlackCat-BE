@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllSach, createSach } = require("../controller/sach.controller");
+const { getAllSach, createSach, getSachByID } = require("../controller/sach.controller");
 const { getAllTacGia, createTacGia } = require("../controller/tacGia.controller");
 const {
   postCreateTaiKhoan,
@@ -9,6 +9,9 @@ const {
 } = require("../controller/taiKhoan.controller");
 const TaiKhoan = require("../models/TaiKhoan");
 const Token = require("../models/token");
+const { getAllNhaXuatBan, createNhaXuatBan } = require("../controller/nhaXuatBan.controller");
+const { getAllTheLoai, createTheLoai } = require("../controller/theLoai.controller");
+const { getAllNhaCungCap, createNhaCungCap, getNhaCungCapByID } = require("../controller/nhaCungCap.controller");
 const router = express.Router();
 
 // Tài khoản
@@ -42,11 +45,25 @@ router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
 
 // Sách
 router.get("/getAllSach", getAllSach);
+router.get("/getSachByID/:id", getSachByID);
 router.post("/createSach", createSach);
 
 
 // Tác giả
 router.get("/getAllTacGia", getAllTacGia);
 router.post("/createTacGia", createTacGia);
+
+//Nhà xuất bản
+router.get("/getAllNhaXuatBan", getAllNhaXuatBan);
+router.post("/createNhaXuatBan", createNhaXuatBan);
+
+//Thể loại
+router.get("/getAllTheLoai", getAllTheLoai);
+router.post("/createTheLoai", createTheLoai);
+
+//Nhà cung cấp
+router.get("/getAllNhaCungCap", getAllNhaCungCap);
+router.post("/createNhaCungCap", createNhaCungCap);
+router.get("getNhaCungCapByID", getNhaCungCapByID);
 
 module.exports = router;

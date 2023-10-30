@@ -9,7 +9,7 @@ const app = express();
 app.use(cors())
 app.use(express.json())
 
-app.use("/", apiRoute);
+app.use("/api/", apiRoute);
 
 // mongoose.connect("mongodb://127.0.0.1:27017/crud");
 // mongoose.connect("mongodb+srv://truongthien2411:thiendeptrai24@cluster0.a3wrie5.mongodb.net/?retryWrites=true&w=majority");

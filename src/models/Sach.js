@@ -5,15 +5,20 @@ const SachSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    moTa: {
+    nhaCungCap: {
         type: String,
+        required: true,
     },
-    loaiSach: {
+    noiDung: {
+        type: String,
+        required: true,
+    },
+    theLoai: {
         type: String,
         required: true
     },
     soLuong: {
-        type: Number,
+        type: String,
         required: true
     },
     maSach: {
@@ -25,18 +30,24 @@ const SachSchema = mongoose.Schema({
         required: true,
     },
     gia: {
-        type: Number,
+        type: String,
+        required: true,
+    },
+    nhaXuatBan: {
+        type: String,
         required: true,
     },
     namXuatBan: {
-        type: Number,
+        type: String,
         required: true,
     },
     tienCoc: {
-        type: Number,
+        type: String,
+        required: true,
     },
     tinhTrang: {
-        type: String
+        type: String,
+        required: true,
     },
 })
 

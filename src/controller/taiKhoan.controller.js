@@ -18,12 +18,12 @@ const loginTaiKhoan = async (req, res) => {
 
     const users = await TaiKhoan.findOne({ tenDangNhap, matKhau });
     if (users.tenDangNhap === tenDangNhap && users.matKhau === matKhau) {
-      if(users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee" ) {
+      if (users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee") {
         return res.status(400).send({
           error: "Tài khoản không được cấp quyền"
         })
       }
-      if(users.xacThucEmail) {
+      if (users.xacThucEmail) {
         const id = users?._id;
         // Đăng ký token
         const token = jwt.sign({ id }, "jwtSecretKey", { expiresIn: 300 });
@@ -51,21 +51,14 @@ const loginTaiKhoan = async (req, res) => {
 const postCreateTaiKhoan = async (req, res) => {
   const { tenDangNhap, matKhau, email, loaiTaiKhoan } = req?.body;
   try {
-    // const res = TaiKhoan.collection.aggregate([
-    //   {
-    //     "$group": {
-    //       _id: "$tenDangNhap",
-    //       id: {
-    //         "$first": "$_id"
-    //       }
-    //     }
-    //   }
-    // ])
+
 
     // Check trùng
     const checkTrung = await TaiKhoan.findOne({ tenDangNhap });
     if (checkTrung?._id) {
-      res.status(400).json({ error: 'Tài khoản đã tồn tại' });
+      res.status(400).json({ error: {
+        message: 'Tài khoản đã tồn tại'
+      } });
     } else {
       // const hashPassword = ""
       const user = await TaiKhoan.create({ tenDangNhap, matKhau, email, loaiTaiKhoan, xacThucEmail: false });
@@ -88,7 +81,7 @@ const loginAdmin = async (req, res) => {
 
     const users = await TaiKhoan.findOne({ tenDangNhap, matKhau });
     if (users.tenDangNhap === tenDangNhap && users.matKhau === matKhau) {
-      if(users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee") {
+      if (users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee") {
         const id = users?._id;
         // Đăng ký token
         const token = jwt.sign({ id }, "jwtSecretKey", { expiresIn: 300 });
@@ -107,7 +100,7 @@ const loginAdmin = async (req, res) => {
         return res.status(400).json({
           error: "Tài khoản không được cấp quyền"
         })
-      } 
+      }
     }
   } catch (error) {
     res.status(400).json({ error: "Tên đăng nhập hoặc mật khẩu không chính xác" });
