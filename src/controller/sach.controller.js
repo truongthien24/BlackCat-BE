@@ -25,7 +25,7 @@ const createSach = async (req, res) => {
     tenNhaCungCap,
   } = req.body;
   try {
-    const sach = Sach.create({
+    const sach = await Sach.create({
       tenSach,
       maSach,
       namXuatBan,
