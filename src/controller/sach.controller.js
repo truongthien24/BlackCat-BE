@@ -41,6 +41,7 @@ const getSachByID = async (req, res) => {
 }
 
 const createSach = async (req, res) => {
+  console.log('req', req.body);
   const {
     tenSach,
     maSach,
@@ -54,6 +55,7 @@ const createSach = async (req, res) => {
     noiDung,
     tinhTrang,
     nhaCungCap,
+    hinhAnh,
   } = req.body;
   try {
     const checkTrung = await Sach.findOne({ maSach });
@@ -77,6 +79,7 @@ const createSach = async (req, res) => {
         noiDung,
         tinhTrang,
         nhaCungCap,
+        hinhAnh,
       });
       res.status(200).json({ message: "Thêm thành công", data: sach });
     }
