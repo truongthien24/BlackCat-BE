@@ -1,6 +1,15 @@
 const express = require("express");
-const { getAllSach, createSach, getSachByID, deleteSach, updateSach } = require("../controller/sach.controller");
-const { getAllTacGia, createTacGia } = require("../controller/tacGia.controller");
+const {
+  getAllSach,
+  createSach,
+  getSachByID,
+  deleteSach,
+  updateSach,
+} = require("../controller/sach.controller");
+const {
+  getAllTacGia,
+  createTacGia,
+} = require("../controller/tacGia.controller");
 const {
   postCreateTaiKhoan,
   getAllTaiKhoan,
@@ -9,16 +18,26 @@ const {
 } = require("../controller/taiKhoan.controller");
 const TaiKhoan = require("../models/TaiKhoan");
 const Token = require("../models/token");
-const { getAllNhaXuatBan, createNhaXuatBan } = require("../controller/nhaXuatBan.controller");
-const { getAllTheLoai, createTheLoai } = require("../controller/theLoai.controller");
-const { getAllNhaCungCap, createNhaCungCap, getNhaCungCapByID } = require("../controller/nhaCungCap.controller");
+const {
+  getAllNhaXuatBan,
+  createNhaXuatBan,
+} = require("../controller/nhaXuatBan.controller");
+const {
+  getAllTheLoai,
+  createTheLoai,
+} = require("../controller/theLoai.controller");
+const {
+  getAllNhaCungCap,
+  createNhaCungCap,
+  getNhaCungCapByID,
+} = require("../controller/nhaCungCap.controller");
 const router = express.Router();
 
 // Tài khoản
 router.post("/create-taiKhoan", postCreateTaiKhoan);
 router.get("/getAll-taiKhoan", getAllTaiKhoan);
 router.post("/login", loginTaiKhoan);
-router.post("/login-admin", loginAdmin)
+router.post("/login-admin", loginAdmin);
 router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
   try {
     const taiKhoan = await TaiKhoan.findOne({ _id: req.params.id });
@@ -42,14 +61,12 @@ router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
   }
 });
 
-
 // Sách
 router.get("/getAllSach", getAllSach);
 router.get("/getSachByID/:id", getSachByID);
 router.post("/createSach", createSach);
 router.delete("/deleteSach/:id", deleteSach);
-router.patch("/updateSach/:id", updateSach)
-
+router.patch("/updateSach/:id", updateSach);
 
 // Tác giả
 router.get("/getAllTacGia", getAllTacGia);
