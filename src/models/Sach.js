@@ -49,6 +49,9 @@ const SachSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  hinhAnh: {
+    type: String,
+  },
 });
 
 const SachModel = mongoose.model("sach", SachSchema);

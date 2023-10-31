@@ -17,7 +17,7 @@ const {
   loginAdmin,
 } = require("../controller/taiKhoan.controller");
 const TaiKhoan = require("../models/TaiKhoan");
-const Token = require("../models/token");
+const File = require("../models/File");
 const {
   getAllNhaXuatBan,
   createNhaXuatBan,
@@ -84,5 +84,19 @@ router.post("/createTheLoai", createTheLoai);
 router.get("/getAllNhaCungCap", getAllNhaCungCap);
 router.post("/createNhaCungCap", createNhaCungCap);
 router.get("getNhaCungCapByID", getNhaCungCapByID);
+
+// File
+router.post("/uploads", async (req, res) => {
+  const body = req.body;
+  console.log("body", body);
+  try {
+    const newImage = await File.create(body);
+    if (newImage) {
+      res.status(200).json({ data: newImage, message: "success" });
+    }
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+});
 
 module.exports = router;
