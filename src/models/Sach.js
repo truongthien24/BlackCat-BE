@@ -18,7 +18,7 @@ const SachSchema = mongoose.Schema({
         required: true
     },
     soLuong: {
-        type: String,
+        type: Number,
         required: true
     },
     maSach: {
@@ -30,7 +30,7 @@ const SachSchema = mongoose.Schema({
         required: true,
     },
     gia: {
-        type: String,
+        type: Number,
         required: true,
     },
     nhaXuatBan: {
@@ -42,7 +42,7 @@ const SachSchema = mongoose.Schema({
         required: true,
     },
     tienCoc: {
-        type: String,
+        type: Number,
         required: true,
     },
     tinhTrang: {

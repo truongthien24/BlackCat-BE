@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllSach, createSach, getSachByID } = require("../controller/sach.controller");
+const { getAllSach, createSach, getSachByID, deleteSach, updateSach } = require("../controller/sach.controller");
 const { getAllTacGia, createTacGia } = require("../controller/tacGia.controller");
 const {
   postCreateTaiKhoan,
@@ -47,6 +47,8 @@ router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
 router.get("/getAllSach", getAllSach);
 router.get("/getSachByID/:id", getSachByID);
 router.post("/createSach", createSach);
+router.delete("/deleteSach/:id", deleteSach);
+router.patch("/updateSach/:id", updateSach)
 
 
 // Tác giả

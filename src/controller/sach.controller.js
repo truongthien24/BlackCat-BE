@@ -85,4 +85,40 @@ const createSach = async (req, res) => {
   }
 };
 
-module.exports = { getAllSach, createSach, getSachByID };
+
+const updateSach = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Sách không tồn tại' });
+  }
+
+  console.log('req.body', req.body)
+
+  const sach = await Sach.findOneAndUpdate({ _id: id }, { ...req.body });
+
+  if (!sach) {
+    return res.status(400).json({ error: 'Sách không tồn tại' });
+  }
+
+  res.status(200).json({ data: sach, message: 'Cập nhật thành công' })
+}
+
+
+const deleteSach = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Sách không tồn tại' });
+  }
+
+  const sach = await Sach.findOneAndDelete({ _id: id });
+
+  if (!sach) {
+    return res.status(400).json({ error: 'Sách không tồn tại' });
+  }
+
+  res.status(200).json({ data: sach, message: 'Xoá thành công' })
+}
+
+module.exports = { getAllSach, createSach, getSachByID, updateSach, deleteSach };
