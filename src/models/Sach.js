@@ -5,7 +5,7 @@ const SachSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  tenNhaCungCap: {
+  nhaCungCap: {
     type: String,
     required: true,
   },
@@ -38,7 +38,7 @@ const SachSchema = mongoose.Schema({
     required: true,
   },
   namXuatBan: {
-    type: Number,
+    type: String,
     required: true,
   },
   tienCoc: {

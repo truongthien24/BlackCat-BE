@@ -11,8 +11,8 @@ module.exports = async (email, subject, text) => {
       port: "587",
       secure: Boolean(true),
       auth: {
-        user: "truongthien2411@gmail.com",
-        pass: "jwdx fqki latn nzmg",
+        user: "dangkhoathai163@gmail.com",
+        pass: "isxn wuva oowi anpo",
       },
     });
 

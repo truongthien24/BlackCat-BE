@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const NhaXuatBanschema = mongoose.Schema({
-    tenNhaXuatBan: {
+    tenNXB: {
         type: String,
         required: true,
     },

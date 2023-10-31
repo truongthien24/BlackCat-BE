@@ -17,7 +17,6 @@ const loginTaiKhoan = async (req, res) => {
   try {
 
     const users = await TaiKhoan.findOne({ tenDangNhap, matKhau });
-    console.log('users', users)
     if (users.tenDangNhap === tenDangNhap && users.matKhau === matKhau) {
       if (users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee") {
         return res.status(400).send({
@@ -57,7 +56,9 @@ const postCreateTaiKhoan = async (req, res) => {
     // Check trùng
     const checkTrung = await TaiKhoan.findOne({ tenDangNhap });
     if (checkTrung?._id) {
-      res.status(400).json({ error: 'Tài khoản đã tồn tại' });
+      res.status(400).json({ error: {
+        message: 'Tài khoản đã tồn tại'
+      } });
     } else {
       // const hashPassword = ""
       const user = await TaiKhoan.create({ tenDangNhap, matKhau, email, loaiTaiKhoan, xacThucEmail: false });

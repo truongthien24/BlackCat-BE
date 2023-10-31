@@ -10,9 +10,9 @@ const getAllNhaXuatBan = async (req, res) => {
 }
 // Thêm nhà xuất bản
 const createNhaXuatBan = async (req, res) => {
-    const { tenNhaXuatBan, quocGia } = req.body;
+    const { tenNXB, quocGia } = req.body;
     try {
-        const nhaXuatBan = NhaXuatBan.create({ tenNhaXuatBan, quocGia })
+        const nhaXuatBan = NhaXuatBan.create({ tenNXB, quocGia })
         res.status(201).json({ message: 'Thêm thành công', data: nhaXuatBan });
     } catch (error) {
         return res.status(400).json({ error })
