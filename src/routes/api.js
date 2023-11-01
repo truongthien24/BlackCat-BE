@@ -9,6 +9,7 @@ const {
 const {
   getAllTacGia,
   createTacGia,
+  updateTacGia,
 } = require("../controller/tacGia.controller");
 const {
   postCreateTaiKhoan,
@@ -21,15 +22,18 @@ const File = require("../models/File");
 const {
   getAllNhaXuatBan,
   createNhaXuatBan,
+  updateNhaXuatBan,
 } = require("../controller/nhaXuatBan.controller");
 const {
   getAllTheLoai,
   createTheLoai,
+  updateTheLoai,
 } = require("../controller/theLoai.controller");
 const {
   getAllNhaCungCap,
   createNhaCungCap,
   getNhaCungCapByID,
+  updateNhaCungCap,
 } = require("../controller/nhaCungCap.controller");
 const router = express.Router();
 
@@ -71,19 +75,23 @@ router.patch("/updateSach/:id", updateSach);
 // Tác giả
 router.get("/getAllTacGia", getAllTacGia);
 router.post("/createTacGia", createTacGia);
+router.patch("/updateTacGia/:id", updateTacGia);
 
 //Nhà xuất bản
 router.get("/getAllNhaXuatBan", getAllNhaXuatBan);
 router.post("/createNhaXuatBan", createNhaXuatBan);
+router.patch("/updateNhaXuatBan/:id", updateNhaXuatBan);
 
 //Thể loại
 router.get("/getAllTheLoai", getAllTheLoai);
 router.post("/createTheLoai", createTheLoai);
+router.patch("/updateTheLoai/:id", updateTheLoai);
 
 //Nhà cung cấp
 router.get("/getAllNhaCungCap", getAllNhaCungCap);
 router.post("/createNhaCungCap", createNhaCungCap);
 router.get("getNhaCungCapByID", getNhaCungCapByID);
+router.patch("/updateNhaCungCap/:id", updateNhaCungCap);
 
 // File
 router.post("/uploads", async (req, res) => {
