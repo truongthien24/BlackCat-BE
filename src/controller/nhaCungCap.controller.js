@@ -56,9 +56,22 @@ const getNhaCungCapByID = async (req, res) => {
   }
 };
 
+const deleteNhaCungCap = async (req, res) => {
+  const { id } = req.params;
+
+  const nhaCungCap = await NhaCungCap.findOneAndDelete({ _id: id });
+
+  if (!nhaCungCap) {
+    return res.status(400).json({ error: "Nhà cung cấp không tồn tại" });
+  }
+
+  res.status(200).json({ data: nhaCungCap, message: "Xoá thành công" });
+};
+
 module.exports = {
   getAllNhaCungCap,
   createNhaCungCap,
   getNhaCungCapByID,
   updateNhaCungCap,
+  deleteNhaCungCap,
 };

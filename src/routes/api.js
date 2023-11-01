@@ -34,6 +34,7 @@ const {
   createNhaCungCap,
   getNhaCungCapByID,
   updateNhaCungCap,
+  deleteNhaCungCap,
 } = require("../controller/nhaCungCap.controller");
 const router = express.Router();
 
@@ -92,6 +93,7 @@ router.get("/getAllNhaCungCap", getAllNhaCungCap);
 router.post("/createNhaCungCap", createNhaCungCap);
 router.get("getNhaCungCapByID", getNhaCungCapByID);
 router.patch("/updateNhaCungCap/:id", updateNhaCungCap);
+router.delete("/deleteNhaCungCap/:id", deleteNhaCungCap);
 
 // File
 router.post("/uploads", async (req, res) => {
