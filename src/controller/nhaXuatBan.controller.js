@@ -12,9 +12,11 @@ const getAllNhaXuatBan = async (req, res) => {
 const createNhaXuatBan = async (req, res) => {
   const { tenNXB, quocGia } = req.body;
   try {
-    // const nhaXuatBan = NhaXuatBan.create({ tenNXB, quocGia })
-    // res.status(201).json({ message: 'Thêm thành công', data: nhaXuatBan });
-    const checkTrung = await NhaXuatBan.findOne({ tenNXB });
+    let data = tenNXB.trim();
+    let data1 = data.replace(/\s+/g, " ");
+    console.log({ data1 });
+
+    const checkTrung = await NhaXuatBan.findOne({ tenNXB: data1 });
     if (checkTrung?._id) {
       res.status(400).json({
         error: {
@@ -45,4 +47,20 @@ const updateNhaXuatBan = async (req, res) => {
   res.status(200).json({ data: nhaXuatBan, message: "Cập nhật thành công" });
 };
 
-module.exports = { getAllNhaXuatBan, createNhaXuatBan, updateNhaXuatBan };
+const deleteNhaXuatBan = async (req, res) => {
+  const { id } = req.params;
+
+  const nhaXuatBan = await NhaXuatBan.findOneAndDelete({ _id: id });
+
+  if (!nhaXuatBan) {
+    return res.status(400).json({ error: "Nhà xuất bản không tồn tại" });
+  }
+
+  res.status(200).json({ data: nhaXuatBan, message: "Xoá thành công" });
+};
+module.exports = {
+  getAllNhaXuatBan,
+  createNhaXuatBan,
+  updateNhaXuatBan,
+  deleteNhaXuatBan,
+};

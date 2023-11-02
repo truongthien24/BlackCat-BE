@@ -2,6 +2,7 @@ const Sach = require("../models/Sach");
 const NhaCungCap = require("../models/NhaCungCap");
 const TacGia = require("../models/TacGia");
 const TheLoai = require("../models/TheLoai");
+const NhaXuatBan = require("../models/NhaXuatBan");
 const mongoose = require("mongoose");
 
 const getAllSach = async (req, res) => {
@@ -11,16 +12,19 @@ const getAllSach = async (req, res) => {
       if (
         !mongoose.Types.ObjectId.isValid(sach?.nhaCungCap) ||
         !mongoose.Types.ObjectId.isValid(sach?.theLoai) ||
-        !mongoose.Types.ObjectId.isValid(sach?.tacGia)
+        !mongoose.Types.ObjectId.isValid(sach?.tacGia) ||
+        !mongoose.Types.ObjectId.isValid(sach?.nhaXuatBan)
       ) {
         return res.status(400).json({ error: "Sach is not found" });
       }
       const nhaCungCap = await NhaCungCap.findById(sach?.nhaCungCap);
       const tacGia = await TacGia.findById(sach?.tacGia);
       const theLoai = await TheLoai.findById(sach?.theLoai);
+      const nhaXuatBan = await NhaXuatBan.findById(sach?.nhaXuatBan);
       sach.nhaCungCap = nhaCungCap?.tenNhaCungCap;
       sach.tacGia = tacGia?.tenTacGia;
       sach.theLoai = theLoai?.tenTheLoai;
+      sach.nhaXuatBan = nhaXuatBan?.tenNXB;
     }
     res.status(200).json({ data: sachs, message: "success" });
   } catch (error) {

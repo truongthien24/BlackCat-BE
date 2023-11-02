@@ -12,7 +12,10 @@ const getAllNhaCungCap = async (req, res) => {
 const createNhaCungCap = async (req, res) => {
   const { tenNhaCungCap } = req.body;
   try {
-    const checkTrung = await NhaCungCap.findOne({ tenNhaCungCap });
+    let data = tenNhaCungCap.trim();
+    let data1 = data.replace(/\s+/g, " ");
+    console.log({ data1 });
+    const checkTrung = await NhaCungCap.findOne({ tenNhaCungCap: data1 });
     if (checkTrung?._id) {
       res.status(400).json({
         error: {

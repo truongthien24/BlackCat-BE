@@ -23,11 +23,13 @@ const {
   getAllNhaXuatBan,
   createNhaXuatBan,
   updateNhaXuatBan,
+  deleteNhaXuatBan,
 } = require("../controller/nhaXuatBan.controller");
 const {
   getAllTheLoai,
   createTheLoai,
   updateTheLoai,
+  deleteTheLoai,
 } = require("../controller/theLoai.controller");
 const {
   getAllNhaCungCap,
@@ -82,11 +84,13 @@ router.patch("/updateTacGia/:id", updateTacGia);
 router.get("/getAllNhaXuatBan", getAllNhaXuatBan);
 router.post("/createNhaXuatBan", createNhaXuatBan);
 router.patch("/updateNhaXuatBan/:id", updateNhaXuatBan);
+router.delete("/deleteNhaXuatBan/:id", deleteNhaXuatBan);
 
 //Thể loại
 router.get("/getAllTheLoai", getAllTheLoai);
 router.post("/createTheLoai", createTheLoai);
 router.patch("/updateTheLoai/:id", updateTheLoai);
+router.delete("/deleteTheLoai/:id", deleteTheLoai);
 
 //Nhà cung cấp
 router.get("/getAllNhaCungCap", getAllNhaCungCap);

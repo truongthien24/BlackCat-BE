@@ -13,9 +13,10 @@ const getAllTacGia = async (req, res) => {
 const createTacGia = async (req, res) => {
   const { tenTacGia, chiTietTacGia } = req.body;
   try {
-    // const tacGia = TacGia.create({ tenTacGia, chiTietTacGia });
-    // res.status(201).json({ message: "create success", data: tacGia });
-    const checkTrung = await TacGia.findOne({ tenTacGia });
+    let data = tenTacGia.trim();
+    let data1 = data.replace(/\s+/g, " ");
+    console.log(data1);
+    const checkTrung = await TacGia.findOne({ tenTacGia: data1 });
     if (checkTrung?._id) {
       res.status(400).json({
         error: {
@@ -35,7 +36,6 @@ const updateTacGia = async (req, res) => {
   const { id } = req.params;
 
   console.log("req.body", req.body);
-
   const tacGia = await TacGia.findOneAndUpdate({ _id: id }, { ...req.body });
 
   if (!tacGia) {
