@@ -38,6 +38,12 @@ const {
   updateNhaCungCap,
   deleteNhaCungCap,
 } = require("../controller/nhaCungCap.controller");
+const {
+  getAllBaiViet,
+  createBaiViet,
+  updateBaiViet,
+  deleteBaiViet,
+} = require("../controller/baiViet.controller");
 const router = express.Router();
 
 // Tài khoản
@@ -114,3 +120,9 @@ router.post("/uploads", async (req, res) => {
 });
 
 module.exports = router;
+
+/// Bài viết
+router.get("/getAllBaiViet", getAllBaiViet);
+router.post("/createBaiViet", createBaiViet);
+router.patch("/updateBaiViet/:id", updateBaiViet);
+router.delete("/deleteBaiViet/:id", deleteBaiViet);
