@@ -11,6 +11,7 @@ const BaiVietSchema = mongoose.Schema({
   },
   hinhAnh: {
     type: String,
+    require: true,
   },
 });
 
