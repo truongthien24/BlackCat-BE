@@ -51,6 +51,7 @@ const SachSchema = mongoose.Schema({
   },
   hinhAnh: {
     type: String,
+    required: true,
   },
 });
 

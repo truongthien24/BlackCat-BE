@@ -58,4 +58,20 @@ const deleteTheLoai = async (req, res) => {
   res.status(200).json({ data: theLoai, message: "Xoá thành công" });
 };
 
-module.exports = { getAllTheLoai, createTheLoai, updateTheLoai, deleteTheLoai };
+const getTheLoaiByID = async (req, res) => {
+  const { idTheLoai } = req.body;
+  try {
+    const theLoai = await TheLoai.findOne({ _id: idTheLoai });
+    res.status(200).json({ data: theLoai, message: "Lấy thành công" });
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
+
+module.exports = {
+  getAllTheLoai,
+  createTheLoai,
+  updateTheLoai,
+  deleteTheLoai,
+  getTheLoaiByID,
+};

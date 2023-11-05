@@ -9,6 +9,17 @@ const getAllTacGia = async (req, res) => {
   }
 };
 
+// Lấy một tác giả
+const getTacGiaByID = async (req, res) => {
+  const { idTacGia } = req.body;
+  try {
+    const tacGia = await TacGia.findOne({ _id: idTacGia });
+    res.status(200).json({ data: tacGia, message: "Lấy thành công" });
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
+
 // Thêm tác giả
 const createTacGia = async (req, res) => {
   const { tenTacGia, chiTietTacGia } = req.body;
@@ -44,4 +55,4 @@ const updateTacGia = async (req, res) => {
   res.status(200).json({ data: tacGia, message: "Cập nhật thành công" });
 };
 
-module.exports = { getAllTacGia, createTacGia, updateTacGia };
+module.exports = { getAllTacGia, createTacGia, updateTacGia, getTacGiaByID };
