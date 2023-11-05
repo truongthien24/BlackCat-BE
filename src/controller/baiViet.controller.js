@@ -57,4 +57,19 @@ const deleteBaiViet = async (req, res) => {
   res.status(200).json({ data: baiViet, message: "Xoá thành công" });
 };
 
-module.exports = { getAllBaiViet, createBaiViet, updateBaiViet, deleteBaiViet };
+const getBaiVietByID = async (req, res) => {
+  const { idBaiViet } = req.body;
+  try {
+    const baiViet = await BaiViet.findOne({ _id: idBaiViet });
+    res.status(200).json({ data: baiViet, message: "Lấy thành công" });
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
+module.exports = {
+  getAllBaiViet,
+  createBaiViet,
+  updateBaiViet,
+  deleteBaiViet,
+  getBaiVietByID,
+};

@@ -53,11 +53,11 @@ const postCreateTaiKhoan = async (req, res) => {
   const { tenDangNhap, matKhau, email, loaiTaiKhoan } = req?.body;
   try {
     // Check trùng
-    const checkTrung = await TaiKhoan.findOne({ tenDangNhap });
+    const checkTrung = await TaiKhoan.findOne({ tenDangNhap, email });
     if (checkTrung?._id) {
       res.status(400).json({
         error: {
-          message: "Tài khoản đã tồn tại",
+          message: "Tài khoản hoặc email đã tồn tại",
         },
       });
     } else {

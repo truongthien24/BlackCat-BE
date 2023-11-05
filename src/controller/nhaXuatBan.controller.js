@@ -58,9 +58,20 @@ const deleteNhaXuatBan = async (req, res) => {
 
   res.status(200).json({ data: nhaXuatBan, message: "Xoá thành công" });
 };
+
+const getNhaXuatBanByID = async (req, res) => {
+  const { idNhaXuatBan } = req.body;
+  try {
+    const nhaXuatBan = await NhaXuatBan.findOne({ _id: idNhaXuatBan });
+    res.status(200).json({ data: nhaXuatBan, message: "Lấy thành công" });
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
 module.exports = {
   getAllNhaXuatBan,
   createNhaXuatBan,
   updateNhaXuatBan,
   deleteNhaXuatBan,
+  getNhaXuatBanByID,
 };

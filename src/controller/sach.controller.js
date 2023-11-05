@@ -17,6 +17,7 @@ const getAllSach = async (req, res) => {
       ) {
         return res.status(400).json({ error: "Sach is not found" });
       }
+
       const nhaCungCap = await NhaCungCap.findById(sach?.nhaCungCap);
       const tacGia = await TacGia.findById(sach?.tacGia);
       const theLoai = await TheLoai.findById(sach?.theLoai);
