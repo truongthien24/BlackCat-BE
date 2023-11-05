@@ -58,9 +58,9 @@ const deleteBaiViet = async (req, res) => {
 };
 
 const getBaiVietByID = async (req, res) => {
-  const { idBaiViet } = req.body;
+  const { id } = req.body;
   try {
-    const baiViet = await BaiViet.findOne({ _id: idBaiViet });
+    const baiViet = await BaiViet.findOne({ _id: id });
     res.status(200).json({ data: baiViet, message: "Lấy thành công" });
   } catch (error) {
     return res.status(400).json({ error });

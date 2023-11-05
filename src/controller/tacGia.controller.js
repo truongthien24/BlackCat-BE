@@ -11,9 +11,9 @@ const getAllTacGia = async (req, res) => {
 
 // Lấy một tác giả
 const getTacGiaByID = async (req, res) => {
-  const { idTacGia } = req.body;
+  const { id } = req.body;
   try {
-    const tacGia = await TacGia.findOne({ _id: idTacGia });
+    const tacGia = await TacGia.findOne({ _id: id });
     res.status(200).json({ data: tacGia, message: "Lấy thành công" });
   } catch (error) {
     return res.status(400).json({ error });

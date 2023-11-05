@@ -61,9 +61,9 @@ const deleteTheLoai = async (req, res) => {
 };
 
 const getTheLoaiByID = async (req, res) => {
-  const { idTheLoai } = req.body;
+  const { id } = req.body;
   try {
-    const theLoai = await TheLoai.findOne({ _id: idTheLoai });
+    const theLoai = await TheLoai.findOne({ _id: id });
     res.status(200).json({ data: theLoai, message: "Lấy thành công" });
   } catch (error) {
     return res.status(400).json({ error });

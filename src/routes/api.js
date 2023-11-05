@@ -89,26 +89,26 @@ router.patch("/updateSach/:id", updateSach);
 router.get("/getAllTacGia", getAllTacGia);
 router.post("/createTacGia", createTacGia);
 router.patch("/updateTacGia/:id", updateTacGia);
-router.get("getTacGiaByID", getTacGiaByID);
+router.get("getTacGiaByID/:id", getTacGiaByID);
 
 //Nhà xuất bản
 router.get("/getAllNhaXuatBan", getAllNhaXuatBan);
 router.post("/createNhaXuatBan", createNhaXuatBan);
 router.patch("/updateNhaXuatBan/:id", updateNhaXuatBan);
 router.delete("/deleteNhaXuatBan/:id", deleteNhaXuatBan);
-router.get("getNhaXuatBanByID", getNhaXuatBanByID);
+router.get("getNhaXuatBanByID/:id", getNhaXuatBanByID);
 
 //Thể loại
 router.get("/getAllTheLoai", getAllTheLoai);
 router.post("/createTheLoai", createTheLoai);
 router.patch("/updateTheLoai/:id", updateTheLoai);
 router.delete("/deleteTheLoai/:id", deleteTheLoai);
-router.get("getTheLoaiByID", getTheLoaiByID);
+router.get("/getTheLoaiByID/:id", getTheLoaiByID);
 
 //Nhà cung cấp
 router.get("/getAllNhaCungCap", getAllNhaCungCap);
 router.post("/createNhaCungCap", createNhaCungCap);
-router.get("getNhaCungCapByID", getNhaCungCapByID);
+router.get("getNhaCungCapByID/:id", getNhaCungCapByID);
 router.patch("/updateNhaCungCap/:id", updateNhaCungCap);
 router.delete("/deleteNhaCungCap/:id", deleteNhaCungCap);
 
@@ -133,4 +133,4 @@ router.get("/getAllBaiViet", getAllBaiViet);
 router.post("/createBaiViet", createBaiViet);
 router.patch("/updateBaiViet/:id", updateBaiViet);
 router.delete("/deleteBaiViet/:id", deleteBaiViet);
-router.get("getBaiVietByID", getBaiVietByID);
+router.get("getBaiVietByID/:id", getBaiVietByID);
