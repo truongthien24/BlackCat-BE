@@ -11,6 +11,7 @@ const {
   createTacGia,
   updateTacGia,
   getTacGiaByID,
+  deleteTacGia,
 } = require("../controller/tacGia.controller");
 const {
   postCreateTaiKhoan,
@@ -65,7 +66,7 @@ router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
     //     taiKhoanId: taiKhoan._id,
     //     token: req.params.token,
     // })
-    // console.log('tokens', tokens)
+    //
     // if (!tokens) {
     //     return res.status(400).send({ message: "Invalid link" });
     // }
@@ -90,6 +91,7 @@ router.get("/getAllTacGia", getAllTacGia);
 router.post("/createTacGia", createTacGia);
 router.patch("/updateTacGia/:id", updateTacGia);
 router.get("/getTacGiaByID/:id", getTacGiaByID);
+router.delete("/deleteTacGia/:id", deleteTacGia);
 
 //Nhà xuất bản
 router.get("/getAllNhaXuatBan", getAllNhaXuatBan);
@@ -115,7 +117,6 @@ router.delete("/deleteNhaCungCap/:id", deleteNhaCungCap);
 // File
 router.post("/uploads", async (req, res) => {
   const body = req.body;
-  console.log("body", body);
   try {
     const newImage = await File.create(body);
     if (newImage) {
@@ -133,4 +134,4 @@ router.get("/getAllBaiViet", getAllBaiViet);
 router.post("/createBaiViet", createBaiViet);
 router.patch("/updateBaiViet/:id", updateBaiViet);
 router.delete("/deleteBaiViet/:id", deleteBaiViet);
-router.get("getBaiVietByID/:id", getBaiVietByID);
+router.get("/getBaiVietByID/:id", getBaiVietByID);

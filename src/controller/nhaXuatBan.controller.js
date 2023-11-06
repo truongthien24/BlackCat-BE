@@ -1,4 +1,5 @@
 const NhaXuatBan = require("../models/NhaXuatBan");
+const Sach = require("../models/Sach");
 
 const getAllNhaXuatBan = async (req, res) => {
   try {
@@ -14,8 +15,6 @@ const createNhaXuatBan = async (req, res) => {
   try {
     let data = tenNXB.trim();
     let data1 = data.replace(/\s+/g, " ");
-    console.log({ data1 });
-
     const checkTrung = await NhaXuatBan.findOne({ tenNXB: data1 });
     if (checkTrung?._id) {
       res.status(400).json({
@@ -32,35 +31,89 @@ const createNhaXuatBan = async (req, res) => {
   }
 };
 
+// const updateNhaXuatBan = async (req, res) => {
+//   const { id } = req.params;
+
+//   const nhaXuatBan = await NhaXuatBan.findOneAndUpdate(
+//     { _id: id },
+//     { ...req.body }
+//   );
+//   if (!nhaXuatBan) {
+//     return res.status(400).json({ error: "Nhà xuất bản không tồn tại" });
+//   }
+//   res.status(200).json({ data: nhaXuatBan, message: "Cập nhật thành công" });
+// };
+
 const updateNhaXuatBan = async (req, res) => {
   const { id } = req.params;
-
-  console.log("req.body", req.body);
-
-  const nhaXuatBan = await NhaXuatBan.findOneAndUpdate(
-    { _id: id },
-    { ...req.body }
-  );
-  if (!nhaXuatBan) {
-    return res.status(400).json({ error: "Nhà xuất bản không tồn tại" });
+  const nhaXuatBan = await NhaXuatBan.findOne({ _id: id });
+  const checkTrung = await NhaXuatBan.findOne({
+    tenNXB: req?.body?.tenNXB,
+  });
+  // Check trùng
+  if (checkTrung) {
+    if (checkTrung?._id?.toString() === id) {
+      const nhaXuatBanUpdate = await NhaXuatBan.findOneAndUpdate(
+        { _id: id },
+        { ...req.body }
+      );
+      if (!nhaXuatBanUpdate) {
+        return res.status(400).json({
+          error: {
+            message: "Nhà xuất bản không tồn tại",
+          },
+        });
+      } else {
+        res
+          .status(200)
+          .json({ data: nhaXuatBan, message: "Cập nhật thành công" });
+      }
+    } else {
+      return res.status(400).json({
+        error: {
+          message: "Tên nhà xuất bản đã tồn tại",
+        },
+      });
+    }
+  } else {
+    const nhaXuatBanUpdate = await NhaXuatBan.findOneAndUpdate(
+      { _id: id },
+      { ...req.body }
+    );
+    if (!nhaXuatBanUpdate) {
+      return res.status(400).json({
+        error: {
+          message: "Nhà xuất bản không tồn tại",
+        },
+      });
+    } else {
+      res
+        .status(200)
+        .json({ data: nhaXuatBan, message: "Cập nhật thành công" });
+    }
   }
-  res.status(200).json({ data: nhaXuatBan, message: "Cập nhật thành công" });
 };
 
 const deleteNhaXuatBan = async (req, res) => {
   const { id } = req.params;
-
-  const nhaXuatBan = await NhaXuatBan.findOneAndDelete({ _id: id });
-
-  if (!nhaXuatBan) {
-    return res.status(400).json({ error: "Nhà xuất bản không tồn tại" });
+  const sach = await Sach.findOne({ nhaXuatBan: id });
+  if (sach) {
+    return res.status(400).json({
+      error: {
+        message: "Sách đang sử dụng nhà xuất bản này",
+      },
+    });
+  } else {
+    const nhaXuatBan = await NhaXuatBan.findOneAndDelete({ _id: id });
+    if (!nhaXuatBan) {
+      return res.status(400).json({ error: "Nhà Xuất bản không tồn tại" });
+    }
+    res.status(200).json({ data: nhaXuatBan, message: "Xoá thành công" });
   }
-
-  res.status(200).json({ data: nhaXuatBan, message: "Xoá thành công" });
 };
 
 const getNhaXuatBanByID = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   try {
     const nhaXuatBan = await NhaXuatBan.findOne({ _id: id });
     res.status(200).json({ data: nhaXuatBan, message: "Lấy thành công" });
