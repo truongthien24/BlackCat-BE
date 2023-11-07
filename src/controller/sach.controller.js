@@ -103,7 +103,6 @@ const updateSach = async (req, res) => {
   if (!sach) {
     return res.status(400).json({ error: 'Sách không tồn tại' });
   }
-
   res.status(200).json({ data: sach, message: 'Cập nhật thành công' })
 }
 
