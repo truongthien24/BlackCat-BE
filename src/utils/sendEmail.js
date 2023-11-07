@@ -30,11 +30,13 @@ module.exports = async (email, subject, text) => {
       subject: subject,
       text: "Confirm to register account",
       html: html,
-      attachments: [{
-        filename: 'logo.png',
-        path: `${__dirname}/image/logo.png`,
-        cid: 'logo'
-      }]
+      attachments: [
+        {
+          filename: "logo.png",
+          path: `${__dirname}/image/logo.png`,
+          cid: "logo",
+        },
+      ],
     });
     console.log("Send email successfull");
   } catch (err) {

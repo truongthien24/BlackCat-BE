@@ -9,6 +9,8 @@ const {
 const {
   getAllTacGia,
   createTacGia,
+  updateTacGia,
+  getTacGiaByID,
 } = require("../controller/tacGia.controller");
 const {
   postCreateTaiKhoan,
@@ -21,16 +23,31 @@ const File = require("../models/File");
 const {
   getAllNhaXuatBan,
   createNhaXuatBan,
+  updateNhaXuatBan,
+  deleteNhaXuatBan,
+  getNhaXuatBanByID,
 } = require("../controller/nhaXuatBan.controller");
 const {
   getAllTheLoai,
   createTheLoai,
+  updateTheLoai,
+  deleteTheLoai,
+  getTheLoaiByID,
 } = require("../controller/theLoai.controller");
 const {
   getAllNhaCungCap,
   createNhaCungCap,
   getNhaCungCapByID,
+  updateNhaCungCap,
+  deleteNhaCungCap,
 } = require("../controller/nhaCungCap.controller");
+const {
+  getAllBaiViet,
+  createBaiViet,
+  updateBaiViet,
+  deleteBaiViet,
+  getBaiVietByID,
+} = require("../controller/baiViet.controller");
 const router = express.Router();
 
 // Tài khoản
@@ -71,19 +88,29 @@ router.patch("/updateSach/:id", updateSach);
 // Tác giả
 router.get("/getAllTacGia", getAllTacGia);
 router.post("/createTacGia", createTacGia);
+router.patch("/updateTacGia/:id", updateTacGia);
+router.get("/getTacGiaByID/:id", getTacGiaByID);
 
 //Nhà xuất bản
 router.get("/getAllNhaXuatBan", getAllNhaXuatBan);
 router.post("/createNhaXuatBan", createNhaXuatBan);
+router.patch("/updateNhaXuatBan/:id", updateNhaXuatBan);
+router.delete("/deleteNhaXuatBan/:id", deleteNhaXuatBan);
+router.get("/getNhaXuatBanByID/:id", getNhaXuatBanByID);
 
 //Thể loại
 router.get("/getAllTheLoai", getAllTheLoai);
 router.post("/createTheLoai", createTheLoai);
+router.patch("/updateTheLoai/:id", updateTheLoai);
+router.delete("/deleteTheLoai/:id", deleteTheLoai);
+router.get("/getTheLoaiByID/:id", getTheLoaiByID);
 
 //Nhà cung cấp
 router.get("/getAllNhaCungCap", getAllNhaCungCap);
 router.post("/createNhaCungCap", createNhaCungCap);
-router.get("getNhaCungCapByID", getNhaCungCapByID);
+router.get("/getNhaCungCapByID/:id", getNhaCungCapByID);
+router.patch("/updateNhaCungCap/:id", updateNhaCungCap);
+router.delete("/deleteNhaCungCap/:id", deleteNhaCungCap);
 
 // File
 router.post("/uploads", async (req, res) => {
@@ -100,3 +127,10 @@ router.post("/uploads", async (req, res) => {
 });
 
 module.exports = router;
+
+/// Bài viết
+router.get("/getAllBaiViet", getAllBaiViet);
+router.post("/createBaiViet", createBaiViet);
+router.patch("/updateBaiViet/:id", updateBaiViet);
+router.delete("/deleteBaiViet/:id", deleteBaiViet);
+router.get("getBaiVietByID", getBaiVietByID);

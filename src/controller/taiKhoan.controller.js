@@ -1,7 +1,7 @@
 const TaiKhoan = require("../models/TaiKhoan");
 const jwt = require("jsonwebtoken");
-const token = require('../models/token');
-const sendEmail = require('../utils/sendEmail');
+const token = require("../models/token");
+const sendEmail = require("../utils/sendEmail");
 
 const getAllTaiKhoan = async (req, res) => {
   try {
@@ -15,13 +15,12 @@ const getAllTaiKhoan = async (req, res) => {
 const loginTaiKhoan = async (req, res) => {
   const { tenDangNhap, matKhau } = req?.body;
   try {
-
     const users = await TaiKhoan.findOne({ tenDangNhap, matKhau });
     if (users.tenDangNhap === tenDangNhap && users.matKhau === matKhau) {
       if (users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee") {
         return res.status(400).send({
-          error: "Tài khoản không được cấp quyền"
-        })
+          error: "Tài khoản không được cấp quyền",
+        });
       }
       if (users.xacThucEmail) {
         const id = users?._id;
@@ -39,36 +38,46 @@ const loginTaiKhoan = async (req, res) => {
         });
       } else {
         return res.status(400).send({
-          error: "Tài khoản chưa được xác thực email"
-        })
+          error: "Tài khoản chưa được xác thực email",
+        });
       }
     }
   } catch (error) {
-    res.status(400).json({ error: "Tên đăng nhập hoặc mật khẩu không chính xác" });
+    res
+      .status(400)
+      .json({ error: "Tên đăng nhập hoặc mật khẩu không chính xác" });
   }
 };
 
 const postCreateTaiKhoan = async (req, res) => {
   const { tenDangNhap, matKhau, email, loaiTaiKhoan } = req?.body;
   try {
-
-
     // Check trùng
-    const checkTrung = await TaiKhoan.findOne({ tenDangNhap });
+    const checkTrung = await TaiKhoan.findOne({ tenDangNhap, email });
     if (checkTrung?._id) {
-      res.status(400).json({ error: {
-        message: 'Tài khoản đã tồn tại'
-      } });
+      res.status(400).json({
+        error: {
+          message: "Tài khoản hoặc email đã tồn tại",
+        },
+      });
     } else {
       // const hashPassword = ""
-      const user = await TaiKhoan.create({ tenDangNhap, matKhau, email, loaiTaiKhoan, xacThucEmail: false });
+      const user = await TaiKhoan.create({
+        tenDangNhap,
+        matKhau,
+        email,
+        loaiTaiKhoan,
+        xacThucEmail: false,
+      });
       const tokens = await token.create({
         taiKhoanId: user._id,
         token: jwt.sign({ id: user._id }, "jwtSecretKey", { expiresIn: 300 }),
-      })
+      });
       const url = `localhost:3000/${user._id}/verify/${tokens.token}`;
       await sendEmail(user.email, "Verify Email", url);
-      res.status(201).send({ message: 'An email sent to your account please verify' });
+      res
+        .status(201)
+        .send({ message: "An email sent to your account please verify" });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -78,7 +87,6 @@ const postCreateTaiKhoan = async (req, res) => {
 const loginAdmin = async (req, res) => {
   const { tenDangNhap, matKhau } = req?.body;
   try {
-
     const users = await TaiKhoan.findOne({ tenDangNhap, matKhau });
     if (users.tenDangNhap === tenDangNhap && users.matKhau === matKhau) {
       if (users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee") {
@@ -95,17 +103,22 @@ const loginAdmin = async (req, res) => {
           },
           Message: "Login sucess!",
         });
-      }
-      else {
+      } else {
         return res.status(400).json({
-          error: "Tài khoản không được cấp quyền"
-        })
+          error: "Tài khoản không được cấp quyền",
+        });
       }
     }
   } catch (error) {
-    res.status(400).json({ error: "Tên đăng nhập hoặc mật khẩu không chính xác" });
+    res
+      .status(400)
+      .json({ error: "Tên đăng nhập hoặc mật khẩu không chính xác" });
   }
-}
+};
 
-
-module.exports = { postCreateTaiKhoan, getAllTaiKhoan, loginTaiKhoan, loginAdmin };
+module.exports = {
+  postCreateTaiKhoan,
+  getAllTaiKhoan,
+  loginTaiKhoan,
+  loginAdmin,
+};
