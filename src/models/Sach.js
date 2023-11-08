@@ -6,8 +6,9 @@ const SachSchema = mongoose.Schema({
     required: true,
   },
   nhaCungCap: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: 'nhaCungCap'
   },
   noiDung: {
     type: String,
