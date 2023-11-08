@@ -50,7 +50,6 @@ const getSachByID = async (req, res) => {
 };
 
 const createSach = async (req, res) => {
-  console.log("req", req.body);
   const {
     tenSach,
     maSach,
@@ -103,8 +102,6 @@ const updateSach = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "Sách không tồn tại" });
   }
-
-  console.log("req.body", req.body);
 
   const sach = await Sach.findOneAndUpdate({ _id: id }, { ...req.body });
 
