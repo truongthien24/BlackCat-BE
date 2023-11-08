@@ -38,8 +38,5 @@ module.exports = async (email, subject, text) => {
         },
       ],
     });
-    console.log("Send email successfull");
-  } catch (err) {
-    console.log("err", err);
-  }
+  } catch (err) {}
 };

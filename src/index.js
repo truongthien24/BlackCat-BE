@@ -18,6 +18,7 @@ app.use("/api/", apiRoute);
 mongoose.connect(
   "mongodb+srv://blackcat:0122123123@atlascluster.kd36usa.mongodb.net/thuesach?retryWrites=true&w=majority"
 );
+
 const conn = mongoose.connection;
 conn.once("open", () => {
   console.log("Successfull connection to db");

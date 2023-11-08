@@ -16,7 +16,9 @@ const createTheLoai = async (req, res) => {
   const { tenTheLoai } = req.body;
   try {
     let ten = tenTheLoai.trim();
-    const checkTrung = await TheLoai.findOne({ tenTheLoai: ten.replace(/\s+/g, " ") });
+    const checkTrung = await TheLoai.findOne({
+      tenTheLoai: ten.replace(/\s+/g, " "),
+    });
     if (checkTrung?._id) {
       res.status(400).json({
         error: {
@@ -35,16 +37,21 @@ const createTheLoai = async (req, res) => {
 const updateTheLoai = async (req, res) => {
   const { id } = req.params;
   const theLoai = await TheLoai.findOne({ _id: id });
-  const checkTrung = await TheLoai.findOne({ tenTheLoai: req?.body?.tenTheLoai });
+  const checkTrung = await TheLoai.findOne({
+    tenTheLoai: req?.body?.tenTheLoai,
+  });
   // Check trùng
-  if(checkTrung) {
+  if (checkTrung) {
     if (checkTrung?._id?.toString() === id) {
-      const theLoaiUpdate = await TheLoai.findOneAndUpdate({ _id: id }, { ...req.body });
+      const theLoaiUpdate = await TheLoai.findOneAndUpdate(
+        { _id: id },
+        { ...req.body }
+      );
       if (!theLoaiUpdate) {
         return res.status(400).json({
           error: {
-            message: "Thể loại không tồn tại"
-          }
+            message: "Thể loại không tồn tại",
+          },
         });
       } else {
         res.status(200).json({ data: theLoai, message: "Cập nhật thành công" });
@@ -52,31 +59,36 @@ const updateTheLoai = async (req, res) => {
     } else {
       return res.status(400).json({
         error: {
-          message: "Tên thể loại đã tồn tại"
-        }
+          message: "Tên thể loại đã tồn tại",
+        },
       });
     }
   } else {
-    const theLoaiUpdate = await TheLoai.findOneAndUpdate({ _id: id }, { ...req.body });
-      if (!theLoaiUpdate) {
-        return res.status(400).json({
-          error: {
-            message: "Thể loại không tồn tại"
-          }
-        });
-      } else {
-        res.status(200).json({ data: theLoai, message: "Cập nhật thành công" });
-      }
+    const theLoaiUpdate = await TheLoai.findOneAndUpdate(
+      { _id: id },
+      { ...req.body }
+    );
+    if (!theLoaiUpdate) {
+      return res.status(400).json({
+        error: {
+          message: "Thể loại không tồn tại",
+        },
+      });
+    } else {
+      res.status(200).json({ data: theLoai, message: "Cập nhật thành công" });
+    }
   }
 };
 
 const deleteTheLoai = async (req, res) => {
   const { id } = req.params;
-  const sach = await Sach.findOne({theLoai: id});
-  if(sach) {
-    return res.status(400).json({ error: {
-      message: "Sách đang sử dụng thể loại này",
-     }});
+  const sach = await Sach.findOne({ theLoai: id });
+  if (sach) {
+    return res.status(400).json({
+      error: {
+        message: "Sách đang sử dụng thể loại này",
+      },
+    });
   } else {
     const theLoai = await TheLoai.findOneAndDelete({ _id: id });
     if (!theLoai) {

@@ -15,7 +15,6 @@ const createBaiViet = async (req, res) => {
   try {
     let data = tenBaiViet.trim();
     let data1 = data.replace(/\s+/g, " ");
-    console.log({ data1 });
     const checkTrung = await BaiViet.findOne({ tenBaiViet: data1 });
     if (checkTrung?._id) {
       res.status(400).json({
@@ -31,18 +30,64 @@ const createBaiViet = async (req, res) => {
     return res.status(400).json({ error });
   }
 };
+
+/// Sửa bài viết
+// const updateBaiViet = async (req, res) => {
+//   const { id } = req.params;
+
+//   const baiViet = await BaiViet.findOneAndUpdate({ _id: id }, { ...req.body });
+
+//   if (!baiViet) {
+//     return res.status(400).json({ error: "Bài viết không tồn tại" });
+//   }
+
+//   res.status(200).json({ data: baiViet, message: "Cập nhật thành công" });
+// };
+
 const updateBaiViet = async (req, res) => {
   const { id } = req.params;
-
-  console.log("req.body", req.body);
-
-  const baiViet = await BaiViet.findOneAndUpdate({ _id: id }, { ...req.body });
-
-  if (!baiViet) {
-    return res.status(400).json({ error: "Bài viết không tồn tại" });
+  const baiViet = await BaiViet.findOne({ _id: id });
+  const checkTrung = await BaiViet.findOne({
+    tenBaiViet: req?.body?.tenBaiViet,
+  });
+  // Check trùng
+  if (checkTrung) {
+    if (checkTrung?._id?.toString() === id) {
+      const baiVietUpdate = await BaiViet.findOneAndUpdate(
+        { _id: id },
+        { ...req.body }
+      );
+      if (!baiVietUpdate) {
+        return res.status(400).json({
+          error: {
+            message: "Bài viết không tồn tại",
+          },
+        });
+      } else {
+        res.status(200).json({ data: baiViet, message: "Cập nhật thành công" });
+      }
+    } else {
+      return res.status(400).json({
+        error: {
+          message: "Tên bài viết đã tồn tại",
+        },
+      });
+    }
+  } else {
+    const baiVietUpdate = await BaiViet.findOneAndUpdate(
+      { _id: id },
+      { ...req.body }
+    );
+    if (!baiVietUpdate) {
+      return res.status(400).json({
+        error: {
+          message: "Bài viết không tồn tại",
+        },
+      });
+    } else {
+      res.status(200).json({ data: baiViet, message: "Cập nhật thành công" });
+    }
   }
-
-  res.status(200).json({ data: baiViet, message: "Cập nhật thành công" });
 };
 
 const deleteBaiViet = async (req, res) => {
@@ -58,9 +103,9 @@ const deleteBaiViet = async (req, res) => {
 };
 
 const getBaiVietByID = async (req, res) => {
-  const { idBaiViet } = req.body;
+  const { id } = req.params;
   try {
-    const baiViet = await BaiViet.findOne({ _id: idBaiViet });
+    const baiViet = await BaiViet.findOne({ _id: id });
     res.status(200).json({ data: baiViet, message: "Lấy thành công" });
   } catch (error) {
     return res.status(400).json({ error });
