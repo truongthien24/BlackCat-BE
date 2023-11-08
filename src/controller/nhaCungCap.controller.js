@@ -16,7 +16,9 @@ const createNhaCungCap = async (req, res) => {
   try {
     let data = tenNhaCungCap.trim();
     let data1 = data.replace(/\s+/g, " ");
-    const checkTrung = await NhaCungCap.findOne({ tenNhaCungCap: data1 });
+    const checkTrung = await NhaCungCap.findOne({
+      tenNhaCungCap: data1
+    });
     if (checkTrung?._id) {
       res.status(400).json({
         error: {
@@ -96,18 +98,6 @@ const getNhaCungCapByID = async (req, res) => {
     return res.status(400).json({ error });
   }
 };
-
-// const deleteNhaCungCap = async (req, res) => {
-//   const { id } = req.params;
-
-//   const nhaCungCap = await NhaCungCap.findOneAndDelete({ _id: id });
-
-//   if (!nhaCungCap) {
-//     return res.status(400).json({ error: "Nhà cung cấp không tồn tại" });
-//   }
-
-//   res.status(200).json({ data: nhaCungCap, message: "Xoá thành công" });
-// };
 
 const deleteNhaCungCap = async (req, res) => {
   const { id } = req.params;

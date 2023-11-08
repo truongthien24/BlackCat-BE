@@ -15,18 +15,19 @@ const getAllTheLoai = async (req, res) => {
 const createTheLoai = async (req, res) => {
   const { tenTheLoai } = req.body;
   try {
-    let ten = tenTheLoai.trim();
-    const checkTrung = await TheLoai.findOne({
-      tenTheLoai: ten.replace(/\s+/g, " "),
-    });
+    let data = tenTheLoai.trim();
+    let data1 = data.replace(/\s+/g, " ");
+    const checkTrung = await TheLoai.findOne({ tenTheLoai: data1 });
     if (checkTrung?._id) {
       res.status(400).json({
         error: {
-          message: "Thể loại đã tồn tại",
+          message: "Tên thể loại đã tồn tại",
         },
       });
     } else {
-      const theLoai = await TheLoai.create({ tenTheLoai });
+      const theLoai = await TheLoai.create({
+        tenTheLoai,
+      });
       res.status(200).json({ message: "Thêm thành công", data: theLoai });
     }
   } catch (error) {
