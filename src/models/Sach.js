@@ -7,6 +7,7 @@ const SachSchema = mongoose.Schema({
   },
   nhaCungCap: {
     type: mongoose.Schema.Types.ObjectId,
+    // type: String,
     required: true,
     ref: 'nhaCungCap'
   },
@@ -27,8 +28,10 @@ const SachSchema = mongoose.Schema({
     required: true,
   },
   tacGia: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    // type: String,
     required: true,
+    ref: 'tacGia'
   },
   gia: {
     type: Number,
@@ -54,6 +57,22 @@ const SachSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  kichThuoc: {
+    type: String,
+    required: true,
+  },
+  soTrang: {
+    type: Number,
+    required: true,
+  },
+  ngonNgu: {
+    type: String,
+    required: true,
+  },
+  quocGia: {
+    type: String,
+    required: true,
+  }
 });
 
 const SachModel = mongoose.model("sach", SachSchema);

@@ -1,4 +1,5 @@
 const Sach = require("../models/Sach");
+const gzip = require("gzip");
 const NhaCungCap = require("../models/NhaCungCap");
 const TacGia = require("../models/TacGia");
 const TheLoai = require("../models/TheLoai");
@@ -7,29 +8,64 @@ const mongoose = require("mongoose");
 
 const getAllSach = async (req, res) => {
   try {
-    const sachs = await Sach.find().populate("nhaCungCap");
-    for (let sach of sachs) {
-      if (
-        !mongoose.Types.ObjectId.isValid(sach?.nhaCungCap) ||
-        !mongoose.Types.ObjectId.isValid(sach?.theLoai) ||
-        !mongoose.Types.ObjectId.isValid(sach?.tacGia) ||
-        !mongoose.Types.ObjectId.isValid(sach?.nhaXuatBan)
-      ) {
-        return res.status(400).json({ error: "Sach is not found" });
-      }
+    const sachs = await Sach.find()
+      .populate({ path: "nhaCungCap", model: "nhaCungCap" })
+      .populate({ path: "tacGia", model: "tacGia" });
+    // const sachs = await Sach.find();
+    // for (let sach of sachs) {
+    //   if (
+    //     !mongoose.Types.ObjectId.isValid(sach?.nhaCungCap) ||
+    //     !mongoose.Types.ObjectId.isValid(sach?.theLoai) ||
+    //     !mongoose.Types.ObjectId.isValid(sach?.tacGia) ||
+    //     !mongoose.Types.ObjectId.isValid(sach?.nhaXuatBan)
+    //   ) {
+    //     return res.status(400).json({
+    //       error: {
+    //         message: "Sach is not found",
+    //       },
+    //     });
+    //   }
 
-      // const nhaCungCap = await NhaCungCap.findById(sach?.nhaCungCap);
-      // const tacGia = await TacGia.findById(sach?.tacGia);
-      // const theLoai = await TheLoai.findById(sach?.theLoai);
-      // const nhaXuatBan = await NhaXuatBan.findById(sach?.nhaXuatBan);
-      // sach.nhaCungCap = nhaCungCap?.tenNhaCungCap;
-      // sach.tacGia = tacGia?.tenTacGia;
-      // sach.theLoai = theLoai?.tenTheLoai;
-      // sach.nhaXuatBan = nhaXuatBan?.tenNXB;
-    }
-    res.status(200).json({ data: sachs, message: "success" });
+    //   const nhaCungCap = await NhaCungCap.findById(sach?.nhaCungCap);
+    //   const tacGia = await TacGia.findById(sach?.tacGia);
+    //   const theLoai = await TheLoai.findById(sach?.theLoai);
+    //   const nhaXuatBan = await NhaXuatBan.findById(sach?.nhaXuatBan);
+    //   sach.nhaCungCap = nhaCungCap?.tenNhaCungCap;
+    //   sach.tacGia = tacGia?.tenTacGia;
+    //   sach.theLoai = theLoai?.tenTheLoai;
+    //   sach.nhaXuatBan = nhaXuatBan?.tenNXB;
+    // }
+    const result = await sachs?.map((sach) => {
+      return {
+        _id: sach._id,
+        tenSach: sach.tenSach,
+        tenNhaCungCap: sach?.nhaCungCap?.tenNhaCungCap,
+        maNhaCungCap: sach?.nhaCungCap?._id?.toString(),
+        theLoai: sach.theLoai,
+        noiDung: sach.noiDung,
+        soLuong: sach.soLuong,
+        maSach: sach.maSach,
+        tenTacGia: sach?.tacGia?.tenTacGia,
+        maTacGia: sach?.tacGia?._id?.toString(),
+        gia: sach.gia,
+        nhaXuatBan: sach.nhaXuatBan,
+        namXuatBan: sach.namXuatBan,
+        tienCoc: sach.tienCoc,
+        tinhTrang: sach.tinhTrang,
+        hinhAnh: sach.hinhAnh,
+        kichThuoc: sach.kichThuoc,
+        soTrang: sach.soTrang,
+        ngonNgu: sach.ngonNgu,
+        quocGia: sach.quocGia,
+      };
+    });
+    res.status(200).json({ data: result, message: "success" });
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({
+      error: {
+        message: error,
+      },
+    });
   }
 };
 
