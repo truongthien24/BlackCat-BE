@@ -7,7 +7,6 @@ const SachSchema = mongoose.Schema({
   },
   nhaCungCap: {
     type: mongoose.Schema.Types.ObjectId,
-    // type: String,
     required: true,
     ref: 'nhaCungCap'
   },
@@ -16,8 +15,9 @@ const SachSchema = mongoose.Schema({
     required: true,
   },
   theLoai: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: 'theLoai'
   },
   soLuong: {
     type: Number,
@@ -29,7 +29,6 @@ const SachSchema = mongoose.Schema({
   },
   tacGia: {
     type: mongoose.Schema.Types.ObjectId,
-    // type: String,
     required: true,
     ref: 'tacGia'
   },
@@ -38,8 +37,9 @@ const SachSchema = mongoose.Schema({
     required: true,
   },
   nhaXuatBan: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: 'nhaXuaBan'
   },
   namXuatBan: {
     type: String,
@@ -54,8 +54,14 @@ const SachSchema = mongoose.Schema({
     required: true,
   },
   hinhAnh: {
-    type: String,
-    required: true,
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    }
   },
   kichThuoc: {
     type: String,

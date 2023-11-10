@@ -5,58 +5,33 @@ const TacGia = require("../models/TacGia");
 const TheLoai = require("../models/TheLoai");
 const NhaXuatBan = require("../models/NhaXuatBan");
 const mongoose = require("mongoose");
+const { uploadToCloudinary } = require("../utils/uploadFileCloud");
 
 const getAllSach = async (req, res) => {
   try {
     const sachs = await Sach.find()
       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
-      .populate({ path: "tacGia", model: "tacGia" });
-    // const sachs = await Sach.find();
-    // for (let sach of sachs) {
-    //   if (
-    //     !mongoose.Types.ObjectId.isValid(sach?.nhaCungCap) ||
-    //     !mongoose.Types.ObjectId.isValid(sach?.theLoai) ||
-    //     !mongoose.Types.ObjectId.isValid(sach?.tacGia) ||
-    //     !mongoose.Types.ObjectId.isValid(sach?.nhaXuatBan)
-    //   ) {
-    //     return res.status(400).json({
-    //       error: {
-    //         message: "Sach is not found",
-    //       },
-    //     });
-    //   }
-
-    //   const nhaCungCap = await NhaCungCap.findById(sach?.nhaCungCap);
-    //   const tacGia = await TacGia.findById(sach?.tacGia);
-    //   const theLoai = await TheLoai.findById(sach?.theLoai);
-    //   const nhaXuatBan = await NhaXuatBan.findById(sach?.nhaXuatBan);
-    //   sach.nhaCungCap = nhaCungCap?.tenNhaCungCap;
-    //   sach.tacGia = tacGia?.tenTacGia;
-    //   sach.theLoai = theLoai?.tenTheLoai;
-    //   sach.nhaXuatBan = nhaXuatBan?.tenNXB;
-    // }
+      .populate({ path: "tacGia", model: "tacGia" })
+      .populate({ path: "theLoai", model: "theLoai" })
+      .populate({ path: "nhaXuatBan", model: "nhaXuatBan" });
     const result = await sachs?.map((sach) => {
       return {
         _id: sach._id,
         tenSach: sach.tenSach,
         tenNhaCungCap: sach?.nhaCungCap?.tenNhaCungCap,
         maNhaCungCap: sach?.nhaCungCap?._id?.toString(),
-        theLoai: sach.theLoai,
-        noiDung: sach.noiDung,
-        soLuong: sach.soLuong,
-        maSach: sach.maSach,
+        tenTheLoai: sach?.theLoai?.tenTheLoai,
+        maTheLoai: sach?.theLoai?._id?.toString(),
+        tenNhaXuatBan: sach?.nhaXuatBan?.tenNXB,
+        maNhaXuatBan: sach?.nhaXuatBan?._id?.toString(),
         tenTacGia: sach?.tacGia?.tenTacGia,
         maTacGia: sach?.tacGia?._id?.toString(),
+        soLuong: sach.soLuong,
+        maSach: sach.maSach,
         gia: sach.gia,
-        nhaXuatBan: sach.nhaXuatBan,
         namXuatBan: sach.namXuatBan,
-        tienCoc: sach.tienCoc,
         tinhTrang: sach.tinhTrang,
         hinhAnh: sach.hinhAnh,
-        kichThuoc: sach.kichThuoc,
-        soTrang: sach.soTrang,
-        ngonNgu: sach.ngonNgu,
-        quocGia: sach.quocGia,
       };
     });
     res.status(200).json({ data: result, message: "success" });
@@ -75,11 +50,39 @@ const getSachByID = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).json({ error: "Không có data" });
     }
-    const sach = await Sach.findById(id);
+    const sach = await Sach.findById(id)
+      .populate({ path: "nhaCungCap", model: "nhaCungCap" })
+      .populate({ path: "tacGia", model: "tacGia" })
+      .populate({ path: "theLoai", model: "theLoai" })
+      .populate({ path: "nhaXuatBan", model: "nhaXuatBan" });
     if (!sach._id) {
       return res.status(400).json({ error: "Không có data" });
     }
-    res.status(200).json({ data: sach, message: "success" });
+    const result = {
+      _id: sach._id,
+      tenSach: sach.tenSach,
+      tenNhaCungCap: sach?.nhaCungCap?.tenNhaCungCap,
+      maNhaCungCap: sach?.nhaCungCap?._id?.toString(),
+      tenTheLoai: sach?.theLoai?.tenTheLoai,
+      maTheLoai: sach?.theLoai?._id?.toString(),
+      tenNhaXuatBan: sach?.nhaXuatBan?.tenNXB,
+      maNhaXuatBan: sach?.nhaXuatBan?._id?.toString(),
+      tenTacGia: sach?.tacGia?.tenTacGia,
+      maTacGia: sach?.tacGia?._id?.toString(),
+      noiDung: sach.noiDung,
+      soLuong: sach.soLuong,
+      maSach: sach.maSach,
+      gia: sach.gia,
+      namXuatBan: sach.namXuatBan,
+      tienCoc: sach.tienCoc,
+      tinhTrang: sach.tinhTrang,
+      hinhAnh: sach.hinhAnh,
+      kichThuoc: sach.kichThuoc,
+      soTrang: sach.soTrang,
+      ngonNgu: sach.ngonNgu,
+      quocGia: sach.quocGia,
+    };
+    res.status(200).json({ data: result, message: "success" });
   } catch (error) {
     return res.status(400).json({ error });
   }
@@ -100,6 +103,10 @@ const createSach = async (req, res) => {
     tinhTrang,
     nhaCungCap,
     hinhAnh,
+    quocGia,
+    ngonNgu,
+    soTrang,
+    kichThuoc,
   } = req.body;
   try {
     const checkTrung = await Sach.findOne({ maSach });
@@ -110,6 +117,8 @@ const createSach = async (req, res) => {
         },
       });
     } else {
+      const uploadImage = await uploadToCloudinary(hinhAnh, "sachs");
+
       const sach = await Sach.create({
         tenSach,
         maSach,
@@ -123,7 +132,14 @@ const createSach = async (req, res) => {
         noiDung,
         tinhTrang,
         nhaCungCap,
-        hinhAnh,
+        quocGia,
+        ngonNgu,
+        soTrang,
+        kichThuoc,
+        hinhAnh: {
+          public_id: uploadImage.public_id,
+          url: uploadImage.secure_url,
+        },
       });
       res.status(200).json({ message: "Thêm thành công", data: sach });
     }
@@ -135,30 +151,42 @@ const createSach = async (req, res) => {
 const updateSach = async (req, res) => {
   const { id } = req.params;
 
+  const { hinhAnh } = req.body;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "Sách không tồn tại" });
+    return res.status(400).json({ error: { message: "Sách không tồn tại" } });
   }
 
-  const sach = await Sach.findOneAndUpdate({ _id: id }, { ...req.body });
+  // const uploadImage = await uploadToCloudinary(req.body.hinhAnh, "sachs");
+  let image = {};
+
+  if (hinhAnh?.public_id) {
+    image = hinhAnh;
+  } else {
+    image = await uploadToCloudinary(req.body.hinhAnh.url, "sachs");
+  }
+  const sach = await Sach.findOneAndUpdate(
+    { _id: id },
+    { ...req.body, hinhAnh: image }
+  );
 
   if (!sach) {
-    return res.status(400).json({ error: "Sách không tồn tại" });
+    return res.status(400).json({ error: {message: "Sách không tồn tại"} });
   }
 
-  res.status(200).json({ data: sach, message: "Cập nhật thành công" });
+  res.status(200).json({ data: [], message: "Cập nhật thành công" });
 };
 
 const deleteSach = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "Sách không tồn tại" });
+    return res.status(400).json({ error: { message: "Sách không tồn tại" } });
   }
 
   const sach = await Sach.findOneAndDelete({ _id: id });
 
   if (!sach) {
-    return res.status(400).json({ error: "Sách không tồn tại" });
+    return res.status(400).json({ error: { message: "Sách không tồn tại" } });
   }
 
   res.status(200).json({ data: sach, message: "Xoá thành công" });
