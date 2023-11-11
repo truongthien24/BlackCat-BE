@@ -15,7 +15,12 @@ const createBaiViet = async (req, res) => {
   try {
     let data = tenBaiViet.trim();
     let data1 = data.replace(/\s+/g, " ");
-    const checkTrung = await BaiViet.findOne({ tenBaiViet: data1 });
+    const checkTrung = await BaiViet.findOne({
+      tenBaiViet: {
+        $regex: data1,
+        $options: "i",
+      },
+    });
     if (checkTrung?._id) {
       res.status(400).json({
         error: {
@@ -31,28 +36,26 @@ const createBaiViet = async (req, res) => {
   }
 };
 
-/// Sửa bài viết
-// const updateBaiViet = async (req, res) => {
-//   const { id } = req.params;
-
-//   const baiViet = await BaiViet.findOneAndUpdate({ _id: id }, { ...req.body });
-
-//   if (!baiViet) {
-//     return res.status(400).json({ error: "Bài viết không tồn tại" });
-//   }
-
-//   res.status(200).json({ data: baiViet, message: "Cập nhật thành công" });
-// };
-
 const updateBaiViet = async (req, res) => {
   const { id } = req.params;
+  const { tenBaiViet } = req.body;
+  let data = tenBaiViet.trim();
+  let data1 = data.replace(/\s+/g, " ");
   const baiViet = await BaiViet.findOne({ _id: id });
   const checkTrung = await BaiViet.findOne({
-    tenBaiViet: req?.body?.tenBaiViet,
+    tenBaiViet: {
+      $regex: data1,
+      $options: "i",
+    },
   });
   // Check trùng
   if (checkTrung) {
     if (checkTrung?._id?.toString() === id) {
+      if (data1 === baiViet.tenBaiViet) {
+        return res
+          .status(400)
+          .json({ error: { message: "Tên bài viết đã tồn tại" } });
+      }
       const baiVietUpdate = await BaiViet.findOneAndUpdate(
         { _id: id },
         { ...req.body }
@@ -74,9 +77,14 @@ const updateBaiViet = async (req, res) => {
       });
     }
   } else {
+    if (data1.toUpperCase() === baiViet.tenBaiViet.toUpperCase()) {
+      return res
+        .status(400)
+        .json({ error: { message: "Tên bài viết đã tồn tại" } });
+    }
     const baiVietUpdate = await BaiViet.findOneAndUpdate(
       { _id: id },
-      { ...req.body }
+      { ...req.body, tenBaiViet: data1 }
     );
     if (!baiVietUpdate) {
       return res.status(400).json({

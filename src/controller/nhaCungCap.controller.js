@@ -17,7 +17,10 @@ const createNhaCungCap = async (req, res) => {
     let data = tenNhaCungCap.trim();
     let data1 = data.replace(/\s+/g, " ");
     const checkTrung = await NhaCungCap.findOne({
-      tenNhaCungCap: data1,
+      tenNhaCungCap: {
+        $regex: data1,
+        $options: "i",
+      },
     });
     if (checkTrung?._id) {
       res.status(400).json({
@@ -38,15 +41,65 @@ const createNhaCungCap = async (req, res) => {
   }
 };
 // sửa nhà cung cấp
+
+// Lấy một nhà cung cấp
+const getNhaCungCapByID = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const nhaCungCap = await NhaCungCap.findOne({ _id: id });
+    res.status(200).json({ data: nhaCungCap, message: "Lấy thành công" });
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
+
+const createTacGia = async (req, res) => {
+  const { tenTacGia, chiTietTacGia } = req.body;
+  try {
+    let ten = tenTacGia.trim();
+    let tenTrim = ten.replace(/\s+/g, " ");
+    const checkTrung = await TacGia.findOne({
+      tenTacGia: {
+        $regex: tenTrim,
+        $options: "i",
+      },
+    });
+    console.log(checkTrung);
+    if (checkTrung?._id) {
+      res.status(400).json({
+        error: {
+          message: "Tên tác giả đã tồn tại",
+        },
+      });
+    } else {
+      const tacGia = await TacGia.create({ tenTacGia, chiTietTacGia });
+      res.status(200).json({ message: "Thêm thành công", data: tacGia });
+    }
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
+// sủa nhà cung cấp
 const updateNhaCungCap = async (req, res) => {
   const { id } = req.params;
+  const { tenNhaCungCap } = req.body;
+  let data = tenNhaCungCap.trim();
+  let data1 = data.replace(/\s+/g, " ");
   const nhaCungCap = await NhaCungCap.findOne({ _id: id });
   const checkTrung = await NhaCungCap.findOne({
-    tenNhaCungCap: req?.body?.tenNhaCungCap,
+    tenNhaCungCap: {
+      $regex: data1,
+      $options: "i",
+    },
   });
   // Check trùng
   if (checkTrung) {
     if (checkTrung?._id?.toString() === id) {
+      if (data1 === nhaCungCap.tenNhaCungCap) {
+        return res
+          .status(400)
+          .json({ error: { message: "Tên nhà cung cấp đã tồn tại" } });
+      }
       const nhaCungCapUpdate = await NhaCungCap.findOneAndUpdate(
         { _id: id },
         { ...req.body }
@@ -70,9 +123,14 @@ const updateNhaCungCap = async (req, res) => {
       });
     }
   } else {
+    if (data1.toUpperCase() === nhaCungCap.tenNhaCungCap.toUpperCase()) {
+      return res
+        .status(400)
+        .json({ error: { message: "Tên nhà cung cấp đã tồn tại" } });
+    }
     const nhaCungCapUpdate = await NhaCungCap.findOneAndUpdate(
       { _id: id },
-      { ...req.body }
+      { ...req.body, tenNhaCungCap: data1 }
     );
     if (!nhaCungCapUpdate) {
       return res.status(400).json({
@@ -87,18 +145,7 @@ const updateNhaCungCap = async (req, res) => {
     }
   }
 };
-
-// Lấy một nhà cung cấp
-const getNhaCungCapByID = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const nhaCungCap = await NhaCungCap.findOne({ _id: id });
-    res.status(200).json({ data: nhaCungCap, message: "Lấy thành công" });
-  } catch (error) {
-    return res.status(400).json({ error });
-  }
-};
-
+// xóa nhà cung cấp
 const deleteNhaCungCap = async (req, res) => {
   const { id } = req.params;
   const sach = await Sach.findOne({ nhaCungCap: id });
