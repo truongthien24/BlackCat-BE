@@ -26,9 +26,15 @@ const getTacGiaByID = async (req, res) => {
 const createTacGia = async (req, res) => {
   const { tenTacGia, chiTietTacGia } = req.body;
   try {
-    let data = tenTacGia.trim();
-    let data1 = data.replace(/\s+/g, " ");
-    const checkTrung = await TacGia.findOne({ tenTacGia: data1 });
+    let ten = tenTacGia.trim();
+    let tenTrim = ten.replace(/\s+/g, " ");
+    const checkTrung = await TacGia.findOne({
+      tenTacGia: {
+        $regex: tenTrim,
+        $options: "i",
+      },
+    });
+    console.log(checkTrung);
     if (checkTrung?._id) {
       res.status(400).json({
         error: {
@@ -44,25 +50,26 @@ const createTacGia = async (req, res) => {
   }
 };
 
-// const updateTacGia = async (req, res) => {
-//   const { id } = req.params;
-//   const tacGia = await TacGia.findOneAndUpdate({ _id: id }, { ...req.body });
-
-//   if (!tacGia) {
-//     return res.status(400).json({ error: "Tác giả không tồn tại" });
-//   }
-//   res.status(200).json({ data: tacGia, message: "Cập nhật thành công" });
-// };
-
 const updateTacGia = async (req, res) => {
   const { id } = req.params;
+  const { tenTacGia } = req.body;
+  let ten = tenTacGia.trim();
+  let tenTrim = ten.replace(/\s+/g, " ");
   const tacGia = await TacGia.findOne({ _id: id });
   const checkTrung = await TacGia.findOne({
-    tenTacGia: req?.body?.tenTacGia,
+    tenTacGia: {
+      $regex: tenTrim,
+      $options: "i",
+    },
   });
   // Check trùng
   if (checkTrung) {
     if (checkTrung?._id?.toString() === id) {
+      if (tenTrim === tacGia.tenTacGia) {
+        return res
+          .status(400)
+          .json({ error: { message: "Tên tác giả đã tồn tại" } });
+      }
       const tacGiaUpdate = await TacGia.findOneAndUpdate(
         { _id: id },
         { ...req.body }
@@ -84,9 +91,14 @@ const updateTacGia = async (req, res) => {
       });
     }
   } else {
+    if (tenTrim.toUpperCase() === tacGia.tenTacGia.toUpperCase()) {
+      return res
+        .status(400)
+        .json({ error: { message: "Tên tác giả đã tồn tại" } });
+    }
     const tacGiaUpdate = await TacGia.findOneAndUpdate(
       { _id: id },
-      { ...req.body }
+      { ...req.body, tenTacGia: tenTrim }
     );
     if (!tacGiaUpdate) {
       return res.status(400).json({
