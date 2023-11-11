@@ -8,8 +8,13 @@ const mongoose = require("mongoose");
 const { uploadToCloudinary } = require("../utils/uploadFileCloud");
 
 const getAllSach = async (req, res) => {
+  const {tenSach} = req.body
+  let objectFind = {};
+  if(tenSach) {
+    objectFind.tenSach = tenSach;
+  }
   try {
-    const sachs = await Sach.find()
+    const sachs = await Sach.find(objectFind)
       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
       .populate({ path: "tacGia", model: "tacGia" })
       .populate({ path: "theLoai", model: "theLoai" })
