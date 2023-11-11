@@ -102,7 +102,7 @@ const getNhaCungCapByID = async (req, res) => {
 const deleteNhaCungCap = async (req, res) => {
   const { id } = req.params;
   const sach = await Sach.findOne({ nhaCungCap: id });
-  console.log(Sach)
+  console.log(Sach);
   if (sach) {
     return res.status(400).json({
       error: {
@@ -117,8 +117,6 @@ const deleteNhaCungCap = async (req, res) => {
     res.status(200).json({ data: nhaCungCap, message: "Xoá thành công" });
   }
 };
-
-
 
 module.exports = {
   getAllNhaCungCap,

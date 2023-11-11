@@ -170,7 +170,7 @@ const updateSach = async (req, res) => {
   );
 
   if (!sach) {
-    return res.status(400).json({ error: {message: "Sách không tồn tại"} });
+    return res.status(400).json({ error: { message: "Sách không tồn tại" } });
   }
 
   res.status(200).json({ data: [], message: "Cập nhật thành công" });
