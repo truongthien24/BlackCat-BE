@@ -6,9 +6,10 @@ const SachSchema = mongoose.Schema({
     required: true,
   },
   nhaCungCap: {
-    type: mongoose.Schema.Types.ObjectId,
+    // type: mongoose.Schema.Types.ObjectId,
+    type: String,
     required: true,
-    ref: 'nhaCungCap'
+    // ref: 'nhaCungCap'
   },
   noiDung: {
     type: String,

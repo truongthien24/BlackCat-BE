@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 
 const getAllSach = async (req, res) => {
   try {
-    const sachs = await Sach.find().populate("nhaCungCap");
+    const sachs = await Sach.find();
     for (let sach of sachs) {
       if (
         !mongoose.Types.ObjectId.isValid(sach?.nhaCungCap) ||
@@ -18,14 +18,14 @@ const getAllSach = async (req, res) => {
         return res.status(400).json({ error: "Sach is not found" });
       }
 
-      // const nhaCungCap = await NhaCungCap.findById(sach?.nhaCungCap);
-      // const tacGia = await TacGia.findById(sach?.tacGia);
-      // const theLoai = await TheLoai.findById(sach?.theLoai);
-      // const nhaXuatBan = await NhaXuatBan.findById(sach?.nhaXuatBan);
-      // sach.nhaCungCap = nhaCungCap?.tenNhaCungCap;
-      // sach.tacGia = tacGia?.tenTacGia;
-      // sach.theLoai = theLoai?.tenTheLoai;
-      // sach.nhaXuatBan = nhaXuatBan?.tenNXB;
+      const nhaCungCap = await NhaCungCap.findById(sach?.nhaCungCap);
+      const tacGia = await TacGia.findById(sach?.tacGia);
+      const theLoai = await TheLoai.findById(sach?.theLoai);
+      const nhaXuatBan = await NhaXuatBan.findById(sach?.nhaXuatBan);
+      sach.nhaCungCap = nhaCungCap?.tenNhaCungCap;
+      sach.tacGia = tacGia?.tenTacGia;
+      sach.theLoai = theLoai?.tenTheLoai;
+      sach.nhaXuatBan = nhaXuatBan?.tenNXB;
     }
     res.status(200).json({ data: sachs, message: "success" });
   } catch (error) {
