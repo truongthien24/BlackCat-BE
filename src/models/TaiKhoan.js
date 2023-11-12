@@ -14,6 +14,12 @@ const TaiKhoanSchema = new mongoose.Schema({
   tuoi: Number,
   xacThucEmail: { type: Boolean },
   loaiTaiKhoan: { type: String, required: true },
+  thongTinNhanHang: {
+    tenKhachHang: { type: String },
+    soDienThoai: { type: Number },
+    diaChi: { type: String },
+    type: Array,
+  },
 });
 
 const TaiKhoanModel = mongoose.model("taiKhoan", TaiKhoanSchema);
