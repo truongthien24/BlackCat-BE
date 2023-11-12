@@ -9,9 +9,19 @@ const BaiVietSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  hinhAnh: {
+  ngayTao: {
     type: String,
-    require: true,
+    required: true,
+  },
+  hinhAnh: {
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
   },
 });
 
