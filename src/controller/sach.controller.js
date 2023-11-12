@@ -1,9 +1,4 @@
 const Sach = require("../models/Sach");
-const gzip = require("gzip");
-const NhaCungCap = require("../models/NhaCungCap");
-const TacGia = require("../models/TacGia");
-const TheLoai = require("../models/TheLoai");
-const NhaXuatBan = require("../models/NhaXuatBan");
 const mongoose = require("mongoose");
 const { uploadToCloudinary } = require("../utils/uploadFileCloud");
 
@@ -160,8 +155,6 @@ const updateSach = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: { message: "Sách không tồn tại" } });
   }
-
-  // const uploadImage = await uploadToCloudinary(req.body.hinhAnh, "sachs");
   let image = {};
 
   if (hinhAnh?.public_id) {
@@ -184,9 +177,14 @@ const updateSach = async (req, res) => {
 const deleteSach = async (req, res) => {
   const { id } = req.params;
 
+  // Step 1
+  // Kiểm tra id có chính xác không
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: { message: "Sách không tồn tại" } });
   }
+
+  // Step 2
+  // Kiểm tra sách có đang được đặt hàng hay không
 
   const sach = await Sach.findOneAndDelete({ _id: id });
 
