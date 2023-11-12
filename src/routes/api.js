@@ -49,6 +49,13 @@ const {
   deleteBaiViet,
   getBaiVietByID,
 } = require("../controller/baiViet.controller");
+const {
+  getAllNgonNgu,
+  createNgonNgu,
+  updateNgonNgu,
+  deleteNgonNgu,
+  getNgonNguByID,
+} = require("../controller/ngonNgu.controller");
 const router = express.Router();
 
 // Tài khoản
@@ -135,3 +142,10 @@ router.post("/createBaiViet", createBaiViet);
 router.patch("/updateBaiViet/:id", updateBaiViet);
 router.delete("/deleteBaiViet/:id", deleteBaiViet);
 router.get("/getBaiVietByID/:id", getBaiVietByID);
+
+// Ngôn ngữ
+router.get("/getAllNgonNgu", getAllNgonNgu);
+router.post("/createNgonNgu", createNgonNgu);
+router.patch("/updateNgonNgu/:id", updateNgonNgu);
+router.delete("/deleteNgonNgu/:id", deleteNgonNgu);
+router.get("/getNgonNguByID/:id", getNgonNguByID);

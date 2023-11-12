@@ -9,13 +9,19 @@ const getAllNhaXuatBan = async (req, res) => {
     return res.status(400).json({ error });
   }
 };
+
 // Thêm nhà xuất bản
 const createNhaXuatBan = async (req, res) => {
   const { tenNXB, quocGia } = req.body;
   try {
     let data = tenNXB.trim();
     let data1 = data.replace(/\s+/g, " ");
-    const checkTrung = await NhaXuatBan.findOne({ tenNXB: data1 });
+    const checkTrung = await NhaXuatBan.findOne({
+      tenNXB: {
+        $regex: data1,
+        $options: "i",
+      },
+    });
     if (checkTrung?._id) {
       res.status(400).json({
         error: {
@@ -31,28 +37,26 @@ const createNhaXuatBan = async (req, res) => {
   }
 };
 
-// const updateNhaXuatBan = async (req, res) => {
-//   const { id } = req.params;
-
-//   const nhaXuatBan = await NhaXuatBan.findOneAndUpdate(
-//     { _id: id },
-//     { ...req.body }
-//   );
-//   if (!nhaXuatBan) {
-//     return res.status(400).json({ error: "Nhà xuất bản không tồn tại" });
-//   }
-//   res.status(200).json({ data: nhaXuatBan, message: "Cập nhật thành công" });
-// };
-
 const updateNhaXuatBan = async (req, res) => {
   const { id } = req.params;
+  const { tenNXB } = req.body;
+  let data = tenNXB.trim();
+  let data1 = data.replace(/\s+/g, " ");
   const nhaXuatBan = await NhaXuatBan.findOne({ _id: id });
   const checkTrung = await NhaXuatBan.findOne({
-    tenNXB: req?.body?.tenNXB,
+    tenNXB: {
+      $regex: data1,
+      $options: "i",
+    },
   });
   // Check trùng
   if (checkTrung) {
     if (checkTrung?._id?.toString() === id) {
+      if (data1 === nhaXuatBan.tenNXB) {
+        return res
+          .status(400)
+          .json({ error: { message: "Tên nhà xuất bản đã tồn tại" } });
+      }
       const nhaXuatBanUpdate = await NhaXuatBan.findOneAndUpdate(
         { _id: id },
         { ...req.body }
@@ -71,14 +75,19 @@ const updateNhaXuatBan = async (req, res) => {
     } else {
       return res.status(400).json({
         error: {
-          message: "Tên nhà xuất bản đã tồn tại",
+          message: "Nhà xuất bản đã tồn tại",
         },
       });
     }
   } else {
+    if (data1.toUpperCase() === nhaXuatBan.tenNXB.toUpperCase()) {
+      return res
+        .status(400)
+        .json({ error: { message: "Tên nhà xuất bản đã tồn tại" } });
+    }
     const nhaXuatBanUpdate = await NhaXuatBan.findOneAndUpdate(
       { _id: id },
-      { ...req.body }
+      { ...req.body, tenNXB: data1 }
     );
     if (!nhaXuatBanUpdate) {
       return res.status(400).json({

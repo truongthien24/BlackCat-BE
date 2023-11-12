@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 const { uploadToCloudinary } = require("../utils/uploadFileCloud");
 
 const getAllSach = async (req, res) => {
-  const {tenSach} = req.body
+  const { tenSach } = req.body;
   let objectFind = {};
-  if(tenSach) {
+  if (tenSach) {
     objectFind.tenSach = tenSach;
   }
   try {
@@ -13,7 +13,8 @@ const getAllSach = async (req, res) => {
       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
       .populate({ path: "tacGia", model: "tacGia" })
       .populate({ path: "theLoai", model: "theLoai" })
-      .populate({ path: "nhaXuatBan", model: "nhaXuatBan" });
+      .populate({ path: "nhaXuatBan", model: "nhaXuatBan" })
+      .populate({ path: "ngonNgu", model: "ngonNgu" });
     const result = await sachs?.map((sach) => {
       return {
         _id: sach._id,
@@ -54,7 +55,8 @@ const getSachByID = async (req, res) => {
       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
       .populate({ path: "tacGia", model: "tacGia" })
       .populate({ path: "theLoai", model: "theLoai" })
-      .populate({ path: "nhaXuatBan", model: "nhaXuatBan" });
+      .populate({ path: "nhaXuatBan", model: "nhaXuatBan" })
+      .populate({ path: "ngonNgu", model: "ngonNgu" });
     if (!sach._id) {
       return res.status(400).json({ error: "Không có data" });
     }
@@ -79,7 +81,8 @@ const getSachByID = async (req, res) => {
       hinhAnh: sach.hinhAnh,
       kichThuoc: sach.kichThuoc,
       soTrang: sach.soTrang,
-      ngonNgu: sach.ngonNgu,
+      tenNgonNgu: sach?.ngonNgu?.tenNgonNgu,
+      maNgonNgu: sach?.ngonNgu?._id?.toString(),
       quocGia: sach.quocGia,
     };
     res.status(200).json({ data: result, message: "success" });
@@ -168,7 +171,7 @@ const updateSach = async (req, res) => {
   );
 
   if (!sach) {
-    return res.status(400).json({ error: {message: "Sách không tồn tại"} });
+    return res.status(400).json({ error: { message: "Sách không tồn tại" } });
   }
 
   res.status(200).json({ data: [], message: "Cập nhật thành công" });

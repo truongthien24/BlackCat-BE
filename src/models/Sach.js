@@ -7,8 +7,11 @@ const SachSchema = mongoose.Schema({
   },
   nhaCungCap: {
     type: mongoose.Schema.Types.ObjectId,
+    // mongoose.Schema.Types.ObjectId tự nối đến collection có _id bằng nhà cung cấp
+    // type: String,
     required: true,
-    ref: 'nhaCungCap'
+    /// ref trỏ tới nhà cung cấp
+    ref: "nhaCungCap",
   },
   noiDung: {
     type: String,
@@ -17,7 +20,7 @@ const SachSchema = mongoose.Schema({
   theLoai: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'theLoai'
+    ref: "theLoai",
   },
   soLuong: {
     type: Number,
@@ -30,7 +33,7 @@ const SachSchema = mongoose.Schema({
   tacGia: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'tacGia'
+    ref: "tacGia",
   },
   gia: {
     type: Number,
@@ -39,7 +42,7 @@ const SachSchema = mongoose.Schema({
   nhaXuatBan: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'nhaXuaBan'
+    ref: "nhaXuaBan",
   },
   namXuatBan: {
     type: String,
@@ -61,7 +64,7 @@ const SachSchema = mongoose.Schema({
     url: {
       type: String,
       required: true,
-    }
+    },
   },
   kichThuoc: {
     type: String,
@@ -72,13 +75,14 @@ const SachSchema = mongoose.Schema({
     required: true,
   },
   ngonNgu: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: "ngonNgu",
   },
   quocGia: {
     type: String,
     required: true,
-  }
+  },
 });
 
 const SachModel = mongoose.model("sach", SachSchema);

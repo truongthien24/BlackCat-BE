@@ -11,22 +11,29 @@ const getAllTheLoai = async (req, res) => {
     return res.status(400).json({ error });
   }
 };
+
 // Thêm thể loại
 const createTheLoai = async (req, res) => {
   const { tenTheLoai } = req.body;
   try {
-    let ten = tenTheLoai.trim();
+    let data = tenTheLoai.trim();
+    let data1 = data.replace(/\s+/g, " ");
     const checkTrung = await TheLoai.findOne({
-      tenTheLoai: ten.replace(/\s+/g, " "),
+      tenTheLoai: {
+        $regex: data1,
+        $options: "i",
+      },
     });
     if (checkTrung?._id) {
       res.status(400).json({
         error: {
-          message: "Thể loại đã tồn tại",
+          message: "Tên thể loại đã tồn tại",
         },
       });
     } else {
-      const theLoai = await TheLoai.create({ tenTheLoai });
+      const theLoai = await TheLoai.create({
+        tenTheLoai,
+      });
       res.status(200).json({ message: "Thêm thành công", data: theLoai });
     }
   } catch (error) {
@@ -36,13 +43,24 @@ const createTheLoai = async (req, res) => {
 
 const updateTheLoai = async (req, res) => {
   const { id } = req.params;
+  const { tenTheLoai } = req.body;
+  let data = tenTheLoai.trim();
+  let data1 = data.replace(/\s+/g, " ");
   const theLoai = await TheLoai.findOne({ _id: id });
   const checkTrung = await TheLoai.findOne({
-    tenTheLoai: req?.body?.tenTheLoai,
+    tenTheLoai: {
+      $regex: data1,
+      $options: "i",
+    },
   });
   // Check trùng
   if (checkTrung) {
     if (checkTrung?._id?.toString() === id) {
+      if (data1 === theLoai.tenTheLoai) {
+        return res
+          .status(400)
+          .json({ error: { message: "Tên thể loại đã tồn tại" } });
+      }
       const theLoaiUpdate = await TheLoai.findOneAndUpdate(
         { _id: id },
         { ...req.body }
@@ -64,9 +82,14 @@ const updateTheLoai = async (req, res) => {
       });
     }
   } else {
+    if (data1.toUpperCase() === theLoai.tenTheLoai.toUpperCase()) {
+      return res
+        .status(400)
+        .json({ error: { message: "Tên thể loại đã tồn tại" } });
+    }
     const theLoaiUpdate = await TheLoai.findOneAndUpdate(
       { _id: id },
-      { ...req.body }
+      { ...req.body, tenTheLoai: data1 }
     );
     if (!theLoaiUpdate) {
       return res.status(400).json({

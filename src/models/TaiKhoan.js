@@ -1,20 +1,26 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const TaiKhoanSchema = new mongoose.Schema({
-    tenDangNhap: {
-        type: String,
-        required: true
-    },
-    email: String,
-    matKhau: {
-        type: String,
-        required: true
-    },
-    hoTen: String,
-    tuoi: Number,
-    xacThucEmail: { type: Boolean },
-    loaiTaiKhoan: { type: String, required: true},
-})
+  tenDangNhap: {
+    type: String,
+    required: true,
+  },
+  email: String,
+  matKhau: {
+    type: String,
+    required: true,
+  },
+  hoTen: String,
+  tuoi: Number,
+  xacThucEmail: { type: Boolean },
+  loaiTaiKhoan: { type: String, required: true },
+  thongTinNhanHang: {
+    tenKhachHang: { type: String },
+    soDienThoai: { type: Number },
+    diaChi: { type: String },
+    type: Array,
+  },
+});
 
 const TaiKhoanModel = mongoose.model("taiKhoan", TaiKhoanSchema);
 
