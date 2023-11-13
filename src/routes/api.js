@@ -5,6 +5,7 @@ const {
   getSachByID,
   deleteSach,
   updateSach,
+  findSach,
 } = require("../controller/sach.controller");
 const {
   getAllTacGia,
@@ -89,6 +90,7 @@ router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
 
 // Sách
 router.get("/getAllSach", getAllSach);
+router.post("/findSach", findSach);
 router.get("/getSachByID/:id", getSachByID);
 router.post("/createSach", createSach);
 router.delete("/deleteSach/:id", deleteSach);
