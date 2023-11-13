@@ -56,6 +56,7 @@ const {
   deleteNgonNgu,
   getNgonNguByID,
 } = require("../controller/ngonNgu.controller");
+const { paymentOnline } = require("../utils/paymentOnline");
 const router = express.Router();
 
 // Tài khoản
@@ -149,3 +150,7 @@ router.post("/createNgonNgu", createNgonNgu);
 router.patch("/updateNgonNgu/:id", updateNgonNgu);
 router.delete("/deleteNgonNgu/:id", deleteNgonNgu);
 router.get("/getNgonNguByID/:id", getNgonNguByID);
+
+
+// Thanh toán
+router.post("/thanhToan", paymentOnline);
