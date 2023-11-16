@@ -12,6 +12,11 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Enable authentication
+app.use(passport.initialize());
+// passport.use('jwt', strategies.jwt);
+
+// Route
 app.use("/api/", apiRoute);
 
 // Kết nối db
