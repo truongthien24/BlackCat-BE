@@ -20,6 +20,9 @@ const TaiKhoanSchema = new mongoose.Schema({
     diaChi: { type: String },
     type: Array,
   },
+  gioHang: {
+    type: String
+  }
 });
 
 const TaiKhoanModel = mongoose.model("taiKhoan", TaiKhoanSchema);

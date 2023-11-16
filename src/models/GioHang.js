@@ -1,15 +1,23 @@
 const mongoose = require('mongoose');
-const Sach = require("../controller/sach.controller");
 
 const GioHangschema = mongoose.Schema({
     userId: {
         type: String,
-        required: true
     },
-    danhSach: {
-        type: Array<Sach> Sach,
-        required: true,
-    },
+    danhSach: [{
+        sach: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'sach'
+        },
+        soLuong: {
+            type: Number,
+            default: 1
+        }
+    }],
+    tongGia: {
+        type: Number,
+        default: 0
+    }
 })
 
 const GioHangModel = mongoose.model("gioHang", GioHangschema);

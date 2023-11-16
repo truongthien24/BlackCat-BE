@@ -58,11 +58,12 @@ const {
   getNgonNguByID,
 } = require("../controller/ngonNgu.controller");
 const { paymentOnline } = require("../utils/paymentOnline");
+const { getAllGioHang, getGioHangByID } = require("../controller/gioHang.controller");
 const router = express.Router();
 
 // Tài khoản
 router.post("/create-taiKhoan", postCreateTaiKhoan);
-router.get("/getAll-taiKhoan", getAllTaiKhoan);
+router.get("/getAllTaiKhoan", getAllTaiKhoan);
 router.post("/login", loginTaiKhoan);
 router.post("/login-admin", loginAdmin);
 router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
@@ -156,3 +157,10 @@ router.get("/getNgonNguByID/:id", getNgonNguByID);
 
 // Thanh toán
 router.post("/thanhToan", paymentOnline);
+
+// Gio hang
+router.get("/getAllGioHang", getAllGioHang);
+router.post("/createNgonNgu", createNgonNgu);
+router.patch("/updateNgonNgu/:id", updateNgonNgu);
+router.delete("/deleteNgonNgu/:id", deleteNgonNgu);
+router.get("/getGioHangByID/:id", getGioHangByID);
