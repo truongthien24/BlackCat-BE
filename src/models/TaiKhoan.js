@@ -20,9 +20,15 @@ const TaiKhoanSchema = new mongoose.Schema({
     diaChi: { type: String },
     type: Array,
   },
-  gioHang: {
-    type: String
-  }
+  gioHang: String,
+  danhSachYeuThich: [
+    {
+      sach: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "sach",
+      },
+    },
+  ],
 });
 
 const TaiKhoanModel = mongoose.model("taiKhoan", TaiKhoanSchema);

@@ -58,7 +58,12 @@ const {
   getNgonNguByID,
 } = require("../controller/ngonNgu.controller");
 const { paymentOnline } = require("../utils/paymentOnline");
-const { getAllGioHang, getGioHangByID } = require("../controller/gioHang.controller");
+const {
+  getAllGioHang,
+  getGioHangByID,
+  updateGioHang,
+} = require("../controller/gioHang.controller");
+const { authorize } = require("../middlewares/auth");
 const router = express.Router();
 
 // Tài khoản
@@ -93,16 +98,16 @@ router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
 router.get("/getAllSach", getAllSach);
 router.post("/findSach", findSach);
 router.get("/getSachByID/:id", getSachByID);
-router.post("/createSach", createSach);
-router.delete("/deleteSach/:id", deleteSach);
-router.patch("/updateSach/:id", updateSach);
+router.post("/createSach",  authorize(["Admin"]), createSach);
+router.delete("/deleteSach/:id", authorize(["Admin"]), deleteSach);
+router.patch("/updateSach/:id", authorize(["Admin"]), updateSach);
 
 // Tác giả
 router.get("/getAllTacGia", getAllTacGia);
-router.post("/createTacGia", createTacGia);
-router.patch("/updateTacGia/:id", updateTacGia);
+router.post("/createTacGia", authorize(["Admin"]), createTacGia);
+router.patch("/updateTacGia/:id", authorize(["Admin"]), updateTacGia);
 router.get("/getTacGiaByID/:id", getTacGiaByID);
-router.delete("/deleteTacGia/:id", deleteTacGia);
+router.delete("/deleteTacGia/:id", authorize(["Admin"]), deleteTacGia);
 
 //Nhà xuất bản
 router.get("/getAllNhaXuatBan", getAllNhaXuatBan);
@@ -154,13 +159,10 @@ router.patch("/updateNgonNgu/:id", updateNgonNgu);
 router.delete("/deleteNgonNgu/:id", deleteNgonNgu);
 router.get("/getNgonNguByID/:id", getNgonNguByID);
 
-
 // Thanh toán
-router.post("/thanhToan", paymentOnline);
+router.post("/thanhToan", authorize(["User"]), paymentOnline);
 
 // Gio hang
 router.get("/getAllGioHang", getAllGioHang);
-router.post("/createNgonNgu", createNgonNgu);
-router.patch("/updateNgonNgu/:id", updateNgonNgu);
-router.delete("/deleteNgonNgu/:id", deleteNgonNgu);
+router.patch("/updateGioHang/:id", updateGioHang);
 router.get("/getGioHangByID/:id", getGioHangByID);
