@@ -161,7 +161,7 @@ router.delete("/deleteNgonNgu/:id", deleteNgonNgu);
 router.get("/getNgonNguByID/:id", getNgonNguByID);
 
 // Thanh toán
-router.post("/thanhToan", authorize(["User"]), paymentOnline);
+router.post("/thanhToan", paymentOnline);
 
 // Gio hang
 router.get("/getAllGioHang", getAllGioHang);
