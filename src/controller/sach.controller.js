@@ -47,7 +47,9 @@ const findSach = async (req, res) => {
     objectFind.tenSach = tenSach;
   }
   try {
-    const sachs = await Sach.find({ tenSach: { $regex: '.*' + tenSach + '.*' } })
+    const sachs = await Sach.find({
+      tenSach: { $regex: ".*" + tenSach + ".*", $options: "i" },
+    })
       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
       .populate({ path: "tacGia", model: "tacGia" })
       .populate({ path: "theLoai", model: "theLoai" })

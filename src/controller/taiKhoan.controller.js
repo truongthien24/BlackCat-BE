@@ -25,7 +25,7 @@ const loginTaiKhoan = async (req, res) => {
       }
       if (users.xacThucEmail) {
         const id = users?._id;
-        // Đăng ký token
+        // Đăng ký token để sử dụng api
         const token = jwt.sign(
           { users },
           "secret",
