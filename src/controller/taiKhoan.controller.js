@@ -2,6 +2,7 @@ const TaiKhoan = require("../models/TaiKhoan");
 const jwt = require("jsonwebtoken");
 const token = require("../models/token");
 const sendEmail = require("../utils/sendEmail");
+const GioHang = require("../models/GioHang");
 
 const getAllTaiKhoan = async (req, res) => {
   try {
@@ -25,7 +26,12 @@ const loginTaiKhoan = async (req, res) => {
       if (users.xacThucEmail) {
         const id = users?._id;
         // Đăng ký token
-        const token = jwt.sign({ id }, "jwtSecretKey", { expiresIn: 300 });
+        const token = jwt.sign(
+          { users },
+          "secret",
+          { expiresIn: "24h" },
+          "9359AF90D36CEC62F9522CE3394E8E2E335DF77983E8F9D9AC77C10D09D3074C"
+        );
         // Thành công trả về status 200 và message
         return res.status(200).json({
           Success: true,
@@ -69,12 +75,17 @@ const postCreateTaiKhoan = async (req, res) => {
       });
     } else {
       // const hashPassword = ""
+
+      const gioHang = await GioHang.create({
+        danhSach: [],
+      });
       const user = await TaiKhoan.create({
         tenDangNhap,
         matKhau,
         email,
         loaiTaiKhoan,
         xacThucEmail: false,
+        gioHang: gioHang?._id,
       });
       const tokens = await token.create({
         taiKhoanId: user._id,
@@ -99,7 +110,13 @@ const loginAdmin = async (req, res) => {
       if (users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee") {
         const id = users?._id;
         // Đăng ký token
-        const token = jwt.sign({ id }, "jwtSecretKey", { expiresIn: 300 });
+        // const token = jwt.sign({ id }, "jwtSecretKey", { expiresIn: 300 });
+        const token = jwt.sign(
+          { users },
+          "secret",
+          { expiresIn: "24h" },
+          "9359AF90D36CEC62F9522CE3394E8E2E335DF77983E8F9D9AC77C10D09D3074C"
+        );
         // Thành công trả về status 200 và message
         return res.status(200).json({
           Success: true,

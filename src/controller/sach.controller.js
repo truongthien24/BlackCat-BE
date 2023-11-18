@@ -3,13 +3,51 @@ const mongoose = require("mongoose");
 const { uploadToCloudinary } = require("../utils/uploadFileCloud");
 
 const getAllSach = async (req, res) => {
+  try {
+    const sachs = await Sach.find({})
+      .populate({ path: "nhaCungCap", model: "nhaCungCap" })
+      .populate({ path: "tacGia", model: "tacGia" })
+      .populate({ path: "theLoai", model: "theLoai" })
+      .populate({ path: "nhaXuatBan", model: "nhaXuatBan" })
+      .populate({ path: "ngonNgu", model: "ngonNgu" });
+    const result = await sachs?.map((sach) => {
+      return {
+        _id: sach._id,
+        tenSach: sach.tenSach,
+        tenNhaCungCap: sach?.nhaCungCap?.tenNhaCungCap,
+        maNhaCungCap: sach?.nhaCungCap?._id?.toString(),
+        tenTheLoai: sach?.theLoai?.tenTheLoai,
+        maTheLoai: sach?.theLoai?._id?.toString(),
+        tenNhaXuatBan: sach?.nhaXuatBan?.tenNXB,
+        maNhaXuatBan: sach?.nhaXuatBan?._id?.toString(),
+        tenTacGia: sach?.tacGia?.tenTacGia,
+        maTacGia: sach?.tacGia?._id?.toString(),
+        soLuong: sach.soLuong,
+        maSach: sach.maSach,
+        gia: sach.gia,
+        namXuatBan: sach.namXuatBan,
+        tinhTrang: sach.tinhTrang,
+        hinhAnh: sach.hinhAnh,
+      };
+    });
+    res.status(200).json({ data: result, message: "success" });
+  } catch (error) {
+    return res.status(400).json({
+      error: {
+        message: error,
+      },
+    });
+  }
+};
+
+const findSach = async (req, res) => {
   const { tenSach } = req.body;
   let objectFind = {};
   if (tenSach) {
     objectFind.tenSach = tenSach;
   }
   try {
-    const sachs = await Sach.find(objectFind)
+    const sachs = await Sach.find({ tenSach: { $regex: '.*' + tenSach + '.*' } })
       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
       .populate({ path: "tacGia", model: "tacGia" })
       .populate({ path: "theLoai", model: "theLoai" })
@@ -160,8 +198,6 @@ const updateSach = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: { message: "Sách không tồn tại" } });
   }
-
-  // const uploadImage = await uploadToCloudinary(req.body.hinhAnh, "sachs");
   let image = {};
 
   if (hinhAnh?.public_id) {
@@ -184,9 +220,14 @@ const updateSach = async (req, res) => {
 const deleteSach = async (req, res) => {
   const { id } = req.params;
 
+  // Step 1
+  // Kiểm tra id có chính xác không
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: { message: "Sách không tồn tại" } });
   }
+
+  // Step 2
+  // Kiểm tra sách có đang được đặt hàng hay không
 
   const sach = await Sach.findOneAndDelete({ _id: id });
 
@@ -203,4 +244,5 @@ module.exports = {
   getSachByID,
   updateSach,
   deleteSach,
+  findSach,
 };

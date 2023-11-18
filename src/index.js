@@ -5,6 +5,8 @@ const cors = require("cors");
 // Kết nối tới api
 const apiRoute = require("./routes/api");
 const bodyParser = require("body-parser");
+const passport = require("passport");
+const strategies = require("./config/passport");
 const app = express();
 
 app.use(cors());
@@ -12,6 +14,11 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Enable authentication
+app.use(passport.initialize());
+passport.use('jwt', strategies.jwt);
+
+// Route
 app.use("/api/", apiRoute);
 
 // Kết nối db

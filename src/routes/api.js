@@ -5,6 +5,7 @@ const {
   getSachByID,
   deleteSach,
   updateSach,
+  findSach,
 } = require("../controller/sach.controller");
 const {
   getAllTacGia,
@@ -56,11 +57,19 @@ const {
   deleteNgonNgu,
   getNgonNguByID,
 } = require("../controller/ngonNgu.controller");
+const { paymentOnline } = require("../utils/paymentOnline");
+const {
+  getAllGioHang,
+  getGioHangByID,
+  updateGioHang,
+  checkSanPham,
+} = require("../controller/gioHang.controller");
+const { authorize } = require("../middlewares/auth");
 const router = express.Router();
 
 // Tài khoản
 router.post("/create-taiKhoan", postCreateTaiKhoan);
-router.get("/getAll-taiKhoan", getAllTaiKhoan);
+router.get("/getAllTaiKhoan", getAllTaiKhoan);
 router.post("/login", loginTaiKhoan);
 router.post("/login-admin", loginAdmin);
 router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
@@ -88,17 +97,18 @@ router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
 
 // Sách
 router.get("/getAllSach", getAllSach);
+router.post("/findSach", findSach);
 router.get("/getSachByID/:id", getSachByID);
 router.post("/createSach", createSach);
-router.delete("/deleteSach/:id", deleteSach);
+router.delete("/deleteSach/:id",  deleteSach);
 router.patch("/updateSach/:id", updateSach);
 
 // Tác giả
 router.get("/getAllTacGia", getAllTacGia);
-router.post("/createTacGia", createTacGia);
-router.patch("/updateTacGia/:id", updateTacGia);
+router.post("/createTacGia", authorize(["admin"]), createTacGia);
+router.patch("/updateTacGia/:id", authorize(["admin"]), updateTacGia);
 router.get("/getTacGiaByID/:id", getTacGiaByID);
-router.delete("/deleteTacGia/:id", deleteTacGia);
+router.delete("/deleteTacGia/:id", authorize(["admin"]), deleteTacGia);
 
 //Nhà xuất bản
 router.get("/getAllNhaXuatBan", getAllNhaXuatBan);
@@ -149,3 +159,12 @@ router.post("/createNgonNgu", createNgonNgu);
 router.patch("/updateNgonNgu/:id", updateNgonNgu);
 router.delete("/deleteNgonNgu/:id", deleteNgonNgu);
 router.get("/getNgonNguByID/:id", getNgonNguByID);
+
+// Thanh toán
+router.post("/thanhToan", paymentOnline);
+
+// Gio hang
+router.get("/getAllGioHang", getAllGioHang);
+router.patch("/updateGioHang/:id", updateGioHang);
+router.get("/getGioHangByID/:id", getGioHangByID);
+router.post("/checkSanPham", checkSanPham);
