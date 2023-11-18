@@ -110,7 +110,13 @@ const loginAdmin = async (req, res) => {
       if (users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee") {
         const id = users?._id;
         // Đăng ký token
-        const token = jwt.sign({ id }, "jwtSecretKey", { expiresIn: 300 });
+        // const token = jwt.sign({ id }, "jwtSecretKey", { expiresIn: 300 });
+        const token = jwt.sign(
+          { users },
+          "secret",
+          { expiresIn: "24h" },
+          "9359AF90D36CEC62F9522CE3394E8E2E335DF77983E8F9D9AC77C10D09D3074C"
+        );
         // Thành công trả về status 200 và message
         return res.status(200).json({
           Success: true,

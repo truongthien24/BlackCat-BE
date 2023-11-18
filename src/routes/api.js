@@ -62,6 +62,7 @@ const {
   getAllGioHang,
   getGioHangByID,
   updateGioHang,
+  checkSanPham,
 } = require("../controller/gioHang.controller");
 const { authorize } = require("../middlewares/auth");
 const router = express.Router();
@@ -98,16 +99,16 @@ router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
 router.get("/getAllSach", getAllSach);
 router.post("/findSach", findSach);
 router.get("/getSachByID/:id", getSachByID);
-router.post("/createSach",  authorize(["Admin"]), createSach);
-router.delete("/deleteSach/:id", authorize(["Admin"]), deleteSach);
-router.patch("/updateSach/:id", authorize(["Admin"]), updateSach);
+router.post("/createSach", createSach);
+router.delete("/deleteSach/:id",  deleteSach);
+router.patch("/updateSach/:id", updateSach);
 
 // Tác giả
 router.get("/getAllTacGia", getAllTacGia);
-router.post("/createTacGia", authorize(["Admin"]), createTacGia);
-router.patch("/updateTacGia/:id", authorize(["Admin"]), updateTacGia);
+router.post("/createTacGia", authorize(["admin"]), createTacGia);
+router.patch("/updateTacGia/:id", authorize(["admin"]), updateTacGia);
 router.get("/getTacGiaByID/:id", getTacGiaByID);
-router.delete("/deleteTacGia/:id", authorize(["Admin"]), deleteTacGia);
+router.delete("/deleteTacGia/:id", authorize(["admin"]), deleteTacGia);
 
 //Nhà xuất bản
 router.get("/getAllNhaXuatBan", getAllNhaXuatBan);
@@ -166,3 +167,4 @@ router.post("/thanhToan", authorize(["User"]), paymentOnline);
 router.get("/getAllGioHang", getAllGioHang);
 router.patch("/updateGioHang/:id", updateGioHang);
 router.get("/getGioHangByID/:id", getGioHangByID);
+router.post("/checkSanPham", checkSanPham);
