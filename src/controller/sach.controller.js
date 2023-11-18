@@ -30,6 +30,8 @@ const getAllSach = async (req, res) => {
         soLuong: sach.soLuong,
         maSach: sach.maSach,
         gia: sach.gia,
+        tenNgonNgu: sach?.ngonNgu?._id?.toString(),
+        maNgonNgu: sach?.ngonNgu?._id?.toString(),
         namXuatBan: sach.namXuatBan,
         tinhTrang: sach.tinhTrang,
         hinhAnh: sach.hinhAnh,
