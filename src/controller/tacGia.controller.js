@@ -50,7 +50,7 @@ const createTacGia = async (req, res) => {
   }
 };
 
-///params 
+///params
 const updateTacGia = async (req, res) => {
   const { id } = req.params;
   const { tenTacGia } = req.body;
