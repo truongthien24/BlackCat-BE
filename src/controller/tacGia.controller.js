@@ -65,11 +65,11 @@ const updateTacGia = async (req, res) => {
   // Check trùng
   if (checkTrung) {
     if (checkTrung?._id?.toString() === id) {
-      if (tenTrim === tacGia.tenTacGia) {
-        return res
-          .status(400)
-          .json({ error: { message: "Tên tác giả đã tồn tại" } });
-      }
+      // if (tenTrim === tacGia.tenTacGia) {
+      //   return res
+      //     .status(400)
+      //     .json({ error: { message: "Tên tác giả đã tồn tại" } });
+      // }
       const tacGiaUpdate = await TacGia.findOneAndUpdate(
         { _id: id },
         { ...req.body }

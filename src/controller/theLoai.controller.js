@@ -56,11 +56,11 @@ const updateTheLoai = async (req, res) => {
   // Check trùng
   if (checkTrung) {
     if (checkTrung?._id?.toString() === id) {
-      if (data1 === theLoai.tenTheLoai) {
-        return res
-          .status(400)
-          .json({ error: { message: "Tên thể loại đã tồn tại" } });
-      }
+      // if (data1 === theLoai.tenTheLoai) {
+      //   return res
+      //     .status(400)
+      //     .json({ error: { message: "Tên thể loại đã tồn tại" } });
+      // }
       const theLoaiUpdate = await TheLoai.findOneAndUpdate(
         { _id: id },
         { ...req.body }

@@ -105,10 +105,10 @@ router.patch("/updateSach/:id", updateSach);
 
 // Tác giả
 router.get("/getAllTacGia", getAllTacGia);
-router.post("/createTacGia", authorize(["admin"]), createTacGia);
-router.patch("/updateTacGia/:id", authorize(["admin"]), updateTacGia);
+router.post("/createTacGia", createTacGia);
+router.patch("/updateTacGia/:id", updateTacGia);
 router.get("/getTacGiaByID/:id", getTacGiaByID);
-router.delete("/deleteTacGia/:id", authorize(["admin"]), deleteTacGia);
+router.delete("/deleteTacGia/:id", deleteTacGia);
 
 //Nhà xuất bản
 router.get("/getAllNhaXuatBan", getAllNhaXuatBan);

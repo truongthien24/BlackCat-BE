@@ -55,11 +55,11 @@ const updateNgonNgu = async (req, res) => {
   // Check trùng
   if (checkTrung) {
     if (checkTrung?._id?.toString() === id) {
-      if (data1 === ngonNgu.tenNgonNgu) {
-        return res
-          .status(400)
-          .json({ error: { message: "Tên ngôn ngữ đã tồn tại" } });
-      }
+      // if (data1 === ngonNgu.tenNgonNgu) {
+      //   return res
+      //     .status(400)
+      //     .json({ error: { message: "Tên ngôn ngữ đã tồn tại" } });
+      // }
       const ngonNguUpdate = await NgonNgu.findOneAndUpdate(
         { _id: id },
         { ...req.body }
