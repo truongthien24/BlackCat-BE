@@ -83,6 +83,10 @@ const SachSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  biaSach: {
+    type: String,
+    required: true,
+  },
 });
 
 const SachModel = mongoose.model("sach", SachSchema);
