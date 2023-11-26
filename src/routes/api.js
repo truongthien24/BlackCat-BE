@@ -65,6 +65,13 @@ const {
   checkSanPham,
 } = require("../controller/gioHang.controller");
 const { authorize } = require("../middlewares/auth");
+const {
+  getAllGiamGia,
+  createGiamGia,
+  updateGiamGia,
+  deleteGiamGia,
+  getGiamGiaByID,
+} = require("../controller/giamGia.controller");
 const router = express.Router();
 
 // Tài khoản
@@ -163,8 +170,16 @@ router.get("/getNgonNguByID/:id", getNgonNguByID);
 // Thanh toán
 router.post("/thanhToan", paymentOnline);
 
-// Gio hang
+// Giỏ hàng
 router.get("/getAllGioHang", getAllGioHang);
 router.patch("/updateGioHang/:id", updateGioHang);
 router.get("/getGioHangByID/:id", getGioHangByID);
 router.post("/checkSanPham", checkSanPham);
+
+// giảm giá
+
+router.get("/getAllGiamGia", getAllGiamGia);
+router.post("/createGiamGia", createGiamGia);
+router.patch("/updateGiamGia/:id", updateGiamGia);
+router.delete("/deleteGiamGia/:id", deleteGiamGia);
+router.get("/getGiamGiaByID/:id", getGiamGiaByID);

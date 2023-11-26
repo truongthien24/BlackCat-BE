@@ -87,6 +87,14 @@ const SachSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  danhSachMaGiam: [
+    {
+      maGiam: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "maGiam",
+      },
+    },
+  ],
 });
 
 const SachModel = mongoose.model("sach", SachSchema);
