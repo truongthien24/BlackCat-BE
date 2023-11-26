@@ -16,6 +16,14 @@ const GioHangschema = mongoose.Schema({
         soNgayThue: {
             type: Number,
             default: 7
+        },
+        giaThue: {
+            type: Number,
+            default: 0,
+        },
+        thanhTien: {
+            type: Number,
+            default: 0,
         }
     }],
     tongGia: {
