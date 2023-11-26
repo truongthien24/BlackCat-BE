@@ -59,7 +59,14 @@ const postCreateTaiKhoan = async (req, res) => {
   const { tenDangNhap, matKhau, email, loaiTaiKhoan } = req?.body;
   try {
     // Check trùng
-    const checkTrungTenDangNhap = await TaiKhoan.findOne({ tenDangNhap });
+    let ten = tenDangNhap.trim();
+    let ten1 = ten.replace(/\s+/g, " ");
+    const checkTrungTenDangNhap = await TaiKhoan.findOne({
+      tenDangNhap: {
+        $regex: ten1,
+        $options: "i",
+      },
+    });
     const checkTrungEmail = await TaiKhoan.findOne({ email });
     if (checkTrungTenDangNhap?._id) {
       res.status(400).json({
