@@ -5,7 +5,7 @@ const { uploadToCloudinary } = require("../utils/uploadFileCloud");
 const getAllSach = async (req, res) => {
   try {
     const sachs = await Sach.find({})
-    //populate lấy dữ liệu
+      //populate lấy dữ liệu
       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
       .populate({ path: "tacGia", model: "tacGia" })
       .populate({ path: "theLoai", model: "theLoai" })
@@ -48,6 +48,7 @@ const findSach = async (req, res) => {
   if (tenSach) {
     objectFind.tenSach = tenSach;
   }
+
   try {
     const sachs = await Sach.find({
       tenSach: { $regex: ".*" + tenSach + ".*", $options: "i" },

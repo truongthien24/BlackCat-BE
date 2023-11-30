@@ -48,7 +48,7 @@ const updateGioHang = async (req, res) => {
           gioHangOld.danhSach.push({
             sach: sach.idSach,
             soLuong: sach.soLuong,
-            soNgayThue: sach.soNgayThue
+            soNgayThue: sach.soNgayThue,
           });
         }
         // Nếu tồn tại thì cộng số lượng
@@ -66,8 +66,7 @@ const updateGioHang = async (req, res) => {
         } else {
           return res.status(400).json({ error: { message: "Thất bại" } });
         }
-      }
-      else if (update) {
+      } else if (update) {
         const gioHangNew = await GioHang.findOneAndUpdate(
           { _id: id },
           {
@@ -105,28 +104,33 @@ const updateGioHang = async (req, res) => {
 
 // Xóa item khỏi giỏ hàng
 
-
 // Check sản phẩm trước khi sang bước thanh toán
 const checkSanPham = async (req, res) => {
   const { danhSach } = req.body;
   try {
     for (let sach of danhSach) {
       const check = await Sach.findOne({ _id: sach?.sach?._id });
-      console.log('check', check);
-      console.log('soLuong', sach?.soLuong);
+      // console.log('check', check);
+      // console.log('soLuong', sach?.soLuong);
       if (check) {
         if (check?.soLuong < sach?.soLuong) {
-          return res.status(400).json({ error: { message: `Sách ${check?.tenSach} không đủ số lượng trong kho` } })
+          return res.status(400).json({
+            error: {
+              message: `Sách ${check?.tenSach} không đủ số lượng trong kho`,
+            },
+          });
         }
       } else {
-        return res.status(400).json({ error: { message: `Sách không tồn tại` } })
+        return res
+          .status(400)
+          .json({ error: { message: `Sách không tồn tại` } });
       }
     }
-    res.status(200).json({ message: 'Kiểm tra hoàn tất' })
+    res.status(200).json({ message: "Kiểm tra hoàn tất" });
   } catch (error) {
-    return res.status(400).json({ error: { message: error } })
+    return res.status(400).json({ error: { message: error } });
   }
-}
+};
 
 module.exports = {
   getAllGioHang,

@@ -6,6 +6,7 @@ const {
   deleteSach,
   updateSach,
   findSach,
+  findTacGia,
 } = require("../controller/sach.controller");
 const {
   getAllTacGia,

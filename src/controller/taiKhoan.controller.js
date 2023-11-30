@@ -67,6 +67,11 @@ const postCreateTaiKhoan = async (req, res) => {
         $options: "i",
       },
     });
+    if (/\s/.test(tenDangNhap)) {
+      return res.status(400).json({
+        error: { message: "Tên đăng nhập không được chứa dấu cách" },
+      });
+    }
     const checkTrungEmail = await TaiKhoan.findOne({ email });
     if (checkTrungTenDangNhap?._id) {
       res.status(400).json({
