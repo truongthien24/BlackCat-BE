@@ -28,6 +28,7 @@ const getAllSach = async (req, res) => {
         namXuatBan: sach.namXuatBan,
         tinhTrang: sach.tinhTrang,
         hinhAnh: sach.hinhAnh,
+        biaSach: sach.biaSach,
       };
     });
     res.status(200).json({ data: result, message: "success" });
@@ -47,7 +48,9 @@ const findSach = async (req, res) => {
     objectFind.tenSach = tenSach;
   }
   try {
-    const sachs = await Sach.find({ tenSach: { $regex: '.*' + tenSach + '.*', $options: "i", } })
+    const sachs = await Sach.find({
+      tenSach: { $regex: ".*" + tenSach + ".*", $options: "i" },
+    })
       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
       .populate({ path: "tacGia", model: "tacGia" })
       .populate({ path: "theLoai", model: "theLoai" })
@@ -68,9 +71,12 @@ const findSach = async (req, res) => {
         soLuong: sach.soLuong,
         maSach: sach.maSach,
         gia: sach.gia,
+        tenNgonNgu: sach?.ngonNgu?._id?.toString(),
+        maNgonNgu: sach?.ngonNgu?._id?.toString(),
         namXuatBan: sach.namXuatBan,
         tinhTrang: sach.tinhTrang,
         hinhAnh: sach.hinhAnh,
+        biaSach: sach.biaSach,
       };
     });
     res.status(200).json({ data: result, message: "success" });
@@ -122,6 +128,7 @@ const getSachByID = async (req, res) => {
       tenNgonNgu: sach?.ngonNgu?.tenNgonNgu,
       maNgonNgu: sach?.ngonNgu?._id?.toString(),
       quocGia: sach.quocGia,
+      biaSach: sach.biaSach,
     };
     res.status(200).json({ data: result, message: "success" });
   } catch (error) {
@@ -148,6 +155,7 @@ const createSach = async (req, res) => {
     ngonNgu,
     soTrang,
     kichThuoc,
+    biaSach,
   } = req.body;
   try {
     const checkTrung = await Sach.findOne({ maSach });
@@ -177,6 +185,7 @@ const createSach = async (req, res) => {
         ngonNgu,
         soTrang,
         kichThuoc,
+        biaSach,
         hinhAnh: {
           public_id: uploadImage.public_id,
           url: uploadImage.secure_url,

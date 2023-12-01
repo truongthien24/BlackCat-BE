@@ -11,7 +11,6 @@ const BaiVietSchema = mongoose.Schema({
   },
   ngayTao: {
     type: String,
-    required: true,
   },
   hinhAnh: {
     public_id: {
@@ -20,7 +19,6 @@ const BaiVietSchema = mongoose.Schema({
     },
     url: {
       type: String,
-      required: true,
     },
   },
 });

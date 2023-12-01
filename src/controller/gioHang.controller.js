@@ -48,6 +48,7 @@ const updateGioHang = async (req, res) => {
           gioHangOld.danhSach.push({
             sach: sach.idSach,
             soLuong: sach.soLuong,
+            soNgayThue: sach.soNgayThue
           });
         }
         // Nếu tồn tại thì cộng số lượng

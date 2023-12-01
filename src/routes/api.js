@@ -104,7 +104,7 @@ router.get("/getAllSach", getAllSach);
 router.post("/findSach", findSach);
 router.get("/getSachByID/:id", getSachByID);
 router.post("/createSach", createSach);
-router.delete("/deleteSach/:id",  deleteSach);
+router.delete("/deleteSach/:id", deleteSach);
 router.patch("/updateSach/:id", updateSach);
 
 // Tác giả
