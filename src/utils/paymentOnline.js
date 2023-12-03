@@ -76,7 +76,10 @@ const paymentOnline = async (request, response) => {
     res.on("data", (body) => {
       response
         .status(200)
-        .json({ data: JSON.parse(body).payUrl, message: "é é é" });
+        .json({ data: {
+          payUrl: JSON.parse(body).payUrl,
+          qrCodeUrl: JSON.parse(body).qrCodeUrl
+        }, message: "é é é" });
     });
     res.on("end", () => {
       console.log("No more data in response.");

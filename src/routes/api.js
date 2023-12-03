@@ -20,6 +20,8 @@ const {
   getAllTaiKhoan,
   loginTaiKhoan,
   loginAdmin,
+  updateTaiKhoan,
+  getAccountByID,
 } = require("../controller/taiKhoan.controller");
 const TaiKhoan = require("../models/TaiKhoan");
 const File = require("../models/File");
@@ -64,6 +66,7 @@ const {
   getGioHangByID,
   updateGioHang,
   checkSanPham,
+  sendMailGioHang,
 } = require("../controller/gioHang.controller");
 const { authorize } = require("../middlewares/auth");
 const {
@@ -80,6 +83,8 @@ router.post("/create-taiKhoan", postCreateTaiKhoan);
 router.get("/getAllTaiKhoan", getAllTaiKhoan);
 router.post("/login", loginTaiKhoan);
 router.post("/login-admin", loginAdmin);
+router.patch("/updateTaiKhoan", updateTaiKhoan);
+router.get("/getAccountByID/:id", getAccountByID)
 router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
   try {
     const taiKhoan = await TaiKhoan.findOne({ _id: req.params.id });
@@ -169,9 +174,9 @@ router.get("/getAllGioHang", getAllGioHang);
 router.patch("/updateGioHang/:id", updateGioHang);
 router.get("/getGioHangByID/:id", getGioHangByID);
 router.post("/checkSanPham", checkSanPham);
+router.post("/sendMailGioHang", sendMailGioHang)
 
 // giảm giá
-
 router.get("/getAllGiamGia", getAllGiamGia);
 router.post("/createGiamGia", createGiamGia);
 router.patch("/updateGiamGia/:id", updateGiamGia);
