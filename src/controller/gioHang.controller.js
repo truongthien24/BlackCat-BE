@@ -1,6 +1,7 @@
 const GioHang = require("../models/GioHang");
 const Sach = require("../models/Sach");
 const { json } = require("body-parser");
+const sendEmailPaymentSuccess = require("../utils/sendEmailPaymentSuccess");
 
 const getAllGioHang = async (req, res) => {
   try {
@@ -112,8 +113,6 @@ const checkSanPham = async (req, res) => {
   try {
     for (let sach of danhSach) {
       const check = await Sach.findOne({ _id: sach?.sach?._id });
-      console.log('check', check);
-      console.log('soLuong', sach?.soLuong);
       if (check) {
         if (check?.soLuong < sach?.soLuong) {
           return res.status(400).json({ error: { message: `Sách ${check?.tenSach} không đủ số lượng trong kho` } })
@@ -128,9 +127,16 @@ const checkSanPham = async (req, res) => {
   }
 }
 
+const sendMailGioHang = async (req, res) => {
+  const {dataGioHang} = req.body;
+  await sendEmailPaymentSuccess("truongthien2411@gmail.com", "Verify Email", "");
+  return res.status(200).json({message: 'Thanh toán thành công'})
+} 
+
 module.exports = {
   getAllGioHang,
   updateGioHang,
   getGioHangByID,
   checkSanPham,
+  sendMailGioHang,
 };

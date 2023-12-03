@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const token = require("../models/token");
 const sendEmail = require("../utils/sendEmail");
 const GioHang = require("../models/GioHang");
+const { default: mongoose } = require("mongoose");
 
 const getAllTaiKhoan = async (req, res) => {
   try {
@@ -10,6 +11,29 @@ const getAllTaiKhoan = async (req, res) => {
     res.status(200).json(users);
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+};
+
+const getAccountByID = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const account = await TaiKhoan.findOne({ _id: id });
+    if (account) {
+      res.status(200).json({
+        data: account,
+        message: "Lấy thành công",
+      });
+    } else {
+      return res.status(400).json({
+        data: {},
+        message: "Tài khoản không tồn tại",
+      });
+    }
+  } catch (err) {
+    return res.status(400).json({
+      data: {},
+      message: err,
+    });
   }
 };
 
@@ -109,6 +133,31 @@ const postCreateTaiKhoan = async (req, res) => {
   }
 };
 
+const updateTaiKhoan = async (req, res) => {
+  const { id, tenDangNhap, matKhau, thongTinNhanHang } = req.body;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res
+        .status(400)
+        .json({ error: { message: "Tài khoản không tồn tại" } });
+    }
+    const account = await TaiKhoan.findOneAndUpdate(
+      { _id: id },
+      { ...req.body }
+    );
+
+    if (!account) {
+      return res
+        .status(400)
+        .json({ error: { message: "Tài khoản không tồn tại" } });
+    }
+
+    res.status(200).json({ data: account, message: "Cập nhật thành công" });
+  } catch (err) {
+    return res.status(400).json({ error: { message: err } });
+  }
+};
+
 const loginAdmin = async (req, res) => {
   const { tenDangNhap, matKhau } = req?.body;
   try {
@@ -152,4 +201,6 @@ module.exports = {
   getAllTaiKhoan,
   loginTaiKhoan,
   loginAdmin,
+  updateTaiKhoan,
+  getAccountByID,
 };

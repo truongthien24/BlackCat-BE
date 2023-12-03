@@ -95,6 +95,12 @@ const SachSchema = mongoose.Schema({
       },
     },
   ],
+  danhGia: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "danhGia",
+    },
+  ]
 });
 
 const SachModel = mongoose.model("sach", SachSchema);
