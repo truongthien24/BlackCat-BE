@@ -51,6 +51,11 @@ const updateGioHang = async (req, res) => {
             soLuong: sach.soLuong,
             soNgayThue: sach.soNgayThue,
           });
+          gioHangOld.tongGia = gioHangOld?.danhSach?.reduce(
+            (a, b) =>
+              a + b?.sach?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
+            0
+          );
         }
         // Nếu tồn tại thì cộng số lượng
         else {
@@ -60,6 +65,11 @@ const updateGioHang = async (req, res) => {
           { _id: id },
           {
             danhSach: gioHangOld.danhSach,
+            tongGia: gioHangOld?.danhSach?.reduce(
+              (a, b) =>
+                a + b?.sach?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
+              0
+            ),
           }
         );
         if (gioHangNew) {
@@ -72,6 +82,11 @@ const updateGioHang = async (req, res) => {
           { _id: id },
           {
             danhSach: sach,
+            tongGia: sach?.reduce(
+              (a, b) =>
+                a + b?.sach?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
+              0
+            ),
           }
         );
 
@@ -113,11 +128,13 @@ const checkSanPham = async (req, res) => {
       const check = await Sach.findOne({ _id: sach?.sach?._id });
       if (check) {
         if (check?.soLuong < sach?.soLuong) {
-          return res.status(400).json({
-            error: {
-              message: `Sách ${check?.tenSach} không đủ số lượng trong kho`,
-            },
-          });
+          return res
+            .status(400)
+            .json({
+              error: {
+                message: `Sách ${check?.tenSach} không đủ số lượng trong kho`,
+              },
+            });
         }
       } else {
         return res
