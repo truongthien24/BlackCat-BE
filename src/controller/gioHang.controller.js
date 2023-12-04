@@ -56,6 +56,8 @@ const updateGioHang = async (req, res) => {
               a + b?.sach?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
             0
           );
+          gioHangOld.tongGia = gioHangOld?.danhSach
+            ?.reduce((a, b) => a + (b?.sach?.tienCoc * b?.soLuong) + (b?.giaThue * b?.soLuong), 0)
         }
         // Nếu tồn tại thì cộng số lượng
         else {
@@ -65,11 +67,6 @@ const updateGioHang = async (req, res) => {
           { _id: id },
           {
             danhSach: gioHangOld.danhSach,
-            tongGia: gioHangOld?.danhSach?.reduce(
-              (a, b) =>
-                a + b?.sach?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
-              0
-            ),
           }
         );
         if (gioHangNew) {
@@ -82,11 +79,6 @@ const updateGioHang = async (req, res) => {
           { _id: id },
           {
             danhSach: sach,
-            tongGia: sach?.reduce(
-              (a, b) =>
-                a + b?.sach?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
-              0
-            ),
           }
         );
 
@@ -149,14 +141,10 @@ const checkSanPham = async (req, res) => {
 };
 
 const sendMailGioHang = async (req, res) => {
-  const { dataGioHang } = req.body;
-  await sendEmailPaymentSuccess(
-    "truongthien2411@gmail.com",
-    "Verify Email",
-    ""
-  );
-  return res.status(200).json({ message: "Thanh toán thành công" });
-};
+  const {dataGioHang} = req.body;
+  await sendEmailPaymentSuccess("truongthien2411@gmail.com", "Verify Email", "");
+  return res.status(200).json({message: 'Thanh toán thành công'})
+} 
 
 module.exports = {
   getAllGioHang,
