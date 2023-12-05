@@ -21,7 +21,7 @@ module.exports = async (email, subject, data) => {
     const template = handlebars.compile(source);
 
     // Replace placeholders in the template
-    const html = template({ danhSach: data?.danhSach, tongGia: (data?.tongGia).toLocaleString(), email: email });
+    const html = template({ danhSach: data?.danhSach, tongGia: (data?.tongGia).toLocaleString(), maDonHang: data?.maDonHang, thongTinGiaoHang: data?.thongTinGiaoHang, email: email });
 
     // Send the email
     await transporter.sendMail({
