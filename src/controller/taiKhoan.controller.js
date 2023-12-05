@@ -103,13 +103,15 @@ const postCreateTaiKhoan = async (req, res) => {
           message: "Tên đăng nhập đã tồn tại",
         },
       });
-    } else if (checkTrungEmail?._id) {
+    } 
+    else if (checkTrungEmail?._id) {
       res.status(400).json({
         error: {
           message: "Email đã tồn tại",
         },
       });
-    } else {
+    } 
+    else {
       // const hashPassword = ""
 
       const gioHang = await GioHang.create({

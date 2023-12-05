@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 const handlebars = require("handlebars");
 const fs = require("fs");
 
-module.exports = async (email, subject, text) => {
+module.exports = async (email, subject, data) => {
   try {
     // Tạo transporter
     const transporter = nodemailer.createTransport({
@@ -21,7 +21,7 @@ module.exports = async (email, subject, text) => {
     const template = handlebars.compile(source);
 
     // Replace placeholders in the template
-    const html = template({ href: text, email: email });
+    const html = template({ danhSach: data?.danhSach, tongGia: (data?.tongGia).toLocaleString(), email: email });
 
     // Send the email
     await transporter.sendMail({

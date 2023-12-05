@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Đặt hàng thành công</title>
 </head>
+
 <body>
     <p>Hello {{email}},</p>
-    <p>Chúc mừng khách hàng đã đặt hàng thành công !</p>
-    <img src="cid:logo"/>
-    <script>
+    <p>Chúc mừng khách hàng đã đặt hàng thành công ! </p>
+    <div style="width: 100vw">
+        {{#each danhSach}}
+        <div style="margin: 10px; width: 100%; display: flex; justify-content: space-between;">
+            - <img src="{{this.sach.hinhAnh.url}}" style="width: 50px; height: 100%"/>
+            <span>{{ this.sach.tenSach }}</span>
+            <span style="margin-left: 10px;">Số lượng: {{this.soLuong}}</span>
+        </div>
+        {{/each}}
+    </div>
+    <p>Tổng giá: {{tongGia}}VND</p>
 
-    </script>
+
+    <img src="cid:logo" />
 </body>
+
 </html>
