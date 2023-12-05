@@ -56,8 +56,11 @@ const updateGioHang = async (req, res) => {
               a + b?.sach?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
             0
           );
-          gioHangOld.tongGia = gioHangOld?.danhSach
-            ?.reduce((a, b) => a + (b?.sach?.tienCoc * b?.soLuong) + (b?.giaThue * b?.soLuong), 0)
+          gioHangOld.tongGia = gioHangOld?.danhSach?.reduce(
+            (a, b) =>
+              a + b?.sach?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
+            0
+          );
         }
         // Nếu tồn tại thì cộng số lượng
         else {
@@ -120,13 +123,11 @@ const checkSanPham = async (req, res) => {
       const check = await Sach.findOne({ _id: sach?.sach?._id });
       if (check) {
         if (check?.soLuong < sach?.soLuong) {
-          return res
-            .status(400)
-            .json({
-              error: {
-                message: `Sách ${check?.tenSach} không đủ số lượng trong kho`,
-              },
-            });
+          return res.status(400).json({
+            error: {
+              message: `Sách ${check?.tenSach} không đủ số lượng trong kho`,
+            },
+          });
         }
       } else {
         return res
@@ -141,10 +142,14 @@ const checkSanPham = async (req, res) => {
 };
 
 const sendMailGioHang = async (req, res) => {
-  const {dataGioHang} = req.body;
-  await sendEmailPaymentSuccess("truongthien2411@gmail.com", "Verify Email", "");
-  return res.status(200).json({message: 'Thanh toán thành công'})
-} 
+  const { dataGioHang } = req.body;
+  await sendEmailPaymentSuccess(
+    "truongthien2411@gmail.com",
+    "Verify Email",
+    ""
+  );
+  return res.status(200).json({ message: "Thanh toán thành công" });
+};
 
 module.exports = {
   getAllGioHang,

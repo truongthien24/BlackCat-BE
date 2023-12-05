@@ -1,6 +1,7 @@
 const Sach = require("../models/Sach");
 const mongoose = require("mongoose");
 const { uploadToCloudinary } = require("../utils/uploadFileCloud");
+const GioHang = require("../models/GioHang");
 
 const getAllSach = async (req, res) => {
   try {
@@ -237,7 +238,14 @@ const deleteSach = async (req, res) => {
 
   // Step 2
   // Kiểm tra sách có đang được đặt hàng hay không
-
+  const gioHang = await GioHang.findOne({ "danhSach.sach": id });
+  if (gioHang) {
+    return res.status(400).json({
+      error: {
+        message: "Sách này đang trong giỏ hàng",
+      },
+    });
+  }
   const sach = await Sach.findOneAndDelete({ _id: id });
 
   if (!sach) {
