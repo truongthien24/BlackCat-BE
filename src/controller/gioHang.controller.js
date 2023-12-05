@@ -134,8 +134,7 @@ const checkSanPham = async (req, res) => {
 }
 
 const sendMailGioHang = async (req, res) => {
-  const { dataGioHang } = req.body;
-  await sendEmailPaymentSuccess("truongthien2411@gmail.com", "Verify Email", "");
+  await sendEmailPaymentSuccess("truongthien2411@gmail.com", "Verify Email", req.body);
   return res.status(200).json({ message: 'Thanh toán thành công' })
 }
 
