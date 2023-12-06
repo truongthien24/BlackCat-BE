@@ -1,4 +1,5 @@
 const DonHang = require("../models/DonHang");
+const GioHang = require("../models/GioHang");
 const sendEmailPaymentSuccess = require("../utils/sendEmailPaymentSuccess");
 const { uploadToCloudinary } = require("../utils/uploadFileCloud");
 
@@ -20,6 +21,7 @@ const createDonHang = async (req, res) => {
     thongTinThanhToan,
     tongGia,
     email,
+    gioHangId,
   } = req.body;
   try {
     const characters =
@@ -42,8 +44,10 @@ const createDonHang = async (req, res) => {
       tinhTrang: 0,
     });
 
+
     if (donHang) {
       await sendEmailPaymentSuccess(email, "Verify Email", donHang);
+      await GioHang.findOneAndUpdate({_id: gioHangId}, {danhSach: [], tongGia: 0})
       res.status(200).json({ message: "Hoàn tất", data: donHang });
     } else {
       return res
