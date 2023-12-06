@@ -84,14 +84,14 @@ router.get("/getAllTaiKhoan", getAllTaiKhoan);
 router.post("/login", loginTaiKhoan);
 router.post("/login-admin", loginAdmin);
 router.patch("/updateTaiKhoan", updateTaiKhoan);
-router.get("/getAccountByID/:id", getAccountByID)
+router.get("/getAccountByID/:id", getAccountByID);
 router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
   try {
     const taiKhoan = await TaiKhoan.findOne({ _id: req.params.id });
     if (!taiKhoan) {
       return res.status(400).send({ message: "Invalid link" });
     }
-  
+
     await TaiKhoan.updateOne({ _id: taiKhoan._id }, { xacThucEmail: true });
     // await Token.remove();
 
@@ -174,7 +174,7 @@ router.get("/getAllGioHang", getAllGioHang);
 router.patch("/updateGioHang/:id", updateGioHang);
 router.get("/getGioHangByID/:id", getGioHangByID);
 router.post("/checkSanPham", checkSanPham);
-router.post("/sendMailGioHang", sendMailGioHang)
+router.post("/sendMailGioHang", sendMailGioHang);
 
 // giảm giá
 router.get("/getAllGiamGia", getAllGiamGia);
