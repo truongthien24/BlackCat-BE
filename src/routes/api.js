@@ -76,6 +76,7 @@ const {
   deleteGiamGia,
   getGiamGiaByID,
 } = require("../controller/giamGia.controller");
+const { getAllDonHang, createDonHang, updateDonHang, deleteDonHang, getDonHangByID } = require("../controller/donHang.controller");
 const router = express.Router();
 
 // Tài khoản
@@ -175,6 +176,13 @@ router.patch("/updateGioHang/:id", updateGioHang);
 router.get("/getGioHangByID/:id", getGioHangByID);
 router.post("/checkSanPham", checkSanPham);
 router.post("/sendMailGioHang", sendMailGioHang);
+
+/// Đơn hàng
+router.post("/getAllDonHang", getAllDonHang);
+router.post("/createDonHang", createDonHang);
+router.patch("/updateDonHang/:id", updateDonHang);
+router.delete("/deleteDonHang/:id", deleteDonHang);
+router.get("/getDonHangByID/:id", getDonHangByID);
 
 // giảm giá
 router.get("/getAllGiamGia", getAllGiamGia);

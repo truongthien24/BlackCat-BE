@@ -44,32 +44,30 @@ const updateGioHang = async (req, res) => {
         const index = gioHangOld?.danhSach?.findIndex(
           (s) => s.sach._id.toString() === sach.idSach
         );
+        let tongGia = 0;
         // Nếu không tồn tại thì thêm sách vào
         if (index === -1) {
           gioHangOld.danhSach.push({
-            sach: sach.idSach,
-            soLuong: sach.soLuong,
-            soNgayThue: sach.soNgayThue,
+            sach: sach?.idSach,
+            soLuong: sach?.soLuong,
+            soNgayThue: sach?.soNgayThue,
+            giaThue: sach?.giaThue,
+            tienCoc: sach?.tienCoc,
           });
-          gioHangOld.tongGia = gioHangOld?.danhSach?.reduce(
-            (a, b) =>
-              a + b?.sach?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
-            0
-          );
+          tongGia = gioHangOld?.danhSach
+            ?.reduce((a, b) => a + (b?.tienCoc * b?.soLuong) + (b?.giaThue * b?.soLuong), 0)
         }
         // Nếu tồn tại thì cộng số lượng
         else {
           gioHangOld.danhSach[index].soLuong += sach.soLuong;
+          tongGia = gioHangOld?.danhSach
+          ?.reduce((a, b) => a + (b?.sach?.tienCoc * b?.soLuong) + (b?.giaThue * b?.soLuong), 0)
         }
         const gioHangNew = await GioHang.findOneAndUpdate(
           { _id: id },
           {
             danhSach: gioHangOld.danhSach,
-            tongGia: gioHangOld?.danhSach?.reduce(
-              (a, b) =>
-                a + b?.sach?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
-              0
-            ),
+            tongGia: tongGia,
           }
         );
         if (gioHangNew) {
@@ -100,22 +98,6 @@ const updateGioHang = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ error: { message: "Thất bại" } });
   }
-
-  // const gioHangUpdate = await GioHang.findOneAndUpdate(
-  //   { _id: req.body.id },
-  //   { ...req.body }
-  // );
-  // if (!gioHangUpdate) {
-  //   return res.status(400).json({
-  //     error: {
-  //       message: "Giỏ hàng không tồn tại",
-  //     },
-  //   });
-  // } else {
-  //   res
-  //     .status(200)
-  //     .json({ data: gioHangUpdate, message: "Cập nhật thành công" });
-  // }
 };
 
 // Xóa item khỏi giỏ hàng
