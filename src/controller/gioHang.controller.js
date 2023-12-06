@@ -96,22 +96,6 @@ const updateGioHang = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ error: { message: "Thất bại" } });
   }
-
-  // const gioHangUpdate = await GioHang.findOneAndUpdate(
-  //   { _id: req.body.id },
-  //   { ...req.body }
-  // );
-  // if (!gioHangUpdate) {
-  //   return res.status(400).json({
-  //     error: {
-  //       message: "Giỏ hàng không tồn tại",
-  //     },
-  //   });
-  // } else {
-  //   res
-  //     .status(200)
-  //     .json({ data: gioHangUpdate, message: "Cập nhật thành công" });
-  // }
 };
 
 // Xóa item khỏi giỏ hàng

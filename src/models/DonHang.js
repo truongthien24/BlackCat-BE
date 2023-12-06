@@ -11,6 +11,9 @@ const DonHangschema = mongoose.Schema({
     ngayTaoDon: {
         type: Date,
     },
+    ngayGiao: {
+        type: Date
+    },
     thongTinGiaoHang: {
         ngayNhanHangDuKien: {
             ngayBatDau: {
@@ -30,7 +33,7 @@ const DonHangschema = mongoose.Schema({
             sdt: {
                 type: String,
             },
-        }
+        },
     },
     thongTinThanhToan: {
         phuongThucThanhToan: {

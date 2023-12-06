@@ -1,12 +1,21 @@
+const { default: mongoose } = require("mongoose");
 const DonHang = require("../models/DonHang");
 const GioHang = require("../models/GioHang");
 const sendEmailPaymentSuccess = require("../utils/sendEmailPaymentSuccess");
-const { uploadToCloudinary } = require("../utils/uploadFileCloud");
 
 const getAllDonHang = async (req, res) => {
   try {
     const { userId } = req.body;
-    const DonHangs = await DonHang.find({ userId: userId });
+    let DonHangs = [];
+    if (mongoose.Types.ObjectId.isValid(userId)) {
+      DonHangs = await DonHang.find({ userId: userId }).populate(
+        "danhSach.sach"
+      );
+    } else {
+      DonHangs = await DonHang.find({}).populate(
+        "danhSach.sach"
+      );
+    }
     res.status(200).json({ data: DonHangs });
   } catch (error) {
     return res.status(400).json({ error });
@@ -44,10 +53,15 @@ const createDonHang = async (req, res) => {
       tinhTrang: 0,
     });
 
-
     if (donHang) {
       await sendEmailPaymentSuccess(email, "Verify Email", donHang);
-      await GioHang.findOneAndUpdate({_id: gioHangId}, {danhSach: [], tongGia: 0})
+      for(let sach = 0; sach < danhSach?.length; sach++) {
+
+      }
+      // await GioHang.findOneAndUpdate(
+      //   { _id: gioHangId },
+      //   { danhSach: [], tongGia: 0 }
+      // );
       res.status(200).json({ message: "Hoàn tất", data: donHang });
     } else {
       return res
@@ -61,22 +75,12 @@ const createDonHang = async (req, res) => {
 
 const updateDonHang = async (req, res) => {
   const { id } = req.params;
-  const { hinhAnh } = req.body;
-  const { tenDonHang } = req.body;
-  let data = tenDonHang.trim();
-  let data1 = data.replace(/\s+/g, " ");
-  let image = {};
-  if (hinhAnh?.public_id) {
-    image = hinhAnh;
-  } else {
-    image = await uploadToCloudinary(req.body.hinhAnh.url, "DonHangs");
-  }
-  const DonHang = await DonHang.findOneAndUpdate(
+  const donHang = await DonHang.findOneAndUpdate(
     { _id: id },
-    { ...req.body, hinhAnh: image }
+    { ...req.body }
   );
 
-  if (!DonHang) {
+  if (!donHang) {
     return res
       .status(400)
       .json({ error: { message: "Bài Viết không tồn tại" } });
@@ -100,8 +104,8 @@ const deleteDonHang = async (req, res) => {
 const getDonHangByID = async (req, res) => {
   const { id } = req.params;
   try {
-    const DonHang = await DonHang.findOne({ _id: id });
-    res.status(200).json({ data: DonHang, message: "Lấy thành công" });
+    const donHang = await DonHang.findOne({ _id: id });
+    res.status(200).json({ data: donHang, message: "Lấy thành công" });
   } catch (error) {
     return res.status(400).json({ error });
   }

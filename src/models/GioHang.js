@@ -24,6 +24,10 @@ const GioHangschema = mongoose.Schema({
         thanhTien: {
             type: Number,
             default: 0,
+        },
+        tienCoc: {
+            type: Number,
+            default: 0,
         }
     }],
     tongGia: {
