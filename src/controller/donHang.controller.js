@@ -58,10 +58,10 @@ const createDonHang = async (req, res) => {
       for(let sach = 0; sach < danhSach?.length; sach++) {
 
       }
-      // await GioHang.findOneAndUpdate(
-      //   { _id: gioHangId },
-      //   { danhSach: [], tongGia: 0 }
-      // );
+      await GioHang.findOneAndUpdate(
+        { _id: gioHangId },
+        { danhSach: [], tongGia: 0 }
+      );
       res.status(200).json({ message: "Hoàn tất", data: donHang });
     } else {
       return res
