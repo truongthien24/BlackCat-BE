@@ -12,9 +12,7 @@ const getAllDonHang = async (req, res) => {
         "danhSach.sach"
       );
     } else {
-      DonHangs = await DonHang.find({}).populate(
-        "danhSach.sach"
-      );
+      DonHangs = await DonHang.find({}).populate("danhSach.sach");
     }
     res.status(200).json({ data: DonHangs });
   } catch (error) {
@@ -55,9 +53,7 @@ const createDonHang = async (req, res) => {
 
     if (donHang) {
       await sendEmailPaymentSuccess(email, "Verify Email", donHang);
-      for(let sach = 0; sach < danhSach?.length; sach++) {
-
-      }
+      for (let sach = 0; sach < danhSach?.length; sach++) {}
       await GioHang.findOneAndUpdate(
         { _id: gioHangId },
         { danhSach: [], tongGia: 0 }
@@ -75,10 +71,7 @@ const createDonHang = async (req, res) => {
 
 const updateDonHang = async (req, res) => {
   const { id } = req.params;
-  const donHang = await DonHang.findOneAndUpdate(
-    { _id: id },
-    { ...req.body }
-  );
+  const donHang = await DonHang.findOneAndUpdate({ _id: id }, { ...req.body });
 
   if (!donHang) {
     return res
@@ -92,13 +85,13 @@ const updateDonHang = async (req, res) => {
 const deleteDonHang = async (req, res) => {
   const { id } = req.params;
 
-  const DonHang = await DonHang.findOneAndDelete({ _id: id });
+  const donHang = await DonHang.findOneAndDelete({ _id: id });
 
-  if (!DonHang) {
+  if (!donHang) {
     return res.status(400).json({ error: "Bài viết không tồn tại" });
   }
 
-  res.status(200).json({ data: DonHang, message: "Xoá thành công" });
+  res.status(200).json({ data: donHang, message: "Xoá thành công" });
 };
 
 const getDonHangByID = async (req, res) => {
