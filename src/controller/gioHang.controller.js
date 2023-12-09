@@ -54,14 +54,19 @@ const updateGioHang = async (req, res) => {
             giaThue: sach?.giaThue,
             tienCoc: sach?.tienCoc,
           });
-          tongGia = gioHangOld?.danhSach
-            ?.reduce((a, b) => a + (b?.tienCoc * b?.soLuong) + (b?.giaThue * b?.soLuong), 0)
+          tongGia = gioHangOld?.danhSach?.reduce(
+            (a, b) => a + b?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
+            0
+          );
         }
         // Nếu tồn tại thì cộng số lượng
         else {
           gioHangOld.danhSach[index].soLuong += sach.soLuong;
-          tongGia = gioHangOld?.danhSach
-          ?.reduce((a, b) => a + (b?.sach?.tienCoc * b?.soLuong) + (b?.giaThue * b?.soLuong), 0)
+          tongGia = gioHangOld?.danhSach?.reduce(
+            (a, b) =>
+              a + b?.sach?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
+            0
+          );
         }
         const gioHangNew = await GioHang.findOneAndUpdate(
           { _id: id },
@@ -75,14 +80,16 @@ const updateGioHang = async (req, res) => {
         } else {
           return res.status(400).json({ error: { message: "Thất bại" } });
         }
-      }
-      else if (update) {
+      } else if (update) {
         const gioHangNew = await GioHang.findOneAndUpdate(
           { _id: id },
           {
             danhSach: sach,
-            tongGia: sach
-              ?.reduce((a, b) => a + (b?.sach?.tienCoc * b?.soLuong) + (b?.giaThue * b?.soLuong), 0)
+            tongGia: sach?.reduce(
+              (a, b) =>
+                a + b?.sach?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
+              0
+            ),
           }
         );
 
@@ -100,7 +107,6 @@ const updateGioHang = async (req, res) => {
 
 // Xóa item khỏi giỏ hàng
 
-
 // Check sản phẩm trước khi sang bước thanh toán
 const checkSanPham = async (req, res) => {
   const { danhSach } = req.body;
@@ -109,22 +115,32 @@ const checkSanPham = async (req, res) => {
       const check = await Sach.findOne({ _id: sach?.sach?._id });
       if (check) {
         if (check?.soLuong < sach?.soLuong) {
-          return res.status(400).json({ error: { message: `Sách ${check?.tenSach} không đủ số lượng trong kho` } })
+          return res.status(400).json({
+            error: {
+              message: `Sách ${check?.tenSach} chỉ còn ${check?.soLuong} cuốn không đủ số lượng bạn cần :((`,
+            },
+          });
         }
       } else {
-        return res.status(400).json({ error: { message: `Sách không tồn tại` } })
+        return res
+          .status(400)
+          .json({ error: { message: `Sách không tồn tại` } });
       }
     }
-    res.status(200).json({ message: 'Kiểm tra hoàn tất' })
+    res.status(200).json({ message: "Kiểm tra hoàn tất" });
   } catch (error) {
-    return res.status(400).json({ error: { message: error } })
+    return res.status(400).json({ error: { message: error } });
   }
-}
+};
 
 const sendMailGioHang = async (req, res) => {
-  await sendEmailPaymentSuccess("truongthien2411@gmail.com", "Verify Email", req.body);
-  return res.status(200).json({ message: 'Thanh toán thành công' })
-}
+  await sendEmailPaymentSuccess(
+    "truongthien2411@gmail.com",
+    "Verify Email",
+    req.body
+  );
+  return res.status(200).json({ message: "Thanh toán thành công" });
+};
 
 module.exports = {
   getAllGioHang,

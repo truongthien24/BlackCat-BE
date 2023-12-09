@@ -52,7 +52,7 @@ const createDonHang = async (req, res) => {
     });
 
     if (donHang) {
-      await sendEmailPaymentSuccess(email, "Verify Email", donHang);
+      await sendEmailPaymentSuccess(email, "Đặt hàng thành công", donHang);
       for (let sach = 0; sach < danhSach?.length; sach++) {}
       await GioHang.findOneAndUpdate(
         { _id: gioHangId },
