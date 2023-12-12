@@ -76,6 +76,7 @@ const {
   getGiamGiaByID,
 } = require("../controller/giamGia.controller");
 const { getAllDonHang, createDonHang, updateDonHang, deleteDonHang, getDonHangByID } = require("../controller/donHang.controller");
+const { getAllDanhGia, createDanhGia, updateDanhGia, deleteDanhGia, getDanhGiaByID } = require("../controller/danhGia.controller");
 const router = express.Router();
 
 // Tài khoản
@@ -196,3 +197,10 @@ router.post("/createGiamGia", createGiamGia);
 router.patch("/updateGiamGia/:id", updateGiamGia);
 router.delete("/deleteGiamGia/:id", deleteGiamGia);
 router.get("/getGiamGiaByID/:id", getGiamGiaByID);
+
+// Đánh giá
+router.get("/getAllDanhGia", getAllDanhGia);
+router.post("/createDanhGia", createDanhGia);
+router.patch("/updateDanhGia/:id", updateDanhGia);
+router.delete("/deleteDanhGia/:id", deleteDanhGia);
+router.post("/getDanhGiaById", getDanhGiaByID);

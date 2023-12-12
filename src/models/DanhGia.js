@@ -5,17 +5,24 @@ const DanhGiaSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "taiKhoan",
     },
+    idSach:  {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "sach",
+    },
     noiDung: {
         type: String,
         required: true,
     },
+    soSao: {
+        type: Number,
+    },
     ngayTao: {
         type: String,
+        required: true,
     },
     hinhAnh: {
         public_id: {
             type: String,
-            required: true,
         },
         url: {
             type: String,
@@ -23,6 +30,6 @@ const DanhGiaSchema = mongoose.Schema({
     },
 });
 
-const BaiVietModel = mongoose.model("danhGia", DanhGiaSchema);
+const DanhGiaModel = mongoose.model("danhGia", DanhGiaSchema);
 
-module.exports = BaiVietModel;
+module.exports = DanhGiaModel;
