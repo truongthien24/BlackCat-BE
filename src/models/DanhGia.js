@@ -9,6 +9,10 @@ const DanhGiaSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "sach",
     },
+    idDanhGiaFather: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "danhGia",
+    },
     noiDung: {
         type: String,
         required: true,

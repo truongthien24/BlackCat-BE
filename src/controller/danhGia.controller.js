@@ -5,8 +5,23 @@ const { uploadToCloudinary } = require("../utils/uploadFileCloud");
 
 const getAllDanhGia = async (req, res) => {
   try {
-    const DanhGias = await DanhGia.find({});
-    return res.status(200).json({ data: DanhGias });
+    const danhGias = await DanhGia.find({}).populate({ path: "idTaiKhoan", model: "taiKhoan" })
+      .populate({ path: "idSach", model: "sach" });;
+    const result = await danhGias?.map((danhGia) => {
+      return {
+        _id: danhGia?._id,
+        email: danhGia?.idTaiKhoan?.email,
+        idTaiKhoan: danhGia?.idTaiKhoan,
+        tenSach: danhGia?.idSach?.tenSach,
+        idSach: danhGia?.idSach,
+        noiDung: danhGia?.noiDung,
+        hinhAnh: danhGia?.hinhAnh,
+        soSao: danhGia?.soSao,
+        ngayTao: danhGia?.ngayTao,
+        idDanhGiaFather: danhGia?.idDanhGiaFather,
+      };
+    });
+    return res.status(200).json({ data: result });
   } catch (error) {
     return res.status(400).json({ error });
   }
