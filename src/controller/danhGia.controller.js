@@ -57,7 +57,6 @@ const createDanhGia = async (req, res) => {
       ngayTao: new Date().toString(),
       hinhAnh: uploadImage,
     });
-    console.log("danhGia", danhGia);
     res.status(200).json({ message: "Thêm thành công", data: danhGia });
   } catch (error) {
     return res.status(400).json({ error });
