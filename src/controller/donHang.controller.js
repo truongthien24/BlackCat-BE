@@ -39,9 +39,12 @@ const createDonHang = async (req, res) => {
       const randomIndex = Math.floor(Math.random() * characters.length);
       maDon += characters.charAt(randomIndex);
     }
+    const danhSachThue = danhSach?.map((sach) => {
+      return { ...sach, tinhTrang: false };
+    });
     const donHang = await DonHang.create({
       userId,
-      danhSach,
+      danhSach: danhSachThue,
       ngayTaoDon: new Date(),
       thongTinGiaoHang,
       thongTinThanhToan,
