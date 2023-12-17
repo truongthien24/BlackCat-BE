@@ -67,6 +67,7 @@ const {
   updateGioHang,
   checkSanPham,
   sendMailGioHang,
+  deleteSanPhamKhoiGioHang,
 } = require("../controller/gioHang.controller");
 const { authorize } = require("../middlewares/auth");
 const {
@@ -76,8 +77,20 @@ const {
   deleteGiamGia,
   getGiamGiaByID,
 } = require("../controller/giamGia.controller");
-const { getAllDonHang, createDonHang, updateDonHang, deleteDonHang, getDonHangByID } = require("../controller/donHang.controller");
-const { getAllDanhGia, createDanhGia, updateDanhGia, deleteDanhGia, getDanhGiaByID } = require("../controller/danhGia.controller");
+const {
+  getAllDonHang,
+  createDonHang,
+  updateDonHang,
+  deleteDonHang,
+  getDonHangByID,
+} = require("../controller/donHang.controller");
+const {
+  getAllDanhGia,
+  createDanhGia,
+  updateDanhGia,
+  deleteDanhGia,
+  getDanhGiaByID,
+} = require("../controller/danhGia.controller");
 const router = express.Router();
 
 // Tài khoản
@@ -177,6 +190,7 @@ router.patch("/updateGioHang/:id", updateGioHang);
 router.get("/getGioHangByID/:id", getGioHangByID);
 router.post("/checkSanPham", checkSanPham);
 router.post("/sendMailGioHang", sendMailGioHang);
+router.delete("/deleteSanPhamKhoiGioHang/:id", deleteSanPhamKhoiGioHang);
 
 /// Đơn hàng
 router.post("/getAllDonHang", getAllDonHang);

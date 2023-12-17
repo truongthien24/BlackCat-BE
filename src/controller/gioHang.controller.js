@@ -106,6 +106,32 @@ const updateGioHang = async (req, res) => {
 };
 
 // Xóa item khỏi giỏ hàng
+const deleteSanPhamKhoiGioHang = async (req, res) => {
+  const { id } = req.params;
+  const gioHang = await GioHang.findOne({ _id: id });
+  if (!gioHang) {
+    return res.status(400).json({ error: "Giỏ hàng không tồn tại" });
+  } else {
+    // const gioHangDanhSachNew = gioHang.danhSach.filter(
+    //   (sach) => sach?.sach != sach
+    // );
+    // const gioHangNew = await GioHang.findOneAndUpdate(
+    //   { _id: id },
+    //   {
+    //     danhSach: gioHangDanhSachNew,
+    //     tongGia: gioHangDanhSachNew?.reduce(
+    //       (a, b) => a + b?.sach?.tienCoc * b?.soLuong + b?.giaThue * b?.soLuong,
+    //       0
+    //     ),
+    //   }
+    // );
+    // if (gioHangNew) {
+    res.status(200).json({ message: "Thành công", data: gioHangNew });
+    // } else {
+    //   return res.status(400).json({ error: { message: "Thất bại" } });
+    // }
+  }
+};
 
 // Check sản phẩm trước khi sang bước thanh toán
 const checkSanPham = async (req, res) => {
@@ -148,4 +174,5 @@ module.exports = {
   getGioHangByID,
   checkSanPham,
   sendMailGioHang,
+  deleteSanPhamKhoiGioHang,
 };

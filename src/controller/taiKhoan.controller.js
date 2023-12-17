@@ -45,6 +45,7 @@ const loginTaiKhoan = async (req, res) => {
   try {
     const users = await TaiKhoan.findOne({ tenDangNhap });
     if (users) {
+      // dùng thư viện bcrypt để mã hóa với so sánh mật khẩu.
       const checkPassword = await bcrypt.compareSync(
         matKhau,
         users?.matKhau
