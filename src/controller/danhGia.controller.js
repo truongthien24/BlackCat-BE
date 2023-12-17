@@ -2,11 +2,13 @@ const { default: mongoose } = require("mongoose");
 const DanhGia = require("../models/DanhGia");
 const Sach = require("../models/Sach");
 const { uploadToCloudinary } = require("../utils/uploadFileCloud");
+const _ = require("lodash");
 
 const getAllDanhGia = async (req, res) => {
   try {
-    const danhGias = await DanhGia.find({}).populate({ path: "idTaiKhoan", model: "taiKhoan" })
-      .populate({ path: "idSach", model: "sach" });;
+    const danhGias = await DanhGia.find({})
+      .populate({ path: "idTaiKhoan", model: "taiKhoan" })
+      .populate({ path: "idSach", model: "sach" });
     const result = await danhGias?.map((danhGia) => {
       return {
         _id: danhGia?._id,
@@ -31,6 +33,7 @@ const createDanhGia = async (req, res) => {
   const {
     idTaiKhoan,
     idSach,
+    idDanhGiaFather,
     noiDung,
     soSao,
     ngayTao,
@@ -56,6 +59,7 @@ const createDanhGia = async (req, res) => {
       soSao,
       ngayTao: new Date().toString(),
       hinhAnh: uploadImage,
+      idDanhGiaFather,
     });
     res.status(200).json({ message: "Thêm thành công", data: danhGia });
   } catch (error) {
@@ -144,8 +148,43 @@ const getDanhGiaByID = async (req, res) => {
   try {
     const danhGias = await DanhGia.find({ idSach: data?.idSanPham })
       .populate({ path: "idTaiKhoan", model: "taiKhoan" })
-      .populate({ path: "idSach", model: "sach" });
-    res.status(200).json({ data: danhGias, message: "Lấy thành công" });
+      .populate({ path: "idSach", model: "sach" })
+      .populate({ path: "idDanhGiaFather", model: "danhGia" });
+
+    let resultDanhGias = danhGias?.filter((danhGia) => danhGia.idDanhGiaFather);
+    let resultDanhGiasFather = danhGias
+      ?.filter((danhGia) => !danhGia.idDanhGiaFather).map((dg)=> {return{...dg._doc, listReply: []}});
+
+    const newDanhGias = _.groupBy(resultDanhGias, (item) => {
+      return [item["idDanhGiaFather"]];
+    });
+
+    const newResultDanhGias = _.map(
+      _.keys(newDanhGias),
+      function (e, indexBatch) {
+        for (let danhGia of resultDanhGiasFather) {
+          if (
+            danhGia._id?.toString() ==
+            newDanhGias[e][0].idDanhGiaFather._id?.toString()
+          ) {
+            danhGia.listReply = newDanhGias[e].map((detail) => {
+              return detail;
+            });
+          }
+        }
+        return {
+          Detail: newDanhGias[e].map((detail) => {
+            return detail;
+          }),
+          idDanhGiaFather: newDanhGias[e][0].idDanhGiaFather._id,
+        };
+      }
+    );
+
+    res.status(200).json({
+      data: resultDanhGiasFather,
+      message: "Lấy thành công",
+    });
   } catch (error) {
     return res.status(400).json({ error });
   }
