@@ -45,6 +45,7 @@ const loginTaiKhoan = async (req, res) => {
   try {
     const users = await TaiKhoan.findOne({ tenDangNhap });
     if (users) {
+      // dùng thư viện bcrypt để mã hóa với so sánh mật khẩu.
       const checkPassword = await bcrypt.compareSync(
         matKhau,
         users?.matKhau
@@ -101,6 +102,11 @@ const postCreateTaiKhoan = async (req, res) => {
         $options: "i",
       },
     });
+    if (/\s/.test(tenDangNhap)) {
+      return res.status(400).json({
+        error: { message: "Tên đăng nhập không được chứa dấu cách" },
+      });
+    }
     const checkTrungEmail = await TaiKhoan.findOne({ email });
     if (checkTrungTenDangNhap?._id) {
       res.status(400).json({

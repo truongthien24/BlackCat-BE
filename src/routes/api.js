@@ -6,6 +6,7 @@ const {
   deleteSach,
   updateSach,
   findSach,
+  findTacGia,
 } = require("../controller/sach.controller");
 const {
   getAllTacGia,
@@ -67,6 +68,7 @@ const {
   updateGioHang,
   checkSanPham,
   sendMailGioHang,
+  deleteSanPhamKhoiGioHang,
 } = require("../controller/gioHang.controller");
 const { authorize } = require("../middlewares/auth");
 const {
@@ -76,8 +78,20 @@ const {
   deleteGiamGia,
   getGiamGiaByID,
 } = require("../controller/giamGia.controller");
-const { getAllDonHang, createDonHang, updateDonHang, deleteDonHang, getDonHangByID } = require("../controller/donHang.controller");
-const { getAllDanhGia, createDanhGia, updateDanhGia, deleteDanhGia, getDanhGiaByID } = require("../controller/danhGia.controller");
+const {
+  getAllDonHang,
+  createDonHang,
+  updateDonHang,
+  deleteDonHang,
+  getDonHangByID,
+} = require("../controller/donHang.controller");
+const {
+  getAllDanhGia,
+  createDanhGia,
+  updateDanhGia,
+  deleteDanhGia,
+  getDanhGiaByID,
+} = require("../controller/danhGia.controller");
 const router = express.Router();
 
 // Tài khoản
@@ -94,14 +108,7 @@ router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
     if (!taiKhoan) {
       return res.status(400).send({ message: "Invalid link" });
     }
-    // const tokens = await Token.findOne({
-    //     taiKhoanId: taiKhoan._id,
-    //     token: req.params.token,
-    // })
-    //
-    // if (!tokens) {
-    //     return res.status(400).send({ message: "Invalid link" });
-    // }
+
     await TaiKhoan.updateOne({ _id: taiKhoan._id }, { xacThucEmail: true });
     // await Token.remove();
 
@@ -184,7 +191,8 @@ router.get("/getAllGioHang", getAllGioHang);
 router.patch("/updateGioHang/:id", updateGioHang);
 router.get("/getGioHangByID/:id", getGioHangByID);
 router.post("/checkSanPham", checkSanPham);
-router.post("/sendMailGioHang", sendMailGioHang)
+router.post("/sendMailGioHang", sendMailGioHang);
+router.delete("/deleteSanPhamKhoiGioHang/:id", deleteSanPhamKhoiGioHang);
 
 /// Đơn hàng
 router.post("/getAllDonHang", getAllDonHang);
