@@ -226,6 +226,13 @@ const forgetPassword = async (req, res) => {
       }
       const hashPasswordFromBcrypt = await hashPassword(result);
       await sendEmailForgetPassword(email, "New password", result);
+      const updateAccount = await TaiKhoan.findOneAndUpdate({_id: account._id}, {matKhau: hashPasswordFromBcrypt});
+      if(updateAccount) {
+        res.status(200).json({
+          data: hashPasswordFromBcrypt,
+          message: "Success. New password has sent your email",
+        });
+      }
     }
   } catch (err) {
 

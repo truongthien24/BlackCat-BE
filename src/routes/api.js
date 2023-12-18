@@ -21,6 +21,7 @@ const {
   loginAdmin,
   updateTaiKhoan,
   getAccountByID,
+  forgetPassword,
 } = require("../controller/taiKhoan.controller");
 const TaiKhoan = require("../models/TaiKhoan");
 const File = require("../models/File");
@@ -85,7 +86,8 @@ router.get("/getAllTaiKhoan", getAllTaiKhoan);
 router.post("/login", loginTaiKhoan);
 router.post("/login-admin", loginAdmin);
 router.patch("/updateTaiKhoan", updateTaiKhoan);
-router.get("/getAccountByID/:id", getAccountByID)
+router.get("/getAccountByID/:id", getAccountByID);
+router.post("/getPasswordByEmail", forgetPassword);
 router.get("/taiKhoan/:id/verify/:token", async (req, res) => {
   try {
     const taiKhoan = await TaiKhoan.findOne({ _id: req.params.id });
