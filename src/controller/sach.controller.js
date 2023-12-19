@@ -56,7 +56,7 @@ const findSach = async (req, res) => {
       tenSach: { $regex: ".*" + tenSach + ".*", $options: "i" },
     })
       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
-      .populate({ path: "tacGia", model: "tacGia" })
+      .populate({ path: "tacGia", model: "tacGia"})
       .populate({ path: "theLoai", model: "theLoai" })
       .populate({ path: "nhaXuatBan", model: "nhaXuatBan" })
       .populate({ path: "ngonNgu", model: "ngonNgu" });

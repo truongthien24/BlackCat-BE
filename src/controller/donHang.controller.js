@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const DonHang = require("../models/DonHang");
 const GioHang = require("../models/GioHang");
+const Sach = require("../models/Sach");
 const sendEmailPaymentSuccess = require("../utils/sendEmailPaymentSuccess");
 
 const getAllDonHang = async (req, res) => {
@@ -56,7 +57,15 @@ const createDonHang = async (req, res) => {
 
     if (donHang) {
       await sendEmailPaymentSuccess(email, "Đặt hàng thành công", donHang);
-      for (let sach = 0; sach < danhSach?.length; sach++) {}
+      for (let sach of danhSach) {
+        const sachResult = await Sach.findOne({_id: sach?.sach?._id});
+        if(sachResult) {
+          const soLuongNew = sachResult?.soLuong - sach?.soLuong;
+          await Sach.findOneAndUpdate({_id: sach?.sach?._id}, {soLuong: soLuongNew})
+        } else {
+          res.status('400').json({error: {message: 'Sach khong ton tai'}})
+        }
+      }
       await GioHang.findOneAndUpdate(
         { _id: gioHangId },
         { danhSach: [], tongGia: 0 }
