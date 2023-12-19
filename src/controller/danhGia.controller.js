@@ -13,6 +13,7 @@ const getAllDanhGia = async (req, res) => {
       return {
         _id: danhGia?._id,
         email: danhGia?.idTaiKhoan?.email,
+        tenDangNhap: danhGia?.idTaiKhoan?.tenDangNhap,
         idTaiKhoan: danhGia?.idTaiKhoan,
         tenSach: danhGia?.idSach?.tenSach,
         idSach: danhGia?.idSach,
@@ -153,7 +154,10 @@ const getDanhGiaByID = async (req, res) => {
 
     let resultDanhGias = danhGias?.filter((danhGia) => danhGia.idDanhGiaFather);
     let resultDanhGiasFather = danhGias
-      ?.filter((danhGia) => !danhGia.idDanhGiaFather).map((dg)=> {return{...dg._doc, listReply: []}});
+      ?.filter((danhGia) => !danhGia.idDanhGiaFather)
+      .map((dg) => {
+        return { ...dg._doc, listReply: [] };
+      });
 
     const newDanhGias = _.groupBy(resultDanhGias, (item) => {
       return [item["idDanhGiaFather"]];
