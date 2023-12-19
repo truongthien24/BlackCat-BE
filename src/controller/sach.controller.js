@@ -1,11 +1,12 @@
 const Sach = require("../models/Sach");
 const mongoose = require("mongoose");
 const { uploadToCloudinary } = require("../utils/uploadFileCloud");
+const GioHang = require("../models/GioHang");
 
 const getAllSach = async (req, res) => {
   try {
     const sachs = await Sach.find({})
-    //populate lấy dữ liệu
+      //populate lấy dữ liệu
       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
       .populate({ path: "tacGia", model: "tacGia" })
       .populate({ path: "theLoai", model: "theLoai" })
@@ -22,6 +23,7 @@ const getAllSach = async (req, res) => {
         tenNhaXuatBan: sach?.nhaXuatBan?.tenNXB,
         maNhaXuatBan: sach?.nhaXuatBan?._id?.toString(),
         tenTacGia: sach?.tacGia?.tenTacGia,
+        chiTietTacGia: sach?.tacGia?.chiTietTacGia,
         maTacGia: sach?.tacGia?._id?.toString(),
         soLuong: sach.soLuong,
         maSach: sach.maSach,
@@ -48,6 +50,7 @@ const findSach = async (req, res) => {
   if (tenSach) {
     objectFind.tenSach = tenSach;
   }
+
   try {
     const sachs = await Sach.find({
       tenSach: { $regex: ".*" + tenSach + ".*", $options: "i" },
@@ -68,6 +71,7 @@ const findSach = async (req, res) => {
         tenNhaXuatBan: sach?.nhaXuatBan?.tenNXB,
         maNhaXuatBan: sach?.nhaXuatBan?._id?.toString(),
         tenTacGia: sach?.tacGia?.tenTacGia,
+        chiTietTacGia: sach?.tacGia?.chiTietTacGia,
         maTacGia: sach?.tacGia?._id?.toString(),
         soLuong: sach.soLuong,
         maSach: sach.maSach,
@@ -115,6 +119,7 @@ const getSachByID = async (req, res) => {
       tenNhaXuatBan: sach?.nhaXuatBan?.tenNXB,
       maNhaXuatBan: sach?.nhaXuatBan?._id?.toString(),
       tenTacGia: sach?.tacGia?.tenTacGia,
+      chiTietTacGia: sach?.tacGia?.chiTietTacGia,
       maTacGia: sach?.tacGia?._id?.toString(),
       noiDung: sach.noiDung,
       soLuong: sach.soLuong,
@@ -236,7 +241,14 @@ const deleteSach = async (req, res) => {
 
   // Step 2
   // Kiểm tra sách có đang được đặt hàng hay không
-
+  const gioHang = await GioHang.findOne({ "danhSach.sach": id });
+  if (gioHang) {
+    return res.status(400).json({
+      error: {
+        message: "Sách này đang trong giỏ hàng",
+      },
+    });
+  }
   const sach = await Sach.findOneAndDelete({ _id: id });
 
   if (!sach) {

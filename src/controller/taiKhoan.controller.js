@@ -4,6 +4,9 @@ const token = require("../models/token");
 const sendEmail = require("../utils/sendEmail");
 const GioHang = require("../models/GioHang");
 const { default: mongoose } = require("mongoose");
+const { hashPassword } = require("../utils/function");
+const bcrypt = require("bcryptjs");
+const sendEmailForgetPassword = require("../utils/sendEmailForgetPassword");
 
 const getAllTaiKhoan = async (req, res) => {
   try {
@@ -40,37 +43,45 @@ const getAccountByID = async (req, res) => {
 const loginTaiKhoan = async (req, res) => {
   const { tenDangNhap, matKhau } = req?.body;
   try {
-    const users = await TaiKhoan.findOne({ tenDangNhap, matKhau });
-    if (users.tenDangNhap === tenDangNhap && users.matKhau === matKhau) {
-      if (users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee") {
-        return res.status(400).send({
-          error: "Tài khoản không được cấp quyền",
-        });
+    const users = await TaiKhoan.findOne({ tenDangNhap });
+    if (users) {
+      // dùng thư viện bcrypt để mã hóa với so sánh mật khẩu.
+      const checkPassword = await bcrypt.compareSync(
+        matKhau,
+        users?.matKhau
+      );
+      if(checkPassword) {
+        if (users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee") {
+          return res.status(400).send({
+            error: "Tài khoản không được cấp quyền",
+          });
+        }
+        if (users.xacThucEmail) {
+          const id = users?._id;
+          // Đăng ký token để sử dụng api
+          const token = jwt.sign(
+            { users },
+            "secret",
+            { expiresIn: "24h" },
+            "9359AF90D36CEC62F9522CE3394E8E2E335DF77983E8F9D9AC77C10D09D3074C"
+          );
+          // Thành công trả về status 200 và message
+          return res.status(200).json({
+            Success: true,
+            token,
+            Data: {
+              tenDangNhap: users?.tenDangNhap,
+              email: users?.email,
+            },
+            Message: "Login sucess!",
+          });
+        } else {
+          return res.status(400).send({
+            error: "Tài khoản chưa được xác thực email",
+          });
+        }
       }
-      if (users.xacThucEmail) {
-        const id = users?._id;
-        // Đăng ký token để sử dụng api
-        const token = jwt.sign(
-          { users },
-          "secret",
-          { expiresIn: "24h" },
-          "9359AF90D36CEC62F9522CE3394E8E2E335DF77983E8F9D9AC77C10D09D3074C"
-        );
-        // Thành công trả về status 200 và message
-        return res.status(200).json({
-          Success: true,
-          token,
-          Data: {
-            tenDangNhap: users?.tenDangNhap,
-            email: users?.email,
-          },
-          Message: "Login sucess!",
-        });
-      } else {
-        return res.status(400).send({
-          error: "Tài khoản chưa được xác thực email",
-        });
-      }
+      
     }
   } catch (error) {
     res
@@ -91,6 +102,11 @@ const postCreateTaiKhoan = async (req, res) => {
         $options: "i",
       },
     });
+    if (/\s/.test(tenDangNhap)) {
+      return res.status(400).json({
+        error: { message: "Tên đăng nhập không được chứa dấu cách" },
+      });
+    }
     const checkTrungEmail = await TaiKhoan.findOne({ email });
     if (checkTrungTenDangNhap?._id) {
       res.status(400).json({
@@ -112,9 +128,11 @@ const postCreateTaiKhoan = async (req, res) => {
       const gioHang = await GioHang.create({
         danhSach: [],
       });
+      const hashPasswordFromBcrypt = await hashPassword(matKhau);
+
       const user = await TaiKhoan.create({
         tenDangNhap,
-        matKhau,
+        matKhau: hashPasswordFromBcrypt,
         email,
         loaiTaiKhoan,
         xacThucEmail: false,
@@ -198,6 +216,35 @@ const loginAdmin = async (req, res) => {
   }
 };
 
+const forgetPassword = async (req, res) => {
+  try {
+    const { email } = req.data;
+    const account = await TaiKhoan.findOne({  email  });
+
+    if (account) {
+      const characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      let result = "";
+
+      for (let i = 0; i < 6; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(randomIndex);
+      }
+      const hashPasswordFromBcrypt = await hashPassword(result);
+      await sendEmailForgetPassword(email, "New password", result);
+      const updateAccount = await TaiKhoan.findOneAndUpdate({_id: account._id}, {matKhau: hashPasswordFromBcrypt});
+      if(updateAccount) {
+        res.status(200).json({
+          data: hashPasswordFromBcrypt,
+          message: "Success. New password has sent your email",
+        });
+      }
+    }
+  } catch (err) {
+
+  }
+}
+
 module.exports = {
   postCreateTaiKhoan,
   getAllTaiKhoan,
@@ -205,4 +252,5 @@ module.exports = {
   loginAdmin,
   updateTaiKhoan,
   getAccountByID,
+  forgetPassword,
 };
