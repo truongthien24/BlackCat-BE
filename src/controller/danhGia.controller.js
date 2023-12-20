@@ -22,6 +22,7 @@ const getAllDanhGia = async (req, res) => {
         soSao: danhGia?.soSao,
         ngayTao: danhGia?.ngayTao,
         idDanhGiaFather: danhGia?.idDanhGiaFather,
+        admin: danhGia?.admin
       };
     });
     return res.status(200).json({ data: result });
@@ -39,7 +40,9 @@ const createDanhGia = async (req, res) => {
     soSao,
     ngayTao,
     hinhAnh = null,
+    admin = false,
   } = req.body;
+  console.log('body', req.body)
   try {
     let uploadImage = {};
     if (hinhAnh) {
@@ -61,6 +64,7 @@ const createDanhGia = async (req, res) => {
       ngayTao: new Date().toString(),
       hinhAnh: uploadImage,
       idDanhGiaFather,
+      admin
     });
     res.status(200).json({ message: "Thêm thành công", data: danhGia });
   } catch (error) {
@@ -128,19 +132,14 @@ const updateDanhGia = async (req, res) => {
 
 const deleteDanhGia = async (req, res) => {
   const { id } = req.params;
-  const sach = await Sach.findOne({ DanhGia: id });
-  if (sach) {
-    return res.status(400).json({
-      error: {
-        message: "Sách đang sử dụng mã giảm giá này",
-      },
-    });
-  } else {
-    const DanhGia = await DanhGia.findOneAndDelete({ _id: id });
-    if (!DanhGia) {
-      return res.status(400).json({ error: "Mã giảm giá không tồn tại" });
+  try {
+    const danhGia = await DanhGia.findOneAndDelete({ _id: id });
+    if (!danhGia) {
+      return res.status(400).json({ error: "Đánh giá không tồn tại" });
     }
-    res.status(200).json({ data: DanhGia, message: "Xoá thành công" });
+    res.status(200).json({ data: {}, message: "Xoá thành công" });
+  } catch (err) {
+    return res.status(500).json({ error: "Lỗi hệ thống" });
   }
 };
 
