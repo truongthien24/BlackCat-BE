@@ -87,9 +87,7 @@ const loginTaiKhoan = async (req, res) => {
       }
     }
   } catch (error) {
-    res
-      .status(400)
-      .json({ error: "Tên đăng nhập hoặc mật khẩu không chính xác" });
+    res.status(400).json({ error: "Lỗi hệ thống" });
   }
 };
 
@@ -257,6 +255,42 @@ const forgetPassword = async (req, res) => {
   }
 };
 
+const changePassword = async (req, res) => {
+  const { id, matKhauHienTai, matKhauMoi } = req.body;
+  try {
+    const taiKhoan = await TaiKhoan.findOne({ _id: id });
+    //Hàm compareSync của bcrypt trả về một giá trị boolean (true nếu mật khẩu khớp và false nếu không khớp)
+    const checkPassword = await bcrypt.compareSync(
+      matKhauHienTai,
+      taiKhoan?.matKhau
+    );
+    if (checkPassword) {
+      if (!bcrypt.compareSync(matKhauMoi, taiKhoan?.matKhau)) {
+        const hashPasswordFromBcrypt = await hashPassword(matKhauMoi);
+        const updateAccount = await TaiKhoan.findOneAndUpdate(
+          { _id: id },
+          { matKhau: hashPasswordFromBcrypt }
+        );
+        if (updateAccount) {
+          res.status(200).json({ message: "Mật khẩu đã được cập nhật" });
+        } else {
+          return res.status(400).json({ message: "Cập nhật không thành công" });
+        }
+      } else {
+        return res
+          .status(400)
+          .json({ error: { message: "Trùng với mật khẩu hiện tại" } });
+      }
+    } else {
+      return res
+        .status(400)
+        .json({ error: { message: "Mật khẩu hiện tại không chính xác" } });
+    }
+  } catch (err) {
+    return res.status(500).json({ error: { message: "Lỗi hệ thống" } });
+  }
+};
+
 module.exports = {
   postCreateTaiKhoan,
   getAllTaiKhoan,
@@ -265,4 +299,5 @@ module.exports = {
   updateTaiKhoan,
   getAccountByID,
   forgetPassword,
+  changePassword,
 };

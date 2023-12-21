@@ -32,6 +32,10 @@ const DanhGiaSchema = mongoose.Schema({
             type: String,
         },
     },
+    admin: {
+        type: Boolean,
+        required: false,
+    }
 });
 
 const DanhGiaModel = mongoose.model("danhGia", DanhGiaSchema);
