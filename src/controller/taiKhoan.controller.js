@@ -20,7 +20,9 @@ const getAllTaiKhoan = async (req, res) => {
 const getAccountByID = async (req, res) => {
   const { id } = req.params;
   try {
-    const account = await TaiKhoan.findOne({ _id: id });
+    const account = await TaiKhoan.findOne({ _id: id }).populate(
+      "danhSachYeuThich.sach"
+    );
     if (account) {
       res.status(200).json({
         data: account,
