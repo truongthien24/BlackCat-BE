@@ -73,7 +73,7 @@ const loginTaiKhoan = async (req, res) => {
               tenDangNhap: users?.tenDangNhap,
               email: users?.email,
             },
-            Message: "Login sucess!",
+            Message: "Đăng nhập thành công",
           });
         } else {
           return res.status(400).send({
@@ -82,14 +82,14 @@ const loginTaiKhoan = async (req, res) => {
         }
       } else {
         res
-        .status(400)
-        .json({ error: "Tên đăng nhập hoặc mật khẩu không chính xác" });
+          .status(400)
+          .json({ error: "Tên đăng nhập hoặc mật khẩu không chính xác" });
       }
     }
   } catch (error) {
     res
       .status(400)
-      .json({ error: "Lỗi hệ thống" });
+      .json({ error: "Tên đăng nhập hoặc mật khẩu không chính xác" });
   }
 };
 
@@ -202,7 +202,7 @@ const loginAdmin = async (req, res) => {
             tenDangNhap: users?.tenDangNhap,
             email: users?.email,
           },
-          Message: "Login sucess!",
+          Message: "Đăng nhập thành công",
         });
       } else {
         return res.status(400).json({
@@ -219,17 +219,24 @@ const loginAdmin = async (req, res) => {
 
 const forgetPassword = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email } = req.data;
     const account = await TaiKhoan.findOne({ email });
+
     if (account) {
       const characters =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      //let result khởi tạo chuỗi rỗng để lưu trữ chuỗi ngẫu nhiên được tạo
       let result = "";
 
       for (let i = 0; i < 6; i++) {
         const randomIndex = Math.floor(Math.random() * characters.length);
         result += characters.charAt(randomIndex);
       }
+      //Math.random() trả về một số ngẫu nhiên từ 0-1
+      //Math.floor() làm tròn xuống để có một số nguyên.
+      //result += characters.charAt(randomIndex);:
+      //Thêm ký tự tại vị trí randomIndex của chuỗi characters vào chuỗi result.
+      //charAt() là một phương thức của chuỗi JavaScript được sử dụng để trả về ký tự tại một vị trí cụ thể trong chuỗi.
       const hashPasswordFromBcrypt = await hashPassword(result);
       await sendEmailForgetPassword(email, "New password", result);
       const updateAccount = await TaiKhoan.findOneAndUpdate(
@@ -239,12 +246,14 @@ const forgetPassword = async (req, res) => {
       if (updateAccount) {
         res.status(200).json({
           data: hashPasswordFromBcrypt,
-          message: "Mật khẩu mới đã được chuyển tới email. Vui lòng kiểm tra",
+          message: "Thành công vui lòng kiểm tra",
         });
       }
     }
   } catch (err) {
-    res.status(400).json({ error: { message: "Lỗi hệ thống" } });
+    res.status(400).json({
+      error: "Email này chưa được đâng ký trước đó",
+    });
   }
 };
 
