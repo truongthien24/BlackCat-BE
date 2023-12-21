@@ -107,14 +107,14 @@ const updateGioHang = async (req, res) => {
 
 // Xóa item khỏi giỏ hàng
 const deleteSanPhamKhoiGioHang = async (req, res) => {
-  const { id } = req.params;
+  const { id, idSach } = req.body;
   const gioHang = await GioHang.findOne({ _id: id });
   if (!gioHang) {
     return res.status(400).json({ error: "Giỏ hàng không tồn tại" });
   } else {
-    // const gioHangDanhSachNew = gioHang.danhSach.filter(
-    //   (sach) => sach?.sach != sach
-    // );
+    const gioHangDanhSachNew = gioHang.danhSach.filter(
+      (sach) => sach?.sach?._id != idSach
+    );
     // const gioHangNew = await GioHang.findOneAndUpdate(
     //   { _id: id },
     //   {
