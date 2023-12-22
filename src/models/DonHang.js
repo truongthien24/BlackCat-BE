@@ -46,6 +46,14 @@ const DonHangschema = mongoose.Schema({
             type: Boolean
         }
     },
+    thongTinTraHang: {
+        ngayBatDau: {
+            type: String,
+        },
+        ngayKetThuc: {
+            type: String
+        }
+    },
     tongGia: {
         type: Number,
         default: 0,

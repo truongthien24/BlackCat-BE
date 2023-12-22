@@ -83,15 +83,28 @@ const createDonHang = async (req, res) => {
 
 const updateDonHang = async (req, res) => {
   const { id } = req.params;
-  const donHang = await DonHang.findOneAndUpdate({ _id: id }, { ...req.body });
-
-  if (!donHang) {
-    return res
-      .status(400)
-      .json({ error: { message: "Bài Viết không tồn tại" } });
+  const { type } = req.body;
+  try {
+    // switch(type) {
+    //   case 1: {
+        const donHang = await DonHang.findOneAndUpdate({ _id: id }, { ...req.body });
+        if (!donHang) {
+          return res
+            .status(400)
+            .json({ error: { message: "Đơn hàng không tồn tại" } });
+        }
+        res.status(200).json({ data: donHang, message: "Cập nhật thành công" });
+        // break;
+      // };
+      // case 2: {
+      //   const donHang = await DonHang.findOneAndUpdate({ _id: id }, { ...req.body });
+      //   break;
+      // };
+      // default: break;
+    // }
+  } catch (err) {
+    return res.status(500).json({error: {message: "Lỗi hệ thống"}})
   }
-
-  res.status(200).json({ data: [], message: "Cập nhật thành công" });
 };
 
 const deleteDonHang = async (req, res) => {
@@ -115,6 +128,7 @@ const getDonHangByID = async (req, res) => {
     return res.status(400).json({ error });
   }
 };
+
 module.exports = {
   getAllDonHang,
   createDonHang,
