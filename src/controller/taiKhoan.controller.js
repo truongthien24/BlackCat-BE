@@ -20,9 +20,7 @@ const getAllTaiKhoan = async (req, res) => {
 const getAccountByID = async (req, res) => {
   const { id } = req.params;
   try {
-    const account = await TaiKhoan.findOne({ _id: id }).populate(
-      "danhSachYeuThich.sach"
-    );
+    const account = await TaiKhoan.findOne({ _id: id });
     if (account) {
       res.status(200).json({
         data: account,
@@ -46,6 +44,11 @@ const loginTaiKhoan = async (req, res) => {
   const { tenDangNhap, matKhau } = req?.body;
   try {
     const users = await TaiKhoan.findOne({ tenDangNhap });
+    if (!users) {
+      return res.status(400).json({
+        error: { message: "Tên đăng nhập không tồn tại" },
+      });
+    }
     if (users) {
       // dùng thư viện bcrypt để mã hóa với so sánh mật khẩu.
       const checkPassword = await bcrypt.compareSync(matKhau, users?.matKhau);
@@ -55,7 +58,7 @@ const loginTaiKhoan = async (req, res) => {
           users.loaiTaiKhoan === "employee"
         ) {
           return res.status(400).send({
-            error: "Tài khoản không được cấp quyền",
+            error: { message: "Tài khoản không được cấp quyền" },
           });
         }
         if (users.xacThucEmail) {
@@ -79,17 +82,17 @@ const loginTaiKhoan = async (req, res) => {
           });
         } else {
           return res.status(400).send({
-            error: "Tài khoản chưa được xác thực email",
+            error: { message: "Tài khoản chưa được xác thực email" },
           });
         }
       } else {
-        res
-          .status(400)
-          .json({ error: "Tên đăng nhập hoặc mật khẩu không chính xác" });
+        res.status(400).json({
+          error: { message: "Tên đăng nhập hoặc mật khẩu không chính xác" },
+        });
       }
     }
   } catch (error) {
-    res.status(400).json({ error: "Lỗi hệ thống" });
+    res.status(400).json({ error: { message: "Lỗi hệ thống" } });
   }
 };
 
@@ -110,6 +113,22 @@ const postCreateTaiKhoan = async (req, res) => {
         error: { message: "Tên đăng nhập không được chứa dấu cách" },
       });
     }
+    if (/\s/.test(matKhau)) {
+      return res.status(400).json({
+        error: { message: "Mật khẩu không được chứa dấu cách" },
+      });
+    }
+    // const isPasswordValid = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).*$/.test(
+    //   matKhau
+    // );
+    // if (!isPasswordValid) {
+    //   return res.status(400).json({
+    //     error: {
+    //       message:
+    //         "Mật khẩu không hợp lệ. Phải bắt đầu bằng chữ cái viết hoa và chứa ít nhất một ký tự đặc biệt.",
+    //     },
+    //   });
+    // }
     const checkTrungEmail = await TaiKhoan.findOne({ email });
     if (checkTrungTenDangNhap?._id) {
       res.status(400).json({
@@ -206,25 +225,25 @@ const loginAdmin = async (req, res) => {
         });
       } else {
         return res.status(400).json({
-          error: "Tài khoản không được cấp quyền",
+          error: { message: "Tài khoản không được cấp quyền" },
         });
       }
     }
   } catch (error) {
-    res
-      .status(400)
-      .json({ error: "Tên đăng nhập hoặc mật khẩu không chính xác" });
+    res.status(400).json({
+      error: { message: "Tên đăng nhập hoặc mật khẩu không chính xác" },
+    });
   }
 };
 
 const forgetPassword = async (req, res) => {
   try {
-    const { email } = req.data;
+    const { email } = req.body;
     const account = await TaiKhoan.findOne({ email });
 
     if (account) {
       const characters =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*";
       //let result khởi tạo chuỗi rỗng để lưu trữ chuỗi ngẫu nhiên được tạo
       let result = "";
 
@@ -246,13 +265,17 @@ const forgetPassword = async (req, res) => {
       if (updateAccount) {
         res.status(200).json({
           data: hashPasswordFromBcrypt,
-          message: "Thành công vui lòng kiểm tra",
+          message: "Mật khẩu mới đã được chuyển tới email. Vui lòng kiểm tra",
         });
       }
+    } else {
+      return res.status(400).json({
+        error: { message: "Email này chưa được đăng ký trước đó" },
+      });
     }
   } catch (err) {
     res.status(400).json({
-      error: "Email này chưa được đâng ký trước đó",
+      error: { message: "Lỗi hệ thống!" },
     });
   }
 };
@@ -261,6 +284,22 @@ const changePassword = async (req, res) => {
   const { id, matKhauHienTai, matKhauMoi } = req.body;
   try {
     const taiKhoan = await TaiKhoan.findOne({ _id: id });
+    // const isPasswordValid = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).*$/.test(
+    //   matKhauMoi
+    // );
+    // if (!isPasswordValid) {
+    //   return res.status(400).json({
+    //     error: {
+    //       message:
+    //         "Mật khẩu không hợp lệ. Phải bắt đầu bằng chữ cái viết hoa và chứa ít nhất một ký tự đặc biệt.",
+    //     },
+    //   });
+    // }
+    // if (/\s/.test(matKhauMoi)) {
+    //   return res.status(400).json({
+    //     error: { message: "Mật khẩu không được chứa dấu cách" },
+    //   });
+    // }
     //Hàm compareSync của bcrypt trả về một giá trị boolean (true nếu mật khẩu khớp và false nếu không khớp)
     const checkPassword = await bcrypt.compareSync(
       matKhauHienTai,
