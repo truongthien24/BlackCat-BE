@@ -126,7 +126,7 @@ const deleteSanPhamKhoiGioHang = async (req, res) => {
     //   }
     // );
     // if (gioHangNew) {
-    res.status(200).json({ message: "Thành công", data: gioHangNew });
+    res.status(200).json({ message: "Thành công", data: [] });
     // } else {
     //   return res.status(400).json({ error: { message: "Thất bại" } });
     // }

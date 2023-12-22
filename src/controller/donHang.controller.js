@@ -58,12 +58,15 @@ const createDonHang = async (req, res) => {
     if (donHang) {
       await sendEmailPaymentSuccess(email, "Đặt hàng thành công", donHang);
       for (let sach of danhSach) {
-        const sachResult = await Sach.findOne({_id: sach?.sach?._id});
-        if(sachResult) {
+        const sachResult = await Sach.findOne({ _id: sach?.sach?._id });
+        if (sachResult) {
           const soLuongNew = sachResult?.soLuong - sach?.soLuong;
-          await Sach.findOneAndUpdate({_id: sach?.sach?._id}, {soLuong: soLuongNew})
+          await Sach.findOneAndUpdate(
+            { _id: sach?.sach?._id },
+            { soLuong: soLuongNew }
+          );
         } else {
-          res.status('400').json({error: {message: 'Sach khong ton tai'}})
+          res.status("400").json({ error: { message: "Sach khong ton tai" } });
         }
       }
       await GioHang.findOneAndUpdate(
@@ -83,27 +86,47 @@ const createDonHang = async (req, res) => {
 
 const updateDonHang = async (req, res) => {
   const { id } = req.params;
-  const { type } = req.body;
+  const { tinhTrang } = req.body;
   try {
     // switch(type) {
     //   case 1: {
-        const donHang = await DonHang.findOneAndUpdate({ _id: id }, { ...req.body });
-        if (!donHang) {
-          return res
-            .status(400)
-            .json({ error: { message: "Đơn hàng không tồn tại" } });
+    const donHang = await DonHang.findOneAndUpdate(
+      { _id: id },
+      { ...req.body }
+    );
+    if (!donHang) {
+      return res
+        .status(400)
+        .json({ error: { message: "Đơn hàng không tồn tại" } });
+    } else {
+      if (tinhTrang == 4) {
+        for (let sach of donHang?.danhSach) {
+          const sachResult = await Sach.findOne({ _id: sach?.sach?._id });
+          if (sachResult) {
+            const soLuongNew = sachResult?.soLuong + sach?.soLuong;
+            await Sach.findOneAndUpdate(
+              { _id: sach?.sach?._id },
+              { soLuong: soLuongNew }
+            );
+          } else {
+            res
+              .status("400")
+              .json({ error: { message: "Sach khong ton tai" } });
+          }
         }
-        res.status(200).json({ data: donHang, message: "Cập nhật thành công" });
-        // break;
-      // };
-      // case 2: {
-      //   const donHang = await DonHang.findOneAndUpdate({ _id: id }, { ...req.body });
-      //   break;
-      // };
-      // default: break;
+      }
+      res.status(200).json({ data: donHang, message: "Cập nhật thành công" });
+    }
+    // break;
+    // };
+    // case 2: {
+    //   const donHang = await DonHang.findOneAndUpdate({ _id: id }, { ...req.body });
+    //   break;
+    // };
+    // default: break;
     // }
   } catch (err) {
-    return res.status(500).json({error: {message: "Lỗi hệ thống"}})
+    return res.status(500).json({ error: { message: "Lỗi hệ thống" } });
   }
 };
 
