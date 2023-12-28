@@ -22,7 +22,7 @@ const getAllDanhGia = async (req, res) => {
         soSao: danhGia?.soSao,
         ngayTao: danhGia?.ngayTao,
         idDanhGiaFather: danhGia?.idDanhGiaFather,
-        admin: danhGia?.admin
+        admin: danhGia?.admin,
       };
     });
     return res.status(200).json({ data: result });
@@ -42,7 +42,18 @@ const createDanhGia = async (req, res) => {
     hinhAnh = null,
     admin = false,
   } = req.body;
-  console.log('body', req.body)
+  console.log("body", req.body);
+  const tuTucTieu = ["tục", "tiểu", "cc", "đụ mẹ", "..."]; // Thêm các từ khóa cần kiểm tra
+
+  const containsTuTucTieu = tuTucTieu.some((keyword) =>
+    noiDung.toLowerCase().includes(keyword)
+  );
+
+  if (containsTuTucTieu) {
+    return res
+      .status(400)
+      .json({ error: { message: "Đánh giá chứa từ ngữ không phù hợp" } });
+  }
   try {
     let uploadImage = {};
     if (hinhAnh) {
@@ -64,7 +75,7 @@ const createDanhGia = async (req, res) => {
       ngayTao: new Date().toString(),
       hinhAnh: uploadImage,
       idDanhGiaFather,
-      admin
+      admin,
     });
     res.status(200).json({ message: "Thêm thành công", data: danhGia });
   } catch (error) {
