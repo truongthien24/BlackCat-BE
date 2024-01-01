@@ -83,7 +83,7 @@ const loginTaiKhoan = async (req, res) => {
         } else {
           return res.status(400).send({
             error: {
-              message: "Tài khoản chưa được xác thực email"
+              message: "Tài khoản chưa được xác thực email",
             },
           });
         }
@@ -173,40 +173,40 @@ const postCreateTaiKhoan = async (req, res) => {
         .send({ message: "An email sent to your account please verify" });
     }
     if (checkTrungTenDangNhap?._id) {
-    res.status(400).json({
-      error: {
-        message: "Tên đăng nhập đã tồn tại",
-      },
-    });
-  } else {
-    // const hashPassword = ""
+      res.status(400).json({
+        error: {
+          message: "Tên đăng nhập đã tồn tại",
+        },
+      });
+    } else {
+      // const hashPassword = ""
 
-    const gioHang = await GioHang.create({
-      danhSach: [],
-    });
-    const hashPasswordFromBcrypt = await hashPassword(matKhau);
+      const gioHang = await GioHang.create({
+        danhSach: [],
+      });
+      const hashPasswordFromBcrypt = await hashPassword(matKhau);
 
-    const user = await TaiKhoan.create({
-      tenDangNhap,
-      matKhau: hashPasswordFromBcrypt,
-      email,
-      loaiTaiKhoan,
-      xacThucEmail: false,
-      gioHang: gioHang?._id,
-    });
-    const tokens = await token.create({
-      taiKhoanId: user._id,
-      token: jwt.sign({ id: user._id }, "jwtSecretKey", { expiresIn: 300 }),
-    });
-    const url = `localhost:3000/${user._id}/verify/${tokens.token}`;
-    await sendEmail(user.email, "Verify Email", url);
-    res
-      .status(201)
-      .send({ message: "An email sent to your account please verify" });
+      const user = await TaiKhoan.create({
+        tenDangNhap,
+        matKhau: hashPasswordFromBcrypt,
+        email,
+        loaiTaiKhoan,
+        xacThucEmail: false,
+        gioHang: gioHang?._id,
+      });
+      const tokens = await token.create({
+        taiKhoanId: user._id,
+        token: jwt.sign({ id: user._id }, "jwtSecretKey", { expiresIn: 300 }),
+      });
+      const url = `localhost:3000/${user._id}/verify/${tokens.token}`;
+      await sendEmail(user.email, "Verify Email", url);
+      res
+        .status(201)
+        .send({ message: "An email sent to your account please verify" });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
-} catch (error) {
-  res.status(400).json({ error: error.message });
-}
 };
 
 const updateTaiKhoan = async (req, res) => {
@@ -238,11 +238,14 @@ const loginAdmin = async (req, res) => {
   const { tenDangNhap, matKhau } = req?.body;
   try {
     const users = await TaiKhoan.findOne({ tenDangNhap });
-    console.log('users', users)
+    console.log("users", users);
     if (users) {
       const checkPassword = await bcrypt.compareSync(matKhau, users?.matKhau);
       if (checkPassword) {
-        if (users.loaiTaiKhoan === "admin" || users.loaiTaiKhoan === "employee") {
+        if (
+          users.loaiTaiKhoan === "admin" ||
+          users.loaiTaiKhoan === "employee"
+        ) {
           const id = users?._id;
           // Đăng ký token
           // const token = jwt.sign({ id }, "jwtSecretKey", { expiresIn: 300 });
@@ -260,7 +263,7 @@ const loginAdmin = async (req, res) => {
               tenDangNhap: users?.tenDangNhap,
               email: users?.email,
             },
-            Message: "Login sucess!",
+            Message: "Đăng nhập thành công.",
           });
         } else {
           return res.status(400).json({
@@ -268,16 +271,15 @@ const loginAdmin = async (req, res) => {
           });
         }
       } else {
-        res.status(400).json({ error: { message: "Mật khẩu không chính xác" } });
+        res
+          .status(400)
+          .json({ error: { message: "Mật khẩu không chính xác" } });
       }
     } else {
       res.status(400).json({ error: { message: "Tài khoản không tồn tại" } });
-
     }
   } catch (error) {
-    res
-      .status(400)
-      .json({ error: "Lỗi hệ thông" });
+    res.status(400).json({ error: "Lỗi hệ thông" });
   }
 };
 
