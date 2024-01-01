@@ -43,7 +43,7 @@ const createDanhGia = async (req, res) => {
     admin = false,
   } = req.body;
   console.log("body", req.body);
-  const tuTucTieu = ["tục", "tiểu", "cc", "đụ mẹ", "..."]; // Thêm các từ khóa cần kiểm tra
+  const tuTucTieu = ["tục", "tiểu", "cc", "..."]; // Thêm các từ khóa cần kiểm tra
 
   const containsTuTucTieu = tuTucTieu.some((keyword) =>
     noiDung.toLowerCase().includes(keyword)
