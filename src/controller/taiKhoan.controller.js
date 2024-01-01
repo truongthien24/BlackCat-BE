@@ -82,14 +82,16 @@ const loginTaiKhoan = async (req, res) => {
           });
         } else {
           return res.status(400).send({
-            error: { message: "Tài khoản chưa được xác thực email" },
+            error: "Tài khoản chưa được xác thực email",
           });
         }
       } else {
-        res.status(400).json({
-          error: { message: "Tên đăng nhập hoặc mật khẩu không chính xác" },
-        });
+        res
+          .status(400)
+          .json({ error: "Tên đăng nhập hoặc mật khẩu không chính xác" });
       }
+    } else {
+      res.status(400).json({ error: { message: "Tài khoản không tồn tại" } });
     }
   } catch (error) {
     res.status(400).json({ error: { message: "Lỗi hệ thống" } });
@@ -113,68 +115,46 @@ const postCreateTaiKhoan = async (req, res) => {
         error: { message: "Tên đăng nhập không được chứa dấu cách" },
       });
     }
-    if (/\s/.test(matKhau)) {
-      return res.status(400).json({
-        error: { message: "Mật khẩu không được chứa dấu cách" },
-      });
-    }
-    // const isPasswordValid = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).*$/.test(
-    //   matKhau
-    // );
-    // if (!isPasswordValid) {
-    //   return res.status(400).json({
-    //     error: {
-    //       message:
-    //         "Mật khẩu không hợp lệ. Phải bắt đầu bằng chữ cái viết hoa và chứa ít nhất một ký tự đặc biệt.",
-    //     },
-    //   });
-    // }
     const checkTrungEmail = await TaiKhoan.findOne({ email });
     if (checkTrungTenDangNhap?._id) {
-      res.status(400).json({
-        error: {
-          message: "Tên đăng nhập đã tồn tại",
-        },
-      });
-    } else if (checkTrungEmail?._id) {
-      res.status(400).json({
-        error: {
-          message: "Email đã tồn tại",
-        },
-      });
-    } else {
-      // const hashPassword = ""
+    res.status(400).json({
+      error: {
+        message: "Tên đăng nhập đã tồn tại",
+      },
+    });
+  } else {
+    // const hashPassword = ""
 
-      const gioHang = await GioHang.create({
-        danhSach: [],
-      });
-      const hashPasswordFromBcrypt = await hashPassword(matKhau);
+    const gioHang = await GioHang.create({
+      danhSach: [],
+    });
+    const hashPasswordFromBcrypt = await hashPassword(matKhau);
 
-      const user = await TaiKhoan.create({
-        tenDangNhap,
-        matKhau: hashPasswordFromBcrypt,
-        email,
-        loaiTaiKhoan,
-        xacThucEmail: false,
-        gioHang: gioHang?._id,
-      });
-      const tokens = await token.create({
-        taiKhoanId: user._id,
-        token: jwt.sign({ id: user._id }, "jwtSecretKey", { expiresIn: 300 }),
-      });
-      const url = `localhost:3000/${user._id}/verify/${tokens.token}`;
-      await sendEmail(user.email, "Verify Email", url);
-      res
-        .status(201)
-        .send({ message: "An email sent to your account please verify" });
-    }
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    const user = await TaiKhoan.create({
+      tenDangNhap,
+      matKhau: hashPasswordFromBcrypt,
+      email,
+      loaiTaiKhoan,
+      xacThucEmail: false,
+      gioHang: gioHang?._id,
+    });
+    const tokens = await token.create({
+      taiKhoanId: user._id,
+      token: jwt.sign({ id: user._id }, "jwtSecretKey", { expiresIn: 300 }),
+    });
+    const url = `localhost:3000/${user._id}/verify/${tokens.token}`;
+    await sendEmail(user.email, "Verify Email", url);
+    res
+      .status(201)
+      .send({ message: "An email sent to your account please verify" });
   }
+} catch (error) {
+  res.status(400).json({ error: error.message });
+}
 };
 
 const updateTaiKhoan = async (req, res) => {
-  const { id, tenDangNhap, matKhau, thongTinNhanHang } = req.body;
+  const { id, tenDangNhap, matKhau, thongTinNhanHang, loaiTaiKhoan } = req.body;
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res
@@ -221,18 +201,21 @@ const loginAdmin = async (req, res) => {
             tenDangNhap: users?.tenDangNhap,
             email: users?.email,
           },
-          Message: "Đăng nhập thành công",
+          Message: "Login sucess!",
         });
       } else {
         return res.status(400).json({
-          error: { message: "Tài khoản không được cấp quyền" },
+          error: "Tài khoản không được cấp quyền",
         });
       }
+    } else {
+      res.status(400).json({ error: { message: "Tài khoản không tồn tại" } });
+
     }
   } catch (error) {
-    res.status(400).json({
-      error: { message: "Tên đăng nhập hoặc mật khẩu không chính xác" },
-    });
+    res
+      .status(400)
+      .json({ error: "Tên đăng nhập hoặc mật khẩu không chính xác" });
   }
 };
 
