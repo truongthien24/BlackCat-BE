@@ -2,6 +2,7 @@ const Sach = require("../models/Sach");
 const mongoose = require("mongoose");
 const { uploadToCloudinary } = require("../utils/uploadFileCloud");
 const GioHang = require("../models/GioHang");
+const DonHang = require("../models/DonHang");
 
 const getAllSach = async (req, res) => {
   try {
@@ -56,7 +57,7 @@ const findSach = async (req, res) => {
       tenSach: { $regex: ".*" + tenSach + ".*", $options: "i" },
     })
       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
-      .populate({ path: "tacGia", model: "tacGia"})
+      .populate({ path: "tacGia", model: "tacGia" })
       .populate({ path: "theLoai", model: "theLoai" })
       .populate({ path: "nhaXuatBan", model: "nhaXuatBan" })
       .populate({ path: "ngonNgu", model: "ngonNgu" });
@@ -246,6 +247,15 @@ const deleteSach = async (req, res) => {
     return res.status(400).json({
       error: {
         message: "Sách này đang trong giỏ hàng",
+      },
+    });
+  }
+  // Kiểm tra sách có đang trong đơn hàng hay không
+  const donHang = await DonHang.findOne({ "danhSach.sach._id": id });
+  if (donHang) {
+    return res.status(400).json({
+      error: {
+        message: "Sách này đang trong đơn hàng",
       },
     });
   }

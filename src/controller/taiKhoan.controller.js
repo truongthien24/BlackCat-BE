@@ -204,9 +204,7 @@ const postCreateTaiKhoan = async (req, res) => {
         .status(201)
         .send({ message: "An email sent to your account please verify" });
     }
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  } catch (error) {}
 };
 
 const updateTaiKhoan = async (req, res) => {
