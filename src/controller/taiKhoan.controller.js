@@ -11,7 +11,7 @@ const sendEmailForgetPassword = require("../utils/sendEmailForgetPassword");
 const getAllTaiKhoan = async (req, res) => {
   try {
     const users = await TaiKhoan.find({});
-    res.status(200).json({data: users, message: 'Lấy thành công'});
+    res.status(200).json({ data: users, message: "Lấy thành công" });
   } catch (error) {
     res.status(500).json({ error: "Lỗi hệ thống" });
   }
@@ -179,6 +179,12 @@ const postCreateTaiKhoan = async (req, res) => {
           message: "Tên đăng nhập đã tồn tại",
         },
       });
+    } else if (checkTrungEmail?._id) {
+      res.status(400).json({
+        error: {
+          message: "Email đã tồn tại",
+        },
+      });
     } else {
       // const hashPassword = ""
 
@@ -194,7 +200,7 @@ const postCreateTaiKhoan = async (req, res) => {
         loaiTaiKhoan,
         xacThucEmail: false,
         gioHang: gioHang?._id,
-        baoXau: false
+        baoXau: false,
       });
       const tokens = await token.create({
         taiKhoanId: user._id,
@@ -210,19 +216,20 @@ const postCreateTaiKhoan = async (req, res) => {
 };
 
 const updateTaiKhoan = async (req, res) => {
-  const { _id, tenDangNhap, matKhau, thongTinNhanHang, loaiTaiKhoan } = req.body;
+  const { _id, tenDangNhap, matKhau, thongTinNhanHang, loaiTaiKhoan } =
+    req.body;
   try {
     if (!mongoose.Types.ObjectId.isValid(_id)) {
       return res
         .status(400)
         .json({ error: { message: "Tài khoản không tồn tại" } });
     }
-    console.log('123', req.body)
+    console.log("123", req.body);
     const account = await TaiKhoan.findOneAndUpdate(
       { _id: _id },
       { ...req.body }
     );
-    console.log('account', account)
+    console.log("account", account);
 
     if (!account) {
       return res
