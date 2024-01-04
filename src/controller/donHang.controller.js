@@ -117,14 +117,6 @@ const updateDonHang = async (req, res) => {
       }
       res.status(200).json({ data: donHang, message: "Cập nhật thành công" });
     }
-    // break;
-    // };
-    // case 2: {
-    //   const donHang = await DonHang.findOneAndUpdate({ _id: id }, { ...req.body });
-    //   break;
-    // };
-    // default: break;
-    // }
   } catch (err) {
     return res.status(500).json({ error: { message: "Lỗi hệ thống" } });
   }

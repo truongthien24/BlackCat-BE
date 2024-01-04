@@ -190,7 +190,6 @@ const loginAdmin = async (req, res) => {
   const { tenDangNhap, matKhau } = req?.body;
   try {
     const users = await TaiKhoan.findOne({ tenDangNhap });
-    console.log('users', users)
     if (users) {
       const checkPassword = await bcrypt.compareSync(matKhau, users?.matKhau);
       if (checkPassword) {
