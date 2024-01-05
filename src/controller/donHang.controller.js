@@ -92,14 +92,19 @@ const updateDonHang = async (req, res) => {
     //   case 1: {
     const donHang = await DonHang.findOneAndUpdate(
       { _id: id },
-      { ...req.body }
+      {
+        ...req.body,
+        ...(tinhTrang === 2 && {
+          thongTinThanhToan: { ...req.body.thongTinThanhToan, thanhToan: true },
+        }),
+      }
     );
     if (!donHang) {
       return res
         .status(400)
         .json({ error: { message: "Đơn hàng không tồn tại" } });
     } else {
-      if (tinhTrang == 4) {
+      if (tinhTrang == 4 || tinhTrang == 5) {
         for (let sach of donHang?.danhSach) {
           const sachResult = await Sach.findOne({ _id: sach?.sach?._id });
           if (sachResult) {
