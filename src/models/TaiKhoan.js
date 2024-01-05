@@ -31,7 +31,7 @@ const TaiKhoanSchema = new mongoose.Schema({
   ],
   baoXau: {
     type: Boolean
-  }
+  },
 });
 
 const TaiKhoanModel = mongoose.model("taiKhoan", TaiKhoanSchema);
