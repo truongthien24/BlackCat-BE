@@ -86,58 +86,18 @@ const createDanhGia = async (req, res) => {
 ///params
 const updateDanhGia = async (req, res) => {
   const { id } = req.params;
-  const { tenMaDanhGia } = req.body;
-  let ten = tenMaDanhGia.trim();
-  let ten1 = ten.replace(/\s+/g, " ");
-  const DanhGia = await DanhGia.findOne({ _id: id });
-  const checkTrung = await DanhGia.findOne({
-    tenMaDanhGia: {
-      $regex: ten1,
-      $options: "i",
-    },
-  });
-  // Check trùng
-  if (checkTrung) {
-    if (checkTrung?._id?.toString() === id) {
-      const DanhGiaUpdate = await DanhGia.findOneAndUpdate(
-        { _id: id },
-        { ...req.body }
-      );
-      if (!DanhGiaUpdate) {
-        return res.status(400).json({
-          error: {
-            message: "Tên mã giảm giá không tồn tại",
-          },
-        });
-      } else {
-        res.status(200).json({ data: DanhGia, message: "Cập nhật thành công" });
-      }
-    } else {
-      return res.status(400).json({
-        error: {
-          message: "Tên mã giảm giá đã tồn tại",
-        },
-      });
-    }
+  const DanhGiaUpdate = await DanhGia.findOneAndUpdate(
+    { _id: id },
+    { ...req.body }
+  );
+  if (!DanhGiaUpdate) {
+    return res.status(400).json({
+      error: {
+        message: "Đánh giá không tồn tại",
+      },
+    });
   } else {
-    if (ten1.toUpperCase() === DanhGia.tenMaDanhGia.toUpperCase()) {
-      return res
-        .status(400)
-        .json({ error: { message: "Tên mã giảm giá đã tồn tại" } });
-    }
-    const DanhGiaUpdate = await DanhGia.findOneAndUpdate(
-      { _id: id },
-      { ...req.body, tenMaDanhGia: ten1 }
-    );
-    if (!DanhGiaUpdate) {
-      return res.status(400).json({
-        error: {
-          message: "Tên mã giảm giá không tồn tại",
-        },
-      });
-    } else {
-      res.status(200).json({ data: DanhGia, message: "Cập nhật thành công" });
-    }
+    res.status(200).json({ data: DanhGia, message: "Cập nhật thành công" });
   }
 };
 

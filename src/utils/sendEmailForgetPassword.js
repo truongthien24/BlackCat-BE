@@ -17,7 +17,7 @@ module.exports = async (email, subject, text) => {
     });
 
     // Read the HTML template
-    const source = fs.readFileSync(__dirname + "/emailTemplateForgetPassword.hbs", "utf8");
+    const source = fs.readFileSync(__dirname + "/EmailTemplateForgetPassword.hbs", "utf8");
     const template = handlebars.compile(source);
 
     // Replace placeholders in the template
