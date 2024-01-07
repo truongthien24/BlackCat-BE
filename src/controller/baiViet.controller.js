@@ -33,7 +33,7 @@ const createBaiViet = async (req, res) => {
       const baiViet = await BaiViet.create({
         tenBaiViet,
         noiDung,
-        ngayTao,
+        ngayTao: new Date().toString(),
         hinhAnh: {
           public_id: uploadImage.public_id,
           url: uploadImage.secure_url,
