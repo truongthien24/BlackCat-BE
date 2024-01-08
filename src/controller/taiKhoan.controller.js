@@ -122,17 +122,17 @@ const postCreateTaiKhoan = async (req, res) => {
         error: { message: "Mật khẩu không được chứa dấu cách" },
       });
     }
-    // const isPasswordValid = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).*$/.test(
-    //   matKhau
-    // );
-    // if (!isPasswordValid) {
-    //   return res.status(400).json({
-    //     error: {
-    //       message:
-    //         "Mật khẩu không hợp lệ. Phải bắt đầu bằng chữ cái viết hoa và chứa ít nhất một ký tự đặc biệt.",
-    //     },
-    //   });
-    // }
+    const isPasswordValid = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).*$/.test(
+      matKhau
+    );
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        error: {
+          message:
+            "Mật khẩu không hợp lệ. Phải bắt đầu bằng chữ cái viết hoa và chứa ít nhất một ký tự đặc biệt.",
+        },
+      });
+    }
     const checkTrungEmail = await TaiKhoan.findOne({ email });
     // if (checkTrungTenDangNhap?._id) {
     //   res.status(400).json({
@@ -217,12 +217,10 @@ const updateTaiKhoan = async (req, res) => {
         .status(400)
         .json({ error: { message: "Tài khoản không tồn tại" } });
     }
-    console.log('123', req.body)
     const account = await TaiKhoan.findOneAndUpdate(
       { _id: _id },
       { ...req.body }
     );
-    console.log('account', account)
 
     if (!account) {
       return res
