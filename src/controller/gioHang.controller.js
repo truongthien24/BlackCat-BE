@@ -1,7 +1,9 @@
 const GioHang = require("../models/GioHang");
 const Sach = require("../models/Sach");
+const GiamGia = require("../models/GiamGia");
 const { json } = require("body-parser");
 const sendEmailPaymentSuccess = require("../utils/sendEmailPaymentSuccess");
+const { default: mongoose } = require("mongoose");
 
 const getAllGioHang = async (req, res) => {
   try {
@@ -16,12 +18,27 @@ const getAllGioHang = async (req, res) => {
 const getGioHangByID = async (req, res) => {
   const { id } = req.params;
   try {
-    const gioHang = await GioHang.findOne({ _id: id }).populate(
+    let gioHang = await GioHang.findOne({ _id: id }).populate(
       "danhSach.sach"
     );
-    res.status(200).json({ data: gioHang, message: "Lấy thành công" });
+    console.log('gioHang?.danhSach', gioHang?.danhSach)
+
+    for(let index = 0; index < gioHang?.danhSach?.length; index++) {
+      console.log(index, gioHang?.danhSach[index]?.sach)
+      if (mongoose.Types.ObjectId.isValid(gioHang?.danhSach[index]?.sach?.giamGia)) {
+        const giamGia = await GiamGia.findOne({_id: gioHang?.danhSach[index]?.sach?.giamGia})
+        console.log('giamGia', giamGia)
+        if(giamGia) {
+         gioHang.danhSach[index].sach.maGiamGia = giamGia._id;
+         gioHang.danhSach[index].sach.phanTramGiamGia = giamGia.phanTramGiamGia;
+        }
+      } 
+    }
+    if(gioHang) {
+      res.status(200).json({ data: gioHang, message: "Lấy thành công" });
+    }
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ error: {message: 'Loi he thong'}  });
   }
 };
 
