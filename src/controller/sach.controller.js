@@ -95,6 +95,60 @@ const findSach = async (req, res) => {
   }
 };
 
+// const findSach = async (req, res) => {
+//   const { tenSach, noiDung } = req.body;
+//   let objectFind = {};
+
+//   // Sử dụng $or để tìm kiếm theo tenSach hoặc noiDung
+//   if (tenSach || noiDung) {
+//     objectFind.$or = [
+//       { tenSach: { $regex: ".*" + tenSach + ".*", $options: "i" } },
+//       { noiDung: { $regex: ".*" + tenSach + ".*", $options: "i" } }
+//     ];
+//   }
+
+//   try {
+//     const sachs = await Sach.find(objectFind)
+//       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
+//       .populate({ path: "tacGia", model: "tacGia" })
+//       .populate({ path: "theLoai", model: "theLoai" })
+//       .populate({ path: "nhaXuatBan", model: "nhaXuatBan" })
+//       .populate({ path: "ngonNgu", model: "ngonNgu" });
+
+//     const result = await sachs?.map((sach) => ({
+//       _id: sach._id,
+//       tenSach: sach.tenSach,
+//       tenNhaCungCap: sach?.nhaCungCap?.tenNhaCungCap,
+//       maNhaCungCap: sach?.nhaCungCap?._id?.toString(),
+//       tenTheLoai: sach?.theLoai?.tenTheLoai,
+//       maTheLoai: sach?.theLoai?._id?.toString(),
+//       tenNhaXuatBan: sach?.nhaXuatBan?.tenNXB,
+//       maNhaXuatBan: sach?.nhaXuatBan?._id?.toString(),
+//       tenTacGia: sach?.tacGia?.tenTacGia,
+//       chiTietTacGia: sach?.tacGia?.chiTietTacGia,
+//       maTacGia: sach?.tacGia?._id?.toString(),
+//       soLuong: sach.soLuong,
+//       maSach: sach.maSach,
+//       gia: sach.gia,
+//       tenNgonNgu: sach?.ngonNgu?._id?.toString(),
+//       maNgonNgu: sach?.ngonNgu?._id?.toString(),
+//       namXuatBan: sach.namXuatBan,
+//       tinhTrang: sach.tinhTrang,
+//       hinhAnh: sach.hinhAnh,
+//       biaSach: sach.biaSach,
+//       noiDung: sach.noiDung,
+//     }));
+
+//     res.status(200).json({ data: result, message: "success" });
+//   } catch (error) {
+//     res.status(400).json({
+//       error: {
+//         message: error.message,
+//       },
+//     });
+//   }
+// };
+
 const getSachByID = async (req, res) => {
   const { id } = req.params;
   try {
