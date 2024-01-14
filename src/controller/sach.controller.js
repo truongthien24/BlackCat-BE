@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const { uploadToCloudinary } = require("../utils/uploadFileCloud");
 const GioHang = require("../models/GioHang");
 const DonHang = require("../models/DonHang");
+const TheLoai = require("../models/TheLoai");
 
 const getAllSach = async (req, res) => {
   try {
@@ -12,7 +13,8 @@ const getAllSach = async (req, res) => {
       .populate({ path: "tacGia", model: "tacGia" })
       .populate({ path: "theLoai", model: "theLoai" })
       .populate({ path: "nhaXuatBan", model: "nhaXuatBan" })
-      .populate({ path: "ngonNgu", model: "ngonNgu" });
+      .populate({ path: "ngonNgu", model: "ngonNgu" })
+      .populate({ path: "giamGia", model: "giamGia" });
     const result = await sachs?.map((sach) => {
       return {
         _id: sach._id,
@@ -30,6 +32,9 @@ const getAllSach = async (req, res) => {
         maSach: sach.maSach,
         gia: sach.gia,
         namXuatBan: sach.namXuatBan,
+        maGiamGia: sach.giamGia?._id?.toString(),
+        tenGiamGia: sach?.giamGia?.tenMaGiaGia,
+        phanTramGiamGia: sach?.giamGia?.phanTramGiamGia,
         tinhTrang: sach.tinhTrang,
         hinhAnh: sach.hinhAnh,
         biaSach: sach.biaSach,
@@ -46,21 +51,30 @@ const getAllSach = async (req, res) => {
 };
 
 const findSach = async (req, res) => {
-  const { tenSach } = req.body;
+  const { tenSach, theLoai } = req.body;
   let objectFind = {};
-  if (tenSach) {
-    objectFind.tenSach = tenSach;
-  }
-
+  
   try {
+    if (tenSach) {
+      objectFind.tenSach = tenSach;
+    }
+    if(theLoai) {
+      const theLoais = await TheLoai.findOne({tenTheLoai: theLoai});
+      if(theLoais) {
+        objectFind.theLoai = theLoais;
+      }
+    }
     const sachs = await Sach.find({
-      tenSach: { $regex: ".*" + tenSach + ".*", $options: "i" },
+      ...(objectFind?.tenSach && {tenSach: { $regex: ".*" + tenSach + ".*", $options: "i" }}),
+      ...(objectFind?.theLoai && {theLoai: objectFind?.theLoai._id})
     })
       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
       .populate({ path: "tacGia", model: "tacGia" })
       .populate({ path: "theLoai", model: "theLoai" })
       .populate({ path: "nhaXuatBan", model: "nhaXuatBan" })
-      .populate({ path: "ngonNgu", model: "ngonNgu" });
+      .populate({ path: "ngonNgu", model: "ngonNgu" })
+      .populate({ path: "giamGia", model: "giamGia" });
+
     const result = await sachs?.map((sach) => {
       return {
         _id: sach._id,
@@ -83,6 +97,9 @@ const findSach = async (req, res) => {
         tinhTrang: sach.tinhTrang,
         hinhAnh: sach.hinhAnh,
         biaSach: sach.biaSach,
+        maGiamGia: sach.giamGia?._id?.toString(),
+        tenGiamGia: sach?.giamGia?.tenMaGiaGia,
+        phanTramGiamGia: sach?.giamGia?.phanTramGiamGia,
       };
     });
     res.status(200).json({ data: result, message: "success" });
@@ -106,7 +123,8 @@ const getSachByID = async (req, res) => {
       .populate({ path: "tacGia", model: "tacGia" })
       .populate({ path: "theLoai", model: "theLoai" })
       .populate({ path: "nhaXuatBan", model: "nhaXuatBan" })
-      .populate({ path: "ngonNgu", model: "ngonNgu" });
+      .populate({ path: "ngonNgu", model: "ngonNgu" })
+      .populate({ path: "giamGia", model: "giamGia" });
     if (!sach._id) {
       return res.status(400).json({ error: "Không có data" });
     }
@@ -136,6 +154,9 @@ const getSachByID = async (req, res) => {
       maNgonNgu: sach?.ngonNgu?._id?.toString(),
       quocGia: sach.quocGia,
       biaSach: sach.biaSach,
+      maGiamGia: sach.giamGia?._id?.toString(),
+      tenGiamGia: sach?.giamGia?.tenMaGiamGia,
+      phanTramGiamGia: sach?.giamGia?.phanTramGiamGia,
     };
     res.status(200).json({ data: result, message: "success" });
   } catch (error) {
@@ -163,6 +184,7 @@ const createSach = async (req, res) => {
     soTrang,
     kichThuoc,
     biaSach,
+    giamGia,
   } = req.body;
   try {
     const checkTrung = await Sach.findOne({ maSach });
@@ -193,6 +215,7 @@ const createSach = async (req, res) => {
         soTrang,
         kichThuoc,
         biaSach,
+        giamGia,
         hinhAnh: {
           public_id: uploadImage.public_id,
           url: uploadImage.secure_url,
