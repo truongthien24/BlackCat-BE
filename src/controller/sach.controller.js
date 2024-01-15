@@ -4,6 +4,7 @@ const { uploadToCloudinary } = require("../utils/uploadFileCloud");
 const GioHang = require("../models/GioHang");
 const DonHang = require("../models/DonHang");
 const TheLoai = require("../models/TheLoai");
+const TacGia = require("../models/TacGia");
 
 const getAllSach = async (req, res) => {
   try {
@@ -53,20 +54,32 @@ const getAllSach = async (req, res) => {
 const findSach = async (req, res) => {
   const { tenSach, theLoai } = req.body;
   let objectFind = {};
-  
+
   try {
     if (tenSach) {
       objectFind.tenSach = tenSach;
+      const tacGia = await TacGia.findOne({
+        tenTacGia: { $regex: ".*" + tenSach + ".*", $options: "i" },
+      });
+      if (tacGia) {
+        objectFind.tacGia = tacGia;
+      }
     }
-    if(theLoai) {
-      const theLoais = await TheLoai.findOne({tenTheLoai: theLoai});
-      if(theLoais) {
+    if (theLoai) {
+      const theLoais = await TheLoai.findOne({ tenTheLoai: theLoai });
+      if (theLoais) {
         objectFind.theLoai = theLoais;
       }
     }
     const sachs = await Sach.find({
-      ...(objectFind?.tenSach && {tenSach: { $regex: ".*" + tenSach + ".*", $options: "i" }}),
-      ...(objectFind?.theLoai && {theLoai: objectFind?.theLoai._id})
+      ...(objectFind?.tenSach && {
+        $or: [
+          { tacGia: objectFind?.tacGia?._id },
+          { tenSach: { $regex: ".*" + tenSach + ".*", $options: "i" } },
+          { noiDung: { $regex: ".*" + tenSach + ".*", $options: "i" } },
+        ],
+      }),
+      ...(objectFind?.theLoai && { theLoai: objectFind?.theLoai._id }),
     })
       .populate({ path: "nhaCungCap", model: "nhaCungCap" })
       .populate({ path: "tacGia", model: "tacGia" })
@@ -106,7 +119,7 @@ const findSach = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       error: {
-        message: error,
+        message: "Lỗi hệ thống",
       },
     });
   }

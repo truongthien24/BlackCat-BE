@@ -18,27 +18,30 @@ const getAllGioHang = async (req, res) => {
 const getGioHangByID = async (req, res) => {
   const { id } = req.params;
   try {
-    let gioHang = await GioHang.findOne({ _id: id }).populate(
-      "danhSach.sach"
-    );
-    console.log('gioHang?.danhSach', gioHang?.danhSach)
+    let gioHang = await GioHang.findOne({ _id: id }).populate("danhSach.sach");
+    console.log("gioHang?.danhSach", gioHang?.danhSach);
 
-    for(let index = 0; index < gioHang?.danhSach?.length; index++) {
-      console.log(index, gioHang?.danhSach[index]?.sach)
-      if (mongoose.Types.ObjectId.isValid(gioHang?.danhSach[index]?.sach?.giamGia)) {
-        const giamGia = await GiamGia.findOne({_id: gioHang?.danhSach[index]?.sach?.giamGia})
-        console.log('giamGia', giamGia)
-        if(giamGia) {
-         gioHang.danhSach[index].sach.maGiamGia = giamGia._id;
-         gioHang.danhSach[index].sach.phanTramGiamGia = giamGia.phanTramGiamGia;
+    for (let index = 0; index < gioHang?.danhSach?.length; index++) {
+      console.log(index, gioHang?.danhSach[index]?.sach);
+      if (
+        mongoose.Types.ObjectId.isValid(gioHang?.danhSach[index]?.sach?.giamGia)
+      ) {
+        const giamGia = await GiamGia.findOne({
+          _id: gioHang?.danhSach[index]?.sach?.giamGia,
+        });
+        console.log("giamGia", giamGia);
+        if (giamGia) {
+          gioHang.danhSach[index].sach.maGiamGia = giamGia._id;
+          gioHang.danhSach[index].sach.phanTramGiamGia =
+            giamGia.phanTramGiamGia;
         }
-      } 
+      }
     }
-    if(gioHang) {
+    if (gioHang) {
       res.status(200).json({ data: gioHang, message: "Lấy thành công" });
     }
   } catch (error) {
-    return res.status(400).json({ error: {message: 'Loi he thong'}  });
+    return res.status(400).json({ error: { message: "Loi he thong" } });
   }
 };
 
@@ -176,20 +179,10 @@ const checkSanPham = async (req, res) => {
   }
 };
 
-const sendMailGioHang = async (req, res) => {
-  await sendEmailPaymentSuccess(
-    "truongthien2411@gmail.com",
-    "Verify Email",
-    req.body
-  );
-  return res.status(200).json({ message: "Thanh toán thành công" });
-};
-
 module.exports = {
   getAllGioHang,
   updateGioHang,
   getGioHangByID,
   checkSanPham,
-  sendMailGioHang,
   deleteSanPhamKhoiGioHang,
 };

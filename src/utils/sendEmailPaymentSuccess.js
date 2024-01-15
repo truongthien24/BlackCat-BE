@@ -17,11 +17,20 @@ module.exports = async (email, subject, data) => {
     });
 
     // Read the HTML template
-    const source = fs.readFileSync(__dirname + "/emailTemplatePaymentSuccess.hbs", "utf8");
+    const source = fs.readFileSync(
+      __dirname + "/EmailTemplatePaymentSuccess.hbs",
+      "utf8"
+    );
     const template = handlebars.compile(source);
 
     // Replace placeholders in the template
-    const html = template({ danhSach: data?.danhSach, tongGia: (data?.tongGia).toLocaleString(), maDonHang: data?.maDonHang, thongTinGiaoHang: data?.thongTinGiaoHang, email: email });
+    const html = template({
+      danhSach: data?.danhSach,
+      tongGia: (data?.tongGia).toLocaleString(),
+      maDonHang: data?.maDonHang,
+      thongTinGiaoHang: data?.thongTinGiaoHang,
+      email: email,
+    });
 
     // Send the email
     await transporter.sendMail({
