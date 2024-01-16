@@ -96,7 +96,7 @@ const SachSchema = mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "danhGia",
     },
-  ]
+  ],
 });
 
 const SachModel = mongoose.model("sach", SachSchema);

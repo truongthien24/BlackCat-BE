@@ -1,5 +1,6 @@
 const Sach = require("../models/Sach");
 const mongoose = require("mongoose");
+const _ = require("lodash");
 const { uploadToCloudinary } = require("../utils/uploadFileCloud");
 const GioHang = require("../models/GioHang");
 const DonHang = require("../models/DonHang");
@@ -190,8 +191,8 @@ const getSachByID = async (req, res) => {
       .populate({ path: "tacGia", model: "tacGia" })
       .populate({ path: "theLoai", model: "theLoai" })
       .populate({ path: "nhaXuatBan", model: "nhaXuatBan" })
-      .populate({ path: "ngonNgu", model: "ngonNgu" })
-      .populate({ path: "giamGia", model: "giamGia" });
+      .populate({ path: "ngonNgu", model: "ngonNgu" });
+    // .populate({ path: "giamGia", model: "giamGia" });
     if (!sach._id) {
       return res.status(400).json({ error: "Không có data" });
     }
@@ -311,7 +312,11 @@ const updateSach = async (req, res) => {
   }
   const sach = await Sach.findOneAndUpdate(
     { _id: id },
-    { ...req.body, hinhAnh: image }
+    {
+      ...req.body,
+      hinhAnh: image,
+      giamGia: _.isEmpty(req.body?.giamGia) ? null : req.body?.giamGia,
+    }
   );
 
   if (!sach) {
