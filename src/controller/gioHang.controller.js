@@ -21,22 +21,44 @@ const getGioHangByID = async (req, res) => {
     let gioHang = await GioHang.findOne({ _id: id }).populate(
       "danhSach.sach"
     );
-    console.log('gioHang?.danhSach', gioHang?.danhSach)
+    // console.log('gioHang?.danhSach', gioHang?.danhSach)
 
-    for(let index = 0; index < gioHang?.danhSach?.length; index++) {
-      console.log(index, gioHang?.danhSach[index]?.sach)
-      if (mongoose.Types.ObjectId.isValid(gioHang?.danhSach[index]?.sach?.giamGia)) {
-        const giamGia = await GiamGia.findOne({_id: gioHang?.danhSach[index]?.sach?.giamGia})
-        console.log('giamGia', giamGia)
-        if(giamGia) {
-         gioHang.danhSach[index].sach.maGiamGia = giamGia._id;
-         gioHang.danhSach[index].sach.phanTramGiamGia = giamGia.phanTramGiamGia;
-        }
-      } 
-    }
+    // for(let index = 0; index < gioHang?.danhSach?.length; index++) {
+    //   console.log(index, gioHang?.danhSach[index]?.sach)
+    //   if (mongoose.Types.ObjectId.isValid(gioHang?.danhSach[index]?.sach?.giamGia)) {
+    //     const giamGia = await GiamGia.findOne({_id: gioHang?.danhSach[index]?.sach?.giamGia})
+    //     console.log('giamGia', giamGia)
+    //     if(giamGia) {
+    //      gioHang.danhSach[index].sach.maGiamGia = giamGia._id;
+    //      gioHang.danhSach[index].sach.phanTramGiamGia = giamGia.phanTramGiamGia;
+    //     }
+    //   } 
+    // }
     if(gioHang) {
       res.status(200).json({ data: gioHang, message: "Lấy thành công" });
     }
+
+    // if(gioHang) {
+    //   let resultGioHang = {danhSach: [], _id: gioHang._id, tongGia: gioHang._tongGia};
+    //   for(let index = 0; index < gioHang?.danhSach?.length; index++) {
+    //     let newSach = {...gioHang.danhSach[index].sach._doc, maGiaGia: "", phanTramGiamGia: 0};
+    //     if (mongoose.Types.ObjectId.isValid(gioHang?.danhSach[index]?.sach?.giamGia)) {
+    //       const giamGia = await GiamGia.findOne({_id: gioHang?.danhSach[index]?.sach?.giamGia})
+    //       if(giamGia) {
+    //         newSach.maGiamGia = giamGia._id.toString();
+    //         newSach.phanTramGiamGia = giamGia.phanTramGiamGia;
+    //       } 
+    //     } 
+    //     resultGioHang.danhSach.push({
+    //       sach: newSach,
+    //       soNgay: gioHang.danhSach[index].soLuong,
+    //       soNgayThue: gioHang.danhSach[index].soNgayThue,
+    //       giaThue: (gioHang.danhSach[index]?.sach?.maGiam ? (gioHang.danhSach[index].sach.gia - ((gioHang.danhSach[index].sach.gia * newSach.phanTramGiamGia) / 100)) : gioHang.danhSach[index]?.sach?.gia) * 0.1,
+    //       thanhTien: gioHang.danhSach[index].thanhTien,
+    //       tienCoc: gioHang.danhSach[index].tienCoc,
+    //     });
+    //   }
+    //   console.log('resultGioHang', resultGioHang)
   } catch (error) {
     return res.status(400).json({ error: {message: 'Loi he thong'}  });
   }

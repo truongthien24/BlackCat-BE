@@ -14,7 +14,6 @@ const khachHangschema = mongoose.Schema({
     type: Number,
     required: true,
   },
-
   diachi: {
     type: String,
     required: true,
