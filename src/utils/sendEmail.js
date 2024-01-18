@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 const handlebars = require("handlebars");
 const fs = require("fs");
 
-module.exports = async (email, subject, text) => {
+module.exports = async (email, subject, text, tenDangNhap) => {
   try {
     // Tạo transporter
     const transporter = nodemailer.createTransport({
@@ -17,11 +17,15 @@ module.exports = async (email, subject, text) => {
     });
 
     // Read the HTML template
-    const source = fs.readFileSync(__dirname + "/emailTemplate.hbs", "utf8");
+    const source = fs.readFileSync(__dirname + "/EmailTemplate.hbs", "utf8");
     const template = handlebars.compile(source);
 
     // Replace placeholders in the template
-    const html = template({ href: text, email: email });
+    const html = template({
+      href: text,
+      email: email,
+      tenDangNhap: tenDangNhap,
+    });
 
     // Send the email
     await transporter.sendMail({

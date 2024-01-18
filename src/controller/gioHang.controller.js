@@ -60,7 +60,7 @@ const getGioHangByID = async (req, res) => {
     //   }
     //   console.log('resultGioHang', resultGioHang)
   } catch (error) {
-    return res.status(400).json({ error: {message: 'Loi he thong'}  });
+    return res.status(400).json({ error: { message: "Loi he thong" } });
   }
 };
 
@@ -198,20 +198,10 @@ const checkSanPham = async (req, res) => {
   }
 };
 
-const sendMailGioHang = async (req, res) => {
-  await sendEmailPaymentSuccess(
-    "truongthien2411@gmail.com",
-    "Verify Email",
-    req.body
-  );
-  return res.status(200).json({ message: "Thanh toán thành công" });
-};
-
 module.exports = {
   getAllGioHang,
   updateGioHang,
   getGioHangByID,
   checkSanPham,
-  sendMailGioHang,
   deleteSanPhamKhoiGioHang,
 };

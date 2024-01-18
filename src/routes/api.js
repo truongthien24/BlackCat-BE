@@ -68,7 +68,6 @@ const {
   getGioHangByID,
   updateGioHang,
   checkSanPham,
-  sendMailGioHang,
   deleteSanPhamKhoiGioHang,
 } = require("../controller/gioHang.controller");
 const { authorize } = require("../middlewares/auth");
@@ -193,7 +192,6 @@ router.get("/getAllGioHang", getAllGioHang);
 router.patch("/updateGioHang/:id", updateGioHang);
 router.get("/getGioHangByID/:id", getGioHangByID);
 router.post("/checkSanPham", checkSanPham);
-router.post("/sendMailGioHang", sendMailGioHang);
 router.delete("/deleteSanPhamKhoiGioHang/:id", deleteSanPhamKhoiGioHang);
 
 /// Đơn hàng

@@ -11,7 +11,7 @@ const sendEmailForgetPassword = require("../utils/sendEmailForgetPassword");
 const getAllTaiKhoan = async (req, res) => {
   try {
     const users = await TaiKhoan.find({});
-    res.status(200).json({data: users, message: 'Lấy thành công'});
+    res.status(200).json({ data: users, message: "Lấy thành công" });
   } catch (error) {
     res.status(500).json({ error: "Lỗi hệ thống" });
   }
@@ -20,7 +20,10 @@ const getAllTaiKhoan = async (req, res) => {
 const getAccountByID = async (req, res) => {
   const { id } = req.params;
   try {
-    const account = await TaiKhoan.findOne({ _id: id }).populate({ path: "danhSachYeuThich.sach", model: "sach" });
+    const account = await TaiKhoan.findOne({ _id: id }).populate({
+      path: "danhSachYeuThich.sach",
+      model: "sach",
+    });
     if (account) {
       res.status(200).json({
         data: account,
@@ -122,17 +125,17 @@ const postCreateTaiKhoan = async (req, res) => {
         error: { message: "Mật khẩu không được chứa dấu cách" },
       });
     }
-    const isPasswordValid = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).*$/.test(
-      matKhau
-    );
-    if (!isPasswordValid) {
-      return res.status(400).json({
-        error: {
-          message:
-            "Mật khẩu không hợp lệ. Phải bắt đầu bằng chữ cái viết hoa và chứa ít nhất một ký tự đặc biệt.",
-        },
-      });
-    }
+    // const isPasswordValid = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).*$/.test(
+    //   matKhau
+    // );
+    // if (!isPasswordValid) {
+    //   return res.status(400).json({
+    //     error: {
+    //       message:
+    //         "Mật khẩu không hợp lệ. Phải bắt đầu bằng chữ cái viết hoa và chứa ít nhất một ký tự đặc biệt.",
+    //     },
+    //   });
+    // }
     const checkTrungEmail = await TaiKhoan.findOne({ email });
     // if (checkTrungTenDangNhap?._id) {
     //   res.status(400).json({
@@ -179,6 +182,12 @@ const postCreateTaiKhoan = async (req, res) => {
           message: "Tên đăng nhập đã tồn tại",
         },
       });
+    } else if (checkTrungEmail?._id) {
+      res.status(400).json({
+        error: {
+          message: "Email đã tồn tại",
+        },
+      });
     } else {
       // const hashPassword = ""
 
@@ -194,14 +203,14 @@ const postCreateTaiKhoan = async (req, res) => {
         loaiTaiKhoan,
         xacThucEmail: false,
         gioHang: gioHang?._id,
-        baoXau: false
+        baoXau: false,
       });
       const tokens = await token.create({
         taiKhoanId: user._id,
         token: jwt.sign({ id: user._id }, "jwtSecretKey", { expiresIn: 300 }),
       });
       const url = `localhost:3000/${user._id}/verify/${tokens.token}`;
-      await sendEmail(user.email, "Verify Email", url);
+      await sendEmail(user.email, "Verify Email", url, user.tenDangNhap);
       res
         .status(201)
         .send({ message: "An email sent to your account please verify" });
@@ -210,7 +219,8 @@ const postCreateTaiKhoan = async (req, res) => {
 };
 
 const updateTaiKhoan = async (req, res) => {
-  const { _id, tenDangNhap, matKhau, thongTinNhanHang, loaiTaiKhoan } = req.body;
+  const { _id, tenDangNhap, matKhau, thongTinNhanHang, loaiTaiKhoan } =
+    req.body;
   try {
     if (!mongoose.Types.ObjectId.isValid(_id)) {
       return res
