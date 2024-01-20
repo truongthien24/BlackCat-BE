@@ -177,19 +177,23 @@ const checkSanPham = async (req, res) => {
   const { danhSach } = req.body;
   try {
     for (let sach of danhSach) {
-      const check = await Sach.findOne({ _id: sach?.sach?._id });
-      if (check) {
-        if (check?.soLuong < sach?.soLuong) {
-          return res.status(400).json({
-            error: {
-              message: `Sách ${check?.tenSach} chỉ còn ${check?.soLuong} cuốn không đủ số lượng bạn cần :((`,
-            },
-          });
-        }
+      if(sach?.soLuong > 10) {
+        return res.status(400).json({error: {message: `${sach?.sach?.tenSach} quá số lượng cho phép (10 cuốn). Xin vui lòng liên hệ: 18006000`}})
       } else {
-        return res
-          .status(400)
-          .json({ error: { message: `Sách không tồn tại` } });
+        const check = await Sach.findOne({ _id: sach?.sach?._id });
+        if (check) {
+          if (check?.soLuong < sach?.soLuong) {
+            return res.status(400).json({
+              error: {
+                message: `Sách ${check?.tenSach} chỉ còn ${check?.soLuong} cuốn không đủ số lượng bạn cần :((`,
+              },
+            });
+          }
+        } else {
+          return res
+            .status(400)
+            .json({ error: { message: `Sách không tồn tại` } });
+        }
       }
     }
     res.status(200).json({ message: "Kiểm tra hoàn tất" });

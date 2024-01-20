@@ -2,7 +2,9 @@ const { default: mongoose } = require("mongoose");
 const DonHang = require("../models/DonHang");
 const GioHang = require("../models/GioHang");
 const Sach = require("../models/Sach");
+const KhachHang = require("../models/KhachHang");
 const sendEmailPaymentSuccess = require("../utils/sendEmailPaymentSuccess");
+const { createKhachHang } = require("./khachHang.controller");
 
 const getAllDonHang = async (req, res) => {
   try {
@@ -69,6 +71,18 @@ const createDonHang = async (req, res) => {
           res.status("400").json({ error: { message: "Sach khong ton tai" } });
         }
       }
+      let ten = donHang.thongTinGiaoHang?.thongTinNguoiNhan?.tenNguoiNhan?.trim();
+      let ten1 = ten.replace(/\s+/g, " ");
+      const checkTrung = await KhachHang.findOne({
+        tenKhachHang: {
+          $regex: ten1,
+          $options: "i",
+        },
+        userId: userId
+      });
+      if (!checkTrung?._id) {
+        await KhachHang.create({ sdt: donHang.thongTinGiaoHang.thongTinNguoiNhan.sdt, diaChi: donHang.thongTinGiaoHang.thongTinNguoiNhan.diaChi, tenKhachHang: donHang.thongTinGiaoHang.thongTinNguoiNhan.tenNguoiNhan, email: email });
+      } 
       await GioHang.findOneAndUpdate(
         { _id: gioHangId },
         { danhSach: [], tongGia: 0 }

@@ -92,6 +92,9 @@ const {
   deleteDanhGia,
   getDanhGiaByID,
 } = require("../controller/danhGia.controller");
+const {
+  getAllKhachHang,
+} = require("../controller/khachHang.controller");
 const router = express.Router();
 
 // Tài khoản
@@ -210,6 +213,13 @@ router.get("/getGiamGiaByID/:id", getGiamGiaByID);
 
 // Đánh giá
 router.get("/getAllDanhGia", getAllDanhGia);
+router.post("/createDanhGia", createDanhGia);
+router.patch("/updateDanhGia/:id", updateDanhGia);
+router.delete("/deleteDanhGia/:id", deleteDanhGia);
+router.post("/getDanhGiaById", getDanhGiaByID);
+
+// khach hang
+router.get("/getAllKhachHang", getAllKhachHang);
 router.post("/createDanhGia", createDanhGia);
 router.patch("/updateDanhGia/:id", updateDanhGia);
 router.delete("/deleteDanhGia/:id", deleteDanhGia);

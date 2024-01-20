@@ -10,16 +10,28 @@ const khachHangschema = mongoose.Schema({
     type: String,
     required: true,
   },
-  soDienThoai: {
+  sdt: {
     type: Number,
     required: true,
   },
-  diachi: {
+  diaChi: {
     type: String,
     required: true,
   },
+  danhSachDonHang: [
+    {
+      donHang: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'donHang'
+      },
+    }
+  ],
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'taiKhoan'
+  }
 });
 
-const KhachHangModel = mongoose.model("ngonNgu", khachHangschema);
+const KhachHangModel = mongoose.model("khachHang", khachHangschema);
 
 module.exports = KhachHangModel;

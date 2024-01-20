@@ -21,7 +21,6 @@ const createGiamGia = async (req, res) => {
         $options: "i",
       },
     });
-    console.log(checkTrung);
     if (checkTrung?._id) {
       res.status(400).json({
         error: {
